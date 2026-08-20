@@ -1,0 +1,10 @@
+name: draft-staleness
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'   # weekly Monday 09:00 UTC; monthly DRI issue reads its output
+  workflow_dispatch:
+
+jobs:
+  call:
+    uses: <adopter-org>/organisationos-foundation/.github/workflows/draft-staleness.yml@v1  # pin to a released tag or commit SHA; bump via a two-approver Foundation PR that also rolls the tag

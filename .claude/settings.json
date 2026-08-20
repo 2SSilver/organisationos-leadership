@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings",
+  "permissions": {
+    "allow": [
+      "Edit(./cadence/**)",
+      "Write(./cadence/**)",
+      "Edit(./strategy/**)",
+      "Write(./strategy/**)",
+      "Edit(./steward/**)",
+      "Write(./steward/**)",
+      "Edit(./CLAUDE.md)",
+      "Read(**)"
+    ],
+    "deny": [
+      "Write(../organisationos-foundation/**)",
+      "Write(../organisationos-domain/**)"
+    ]
+  },
+  "marketplaces": [
+    {
+      "name": "anthropic-official",
+      "url": "https://github.com/anthropics/claude-code-plugins",
+      "ref": "REPLACE-WITH-AUDITED-COMMIT-SHA"
+    }
+  ],
+  "strictKnownMarketplaces": true,
+  "plugins": {
+    "superpowers": {
+      "marketplace": "anthropic-official",
+      "version": "<pinned-version-or-ref>"
+    }
+  },
+  "_notes": [
+    "Per v3.1 §15: pin to a marketplace ref (commit SHA), not a tag/label.",
+    "strictKnownMarketplaces blocks any marketplace not explicitly listed.",
+    "Pin bumps are two-approver PRs (Admin + Leader) per .github/CODEOWNERS.",
+    "Any non-marketplace install (URL, zip, local path) requires a CDR.",
+    "Remove the _notes field before committing in a real adoption — it is documentation, not config."
+  ]
+}

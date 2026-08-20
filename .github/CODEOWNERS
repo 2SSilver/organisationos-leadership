@@ -1,0 +1,33 @@
+# CODEOWNERS — Leadership repo
+# Adopter customisation: replace every placeholder handle below with real GitHub handles.
+
+# Default
+*                                @placeholder-leader @placeholder-admin
+
+# Two-approver harness paths
+/.github/                        @placeholder-admin @placeholder-leader
+/.claude/                        @placeholder-admin @placeholder-leader
+/CLAUDE.md                       @placeholder-admin @placeholder-leader
+/AGENTS.md                       @placeholder-admin @placeholder-leader
+/FORMATS.md                      @placeholder-admin @placeholder-leader
+
+# Strategy: Leaders own; Admin notified
+/strategy/                       @placeholder-leader
+
+# Cadence: Admin owns the propagation log (Leader co-owns as Forum chair); Forum minutes any Leader can append.
+# Secondary owner (spec §5 "Small-org fallback to the multi-hat rule" —
+# worked example: Leader-authored minutes): /cadence/ is otherwise owned
+# solely by the Leader, so a Leader-authored minutes PR has no valid
+# code-owner approver under proposer-cannot-approve. A Domain Lead
+# countersigns as the named alternate.
+/cadence/                        @placeholder-leader @placeholder-domain-1-lead
+/cadence/propagation-log.md      @placeholder-admin @placeholder-leader
+
+# Steward: Admin only, except the drift log (spec §5 commit-boundary
+# carve-out / §13 Routine option, MR-17). Proposer-cannot-approve makes
+# a single-owner gate on drift-log.md mechanically impossible once the
+# Admin is both the routine proposer and the only owner — so the more
+# specific path below requires the Leader as the distinct reviewer,
+# while the rest of /steward/ stays Admin-only.
+/steward/                        @placeholder-admin
+/steward/drift-log.md            @placeholder-leader

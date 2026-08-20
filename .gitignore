@@ -1,0 +1,28 @@
+# Personal overlays
+CLAUDE.local.md
+**/CLAUDE.local.md
+.claude/settings.local.json
+**/.claude/settings.local.json
+
+# Operating environment
+.env
+.env.local
+.env.*
+
+# Credentials and keys (banned-string CI is not a secret scanner;
+# add gitleaks/trufflehog as a separate workflow for defence in depth)
+**/*.pem
+**/*.key
+**/*.token
+**/secrets/
+**/credentials*
+**/oauth*
+**/.aws/
+**/.ssh/
+**/*.kdbx
+
+# OS / IDE noise
+.DS_Store
+.idea/workspace.xml
+*.swp
+*~

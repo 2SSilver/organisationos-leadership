@@ -1,0 +1,10 @@
+name: link-check
+
+on:
+  pull_request:
+    paths:
+      - '**.md'
+
+jobs:
+  call:
+    uses: <adopter-org>/organisationos-foundation/.github/workflows/link-check.yml@v1  # pin to a released tag or commit SHA; bump via a two-approver Foundation PR that also rolls the tag
