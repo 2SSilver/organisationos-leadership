@@ -7,4 +7,11 @@ on:
 
 jobs:
   call:
+    # Job-scoped write: the reusable this calls OPENS AN ISSUE (not a comment),
+    # so it needs issues: write rather than pull-requests: write. Without it the
+    # scheduled run fails with "Resource not accessible by integration" and the
+    # SLA or staleness breach it was meant to surface is never raised.
+    permissions:
+      issues: write
+      contents: read
     uses: <adopter-org>/organisationos-foundation/.github/workflows/draft-staleness.yml@v1  # pin to a released tag or commit SHA; bump via a two-approver Foundation PR that also rolls the tag
