@@ -4,7 +4,7 @@ Open propagation actions from accepted CDRs. The Admin maintains this file. Each
 
 ## Format
 
-```
+```text
 ## CDR-NNN: <title>
 
 - [ ] Action in Domain 1: <description> — Owner: @<handle>, Deadline: YYYY-MM-DD

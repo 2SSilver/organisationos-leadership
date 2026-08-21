@@ -9,7 +9,7 @@ This is the **Leadership repo** in an OrganisationOS three-repo set. It holds th
 ## 2. What lives here
 
 | Path | Contents |
-|---|---|
+| --- | --- |
 | `strategy/` | Org-level strategic content: priorities, OKRs, position papers |
 | `cadence/` | Leadership Forum minutes; propagation log tracking CDR → domain implementation |
 | `steward/` | Admin's drift log, monthly DRI notes, harness improvement backlog |
@@ -22,7 +22,7 @@ This is the **Leadership repo** in an OrganisationOS three-repo set. It holds th
 
 See Foundation README §3 for the full clone layout and the critical "not nested" caveat. In short:
 
-```
+```text
 ~/projects/<adopter-org>/
   organisationos-foundation/     ← must be cloned first
   organisationos-leadership/     ← this repo
@@ -36,7 +36,7 @@ Do NOT nest these repos inside another project tree. Cross-repo `@import` requir
 ## 4. Role-to-clone-set matrix
 
 | Role | Required clones | Notes |
-|---|---|---|
+| --- | --- | --- |
 | Leader | Foundation + Leadership + Domain | Needs Domain to review Domain PRs locally |
 | Admin | Foundation + Leadership + Domain (+ per-domain if split) | Full set required |
 

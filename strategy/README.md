@@ -5,6 +5,7 @@ Long-lived strategic direction for this organisation. The Leader commits here. S
 ## Structure (adopter customises)
 
 Common shapes:
+
 - A single `strategy.md` summarising current direction with dated revisions.
 - One file per strategic theme (`growth.md`, `talent.md`, `quality.md`).
 - One file per planning horizon (`current-year.md`, `next-year.md`).
