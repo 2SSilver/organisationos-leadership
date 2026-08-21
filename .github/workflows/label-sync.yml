@@ -1,0 +1,59 @@
+name: label-sync
+
+# AR-12: labels.yml shipped in Foundation only, with no mechanism to apply it
+# anywhere. Adopters were told to "apply it with a label-sync action or
+# gh label create" and left to it.
+#
+# Deliberately uses the `gh` CLI rather than a third-party label-sync action:
+# AR-06 found this harness already asserting supply-chain controls it does not
+# have, and adding an unpinned marketplace action while that finding is open
+# would make the overclaim worse.
+#
+# Run manually once per repo after adoption, and again whenever labels.yml
+# changes. Idempotent — existing labels are updated, not duplicated.
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply labels.yml to this repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          if [ ! -f .github/labels.yml ]; then
+            echo "::error file=.github/labels.yml::No .github/labels.yml in this repo. Copy it from Foundation before running label-sync."
+            exit 1
+          fi
+          # labels.yml is a flat list of `- name:` / `color:` / `description:`
+          # entries. Parsed with sed rather than a YAML library to keep this
+          # dependency-free.
+          name=""; color=""; desc=""
+          apply() {
+            [ -z "$name" ] && return 0
+            if gh label create "$name" --color "$color" --description "$desc" 2>/dev/null; then
+              echo "created: $name"
+            else
+              gh label edit "$name" --color "$color" --description "$desc"
+              echo "updated: $name"
+            fi
+          }
+          # `|| [ -n "$line" ]` also processes a final line with no trailing
+          # newline — without it, `read` fails on EOF and drops that line, so a
+          # labels.yml missing a trailing newline would silently give the last
+          # label the previous one's description via the stale $desc.
+          while IFS= read -r line || [ -n "$line" ]; do
+            case "$line" in
+              '- name: '*) apply; name=$(printf '%s' "$line" | sed 's/^- name: *//; s/[[:space:]]*$//; s/^"//; s/"$//') ;;
+              '  color: '*) color=$(printf '%s' "$line" | sed 's/^  color: *//; s/[[:space:]]*$//; s/^"//; s/"$//') ;;
+              '  description: '*) desc=$(printf '%s' "$line" | sed 's/^  description: *//; s/[[:space:]]*$//; s/^"//; s/"$//') ;;
+            esac
+          done < .github/labels.yml
+          apply

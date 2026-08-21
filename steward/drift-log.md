@@ -11,7 +11,7 @@ The Admin's rolling backlog of harness drift and improvement items. This is **no
 
 ## Format
 
-```
+```text
 ## YYYY-MM — monthly DRI summary
 
 - Drift found: <item> — Action: <PR link or "monitoring">

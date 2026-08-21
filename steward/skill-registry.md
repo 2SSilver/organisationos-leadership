@@ -7,8 +7,8 @@ The Admin maintains this file. Reviewed at monthly DRI (§13).
 ## Format
 
 | Name | Declared in | Routes around | Approver | Date approved | Last verified |
-|---|---|---|---|---|---|
-| requesting-deliverable-review | foundation/.claude/skills/requesting-deliverable-review/ | superpowers:requesting-code-review | @<domain-1-lead> | YYYY-MM-DD | YYYY-MM-DD |
+| --- | --- | --- | --- | --- | --- |
+| requesting-deliverable-review | Foundation `.claude/skills/requesting-deliverable-review/` | superpowers:requesting-code-review | @<domain-1-lead> | YYYY-MM-DD | YYYY-MM-DD |
 
 ## Rules
 

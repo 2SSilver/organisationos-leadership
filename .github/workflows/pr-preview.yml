@@ -7,4 +7,10 @@ on:
 
 jobs:
   call:
+    # Job-scoped write: the reusable this calls posts a PR comment. pr-preview
+    # additionally cannot start at all without it, since its reusable declares
+    # pull-requests: write and a read-default caller cannot pass that down.
+    permissions:
+      pull-requests: write
+      contents: read
     uses: <adopter-org>/organisationos-foundation/.github/workflows/pr-preview.yml@v1  # pin to a released tag or commit SHA; bump via a two-approver Foundation PR that also rolls the tag

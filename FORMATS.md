@@ -11,7 +11,7 @@ Three principles. The whitelist follows. Adopters apply the principles to add or
 ## In Git — whitelist
 
 | Format | Use for | Size cap |
-|---|---|---|
+| --- | --- | --- |
 | Markdown (`.md`) | Everything written | — |
 | Mermaid (in Markdown fences) | Diagrams expressible as graph, sequence, flow, tree | — |
 | Plain text (`.txt`) | Raw extracted text (transcripts, OCR, log dumps) | — |
@@ -29,7 +29,7 @@ Three principles. The whitelist follows. Adopters apply the principles to add or
 ## Out of Git — referenced via `references.md`
 
 | Format / system | Why out of Git |
-|---|---|
+| --- | --- |
 | Excel with macros, pivots, dashboards, live data | Binary, opaque, work doesn't diff cleanly |
 | *Plain tabular Excel* | Export to CSV and commit; the CSV is the source. |
 | PowerPoint / Keynote (`.pptx`, `.key`) | Binary, opaque to diff. Built from Markdown via the build-deck pattern. |

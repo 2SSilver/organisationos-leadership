@@ -16,13 +16,14 @@ Leadership Forum minutes, agendas, and propagation log.
 ## Upstream / downstream coupling
 
 If this organisation sits inside a larger parent, declare:
+
 - **Upstream:** the strategy this forum receives from (e.g. parent firm's executive committee)
 - **Downstream:** what this forum propagates (e.g. per-domain planning rounds, departmental reviews)
 
 ## File pattern
 
 - `YYYY-MM-DD.md` — minutes of each forum. Commit within one working day.
-- `vocabulary-YYYY-MM-DD.md` — output of any vocabulary workshop (see `../../foundation/standards/templates/vocabulary-workshop.md`).
+- `vocabulary-YYYY-MM-DD.md` — output of any vocabulary workshop (see `../../organisationos-foundation/standards/templates/vocabulary-workshop.md`).
 
 ## Minutes template
 
