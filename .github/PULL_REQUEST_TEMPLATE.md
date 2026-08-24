@@ -35,7 +35,7 @@ block applies when a Leadership-repo PR is tied to a cross-domain CDR.)
 - [ ] Product Owner approved (where the CDR template lists PO for this artefact type)
 - [ ] Admin approved (where the CDR template lists Admin for this artefact type)
 
-Manual affordance; the completeness check is CI-enforced in the Foundation repo, where cross-domain artefacts live.
+Manual affordance only — this checklist is not CI-enforced. Reviewers confirm the affected-domain approvals themselves.
 
 ## Reviewer affordances
 
