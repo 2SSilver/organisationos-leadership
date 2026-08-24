@@ -50,7 +50,7 @@ Team Members, Product Owners, and Domain Leads do not normally need the Leadersh
 2. Clone this repo as a sibling.
 3. Update `.github/CODEOWNERS` with real GitHub handles.
 4. The role→`additionalDirectories` mapping has one canonical source: Foundation's `standards/templates/onboarding/` (5 role-specific files). Copy the file matching your role — `../organisationos-foundation/standards/templates/onboarding/settings.local.json.example-<role>` — to `.claude/settings.local.json`, and the matching `claude-local-<role>.example.md` to `CLAUDE.local.md`. This repo's own `.claude/settings.local.json.example`, if present, is a pointer to that folder, not a second copy of the mapping. On a role change, re-copy from the updated onboarding file (see the monthly-DRI checklist).
-5. Install the pre-commit hook from Foundation: `cp ../organisationos-foundation/.github/hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit`.
+5. Install the pre-commit hook from Foundation: `cp ../organisationos-foundation/.github/hooks/banned-string-pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit`.
 
 ---
 
