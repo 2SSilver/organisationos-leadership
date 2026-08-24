@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - name: Apply labels.yml to this repository
