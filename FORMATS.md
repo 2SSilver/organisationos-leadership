@@ -16,7 +16,7 @@ Three principles. The whitelist follows. Adopters apply the principles to add or
 | Mermaid (in Markdown fences) | Diagrams expressible as graph, sequence, flow, tree | — |
 | Plain text (`.txt`) | Raw extracted text (transcripts, OCR, log dumps) | — |
 | CSV / TSV (`.csv`, `.tsv`) | Structured tabular data | — |
-| JSON / YAML (`.json`, `.yaml`, `.yml`) | Config, frontmatter, machine-readable data | — |
+| JSON / JSONC / YAML (`.json`, `.jsonc`, `.yaml`, `.yml`) | Config, frontmatter, machine-readable data. `.jsonc` is JSON with comments, used by tool configs such as `.markdownlint.jsonc` | — |
 | TOML (`.toml`) | Build/config files | — |
 | Excalidraw / Drawio (`.excalidraw`, `.drawio`) | Diagrams Mermaid cannot express | ≤500 KB |
 | SVG (`.svg`) | Generated diagram output | ≤200 KB |
