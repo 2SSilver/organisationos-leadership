@@ -4,10 +4,10 @@ The Admin's rolling backlog of harness drift and improvement items. This is **no
 
 ## What goes here
 
-- Findings from the monthly DRI maintenance issue (§13.5): stale CLAUDE.md, stale interfaces, stale wiki content, accumulated drafts, banned-pattern-list gaps.
+- Findings from the monthly maintenance issue (see README): stale CLAUDE.md, stale interfaces, stale wiki content, accumulated drafts, banned-pattern-list gaps.
 - Improvement-loop proposals — the one-harness-change-per-month the Admin-Engineer drafts as a Foundation PR.
 - Reasoning for harness-substrate changes (workflows, templates, role docs) that do not warrant a CDR.
-- Admin/Leader disagreements recorded per §11.5 escalation.
+- Admin/Leader disagreements recorded per Leadership Forum cadence (Leadership repo, cadence/) escalation.
 
 ## Format
 
@@ -22,7 +22,7 @@ Notes: <escalations, context>
 
 ## Rules
 
-- The monthly DRI issue (§13.5) closes with a one-paragraph summary linked from this file.
+- The monthly maintenance issue (see README) closes with a one-paragraph summary linked from this file.
 - Harness improvement proposals route to Foundation as two-approver PRs (Admin + Leader).
 - Closed months remain for the audit trail; optionally archive to `_archive/drift-log-YYYY.md` annually.
 

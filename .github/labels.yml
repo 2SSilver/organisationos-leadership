@@ -1,4 +1,4 @@
-# OrganisationOS label taxonomy (§12). Apply with a label-sync action or `gh label create`.
+# OrganisationOS label taxonomy (docs/setup-org.md → Step 6). Apply with a label-sync action or `gh label create`.
 # Adopters add one domain:<n> per domain folder.
 - name: "domain:1"
   color: "1d76db"

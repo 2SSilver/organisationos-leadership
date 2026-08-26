@@ -15,7 +15,7 @@
 /strategy/                       @placeholder-leader
 
 # Cadence: Admin owns the propagation log (Leader co-owns as Forum chair); Forum minutes any Leader can append.
-# Secondary owner (spec §5 "Small-org fallback to the multi-hat rule" —
+# Secondary owner ("Small-org fallback to the multi-hat rule" —
 # worked example: Leader-authored minutes): /cadence/ is otherwise owned
 # solely by the Leader, so a Leader-authored minutes PR has no valid
 # code-owner approver under proposer-cannot-approve. A Domain Lead
@@ -23,8 +23,10 @@
 /cadence/                        @placeholder-leader @placeholder-domain-1-lead
 /cadence/propagation-log.md      @placeholder-admin @placeholder-leader
 
-# Steward: Admin only, except the drift log (spec §5 commit-boundary
-# carve-out / §13 Routine option, MR-17). Proposer-cannot-approve makes
+# Steward: Admin only, except the drift log (the role model's commit-boundary
+# carve-out — docs/concepts.md → The five roles — combined with the
+# reusable-workflow pattern's Routine option, Foundation .github/workflows/,
+# called at @v1, MR-17). Proposer-cannot-approve makes
 # a single-owner gate on drift-log.md mechanically impossible once the
 # Admin is both the routine proposer and the only owner — so the more
 # specific path below requires the Leader as the distinct reviewer,

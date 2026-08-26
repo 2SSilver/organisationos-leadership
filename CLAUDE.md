@@ -25,7 +25,7 @@ Substantive cross-domain artefacts (CDRs, NFRs, interfaces, architectural decisi
 
 0. **`pull-check`** — run `git fetch` on each cloned repo present in the workspace (Leadership, Foundation, and any Domain siblings) and report how many commits behind `origin/main` each one is (e.g. "Foundation is 3 commits behind origin/main"). This is a freshness *signal*, not auto-merge — never `git pull`/`merge`/`rebase` on the operator's behalf. It runs before the context below is assembled, because that context is not refreshed again until the next session.
 1. This file (loaded first)
-2. Foundation's CLAUDE.md (loaded via the @import below)
+2. Foundation's CLAUDE.md — **read on demand, not loaded.** The `@import` below is a pointer: a cross-repo import does not inline its target, so Foundation's rules are not in context unless something retrieves them. The rules that must hold in every session are restated in this file. See Foundation `docs/loading-model.md`.
 3. `CLAUDE.local.md` if present (gitignored, personal overlay)
 
 @../organisationos-foundation/CLAUDE.md
@@ -40,6 +40,12 @@ Substantive cross-domain artefacts (CDRs, NFRs, interfaces, architectural decisi
 
 ---
 
-## Confidentiality
+## Confidentiality (hard — enforcement is layered)
 
-Per Foundation's CLAUDE.md (loaded above), identifying details from external work do not enter this repo. Strategy documents that reference engagements use anonymised slugs.
+Identifying details from external work do not enter this repo. Strategy documents that reference engagements use anonymised slugs. This rule is stated here in full rather than by reference to Foundation, because a cross-repo `@import` does not put Foundation's rules into context — see Foundation `docs/loading-model.md`. Restating the rule here is what makes it reliably active. Enforcement layers (rely on 1 and 2; layer 3 is conscience):
+
+1. Pre-commit + CI banned-string check (`banned-string-check.yml`; patterns in Foundation `standards/banned-patterns.yml`)
+2. Back-flow review by Admin + Domain Lead on `back-flow`-labelled PRs
+3. This rule, as last-line operator conscience
+
+What the banned-string check cannot see — paraphrased, structural, numerical, co-occurrence, date and near-miss identifiers — is listed in Foundation `standards/coverage-gaps.md`.

@@ -31,7 +31,7 @@
     }
   },
   "_notes": [
-    "Per v3.1 §15: pin to a marketplace ref (commit SHA), not a tag/label.",
+    "Pin to a marketplace ref (commit SHA), not a tag/label.",
     "strictKnownMarketplaces blocks any marketplace not explicitly listed.",
     "Pin bumps are two-approver PRs (Admin + Leader) per .github/CODEOWNERS.",
     "Any non-marketplace install (URL, zip, local path) requires a CDR.",
