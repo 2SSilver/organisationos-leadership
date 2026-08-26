@@ -1,0 +1,8 @@
+# Cross-repo links carry the <adopter-org> placeholder until setup-org.md step 3
+# substitutes it. Ignore only the unsubstituted form; once substituted, the URLs
+# are real and link-check verifies them.
+#
+# Matched WITHOUT the angle brackets on purpose: lychee percent-encodes them
+# before matching, so the URI it tests reads %3Cadopter-org%3E. A pattern
+# containing literal < or > is silently inert.
+adopter-org

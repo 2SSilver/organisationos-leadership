@@ -1,12 +1,51 @@
-# OrganisationOS — Leadership repo
+![OrganisationOS](docs/assets/banner.png)
 
-## 1. What this is
+# OrganisationOS — Leadership
 
-This is the **Leadership repo** in an OrganisationOS three-repo set. It holds the working surface for Leaders and the Admin: strategy, meeting cadence, and the steward's backlog. It depends on the Foundation repo for shared standards, templates, and CI workflows.
+**The steering surface of an OrganisationOS three-repo set.** OrganisationOS is a harness for human↔AI-agent collaboration in a knowledge-work organisation: three Git repositories, a small set of conventions, and CI that keeps them honest. This repo holds what Leaders and the Admin work in — strategy, the Leadership Forum's cadence, the propagation log that tracks cross-domain decisions into the domains, and the steward's drift log. It depends on the Foundation repo for every shared standard, template and CI workflow.
 
----
+## The three repos
 
-## 2. What lives here
+```mermaid
+flowchart TB
+    F["Foundation — the substrate<br/>standards · glossary · interfaces<br/>CDRs · NFRs · org-wide ADRs<br/>reusable CI · shared agents and commands"]
+    L["Leadership — the steering surface<br/>strategy · forum cadence<br/>propagation log · drift log"]
+    D["Domain — the working surface<br/>domain-1 … domain-N<br/>local ADRs · methods · outputs"]
+    L -- "references CLAUDE.md<br/>calls reusable CI" --> F
+    D -- "references CLAUDE.md<br/>calls reusable CI" --> F
+    style L stroke-width:3px
+```
+
+| Repo | Holds | |
+| --- | --- | --- |
+| **Foundation** | Shared standards, decisions, CI and tooling | [organisationos-foundation](https://github.com/<adopter-org>/organisationos-foundation) |
+| **Leadership** | Strategy, Forum cadence, propagation log, drift log | **You are here** |
+| **Domain** | Per-domain working content | [organisationos-domain](https://github.com/<adopter-org>/organisationos-domain) |
+
+On disk the three are siblings under one parent folder. Every cross-repo path in this repo is written `../organisationos-foundation/…`, and the settings that give a session reach into Foundation name that exact path. Nest the repos anywhere else and those paths break, silently.
+
+```text
+~/projects/<adopter-org>/
+  organisationos-foundation/     ← clone this first
+  organisationos-leadership/     ← this repo
+  organisationos-domain/
+```
+
+## Where do I start?
+
+```mermaid
+flowchart TB
+    Q{"Is OrganisationOS already running<br/>in your organisation?"}
+    Q -- "No — I am setting it up" --> ORG["Foundation docs/setup-org.md<br/>once per organisation"]
+    Q -- "Yes — I am joining" --> PER["Foundation docs/setup-person.md<br/>once per person"]
+    ORG --> PER
+```
+
+- **Setting OrganisationOS up for an organisation** — [setup-org.md](https://github.com/<adopter-org>/organisationos-foundation/blob/main/docs/setup-org.md) in Foundation. Step 8 there enables this repo's monthly maintenance issue.
+- **Joining as a Leader or Admin** — [setup-person.md](https://github.com/<adopter-org>/organisationos-foundation/blob/main/docs/setup-person.md) in Foundation. Leaders and the Admin clone all three repos; Team Members, Product Owners and Domain Leads do not normally need this one.
+- **Understanding it first** — [concepts.md](https://github.com/<adopter-org>/organisationos-foundation/blob/main/docs/concepts.md) and [loading-model.md](https://github.com/<adopter-org>/organisationos-foundation/blob/main/docs/loading-model.md) in Foundation.
+
+## What lives here
 
 | Path | Contents |
 | --- | --- |
@@ -16,52 +55,19 @@ This is the **Leadership repo** in an OrganisationOS three-repo set. It holds th
 
 **NOT here:** CDRs, NFRs, interfaces, standards, architectural decisions, or any cross-domain artefact. Those live in the Foundation repo. If the content affects more than one domain or needs org-wide enforcement, it goes in Foundation.
 
----
+## The monthly maintenance issue
 
-## 3. Clone layout
+On the 1st of each month `.github/workflows/monthly-dri.yml` opens an issue from `.github/ISSUE_TEMPLATE/monthly-dri.md` and assigns it to the handle in the `ADMIN_HANDLE` repository variable. The Admin walks the checklist and closes the issue with a one-paragraph summary linked from `steward/drift-log.md`. If the variable is unset the issue opens unassigned; if the `drift` and `harness` labels do not exist yet, run `label-sync.yml` first. Run the workflow from the Actions tab to open the current month's issue on demand — it will not create a duplicate.
 
-See Foundation README §3 for the full clone layout and the critical "not nested" caveat. In short:
-
-```text
-~/projects/<adopter-org>/
-  organisationos-foundation/     ← must be cloned first
-  organisationos-leadership/     ← this repo
-  organisationos-domain/
-```
-
-Do NOT nest these repos inside another project tree. Cross-repo `@import` requires top-level sibling placement.
-
----
-
-## 4. Role-to-clone-set matrix
-
-| Role | Required clones | Notes |
-| --- | --- | --- |
-| Leader | Foundation + Leadership + Domain | Needs Domain to review Domain PRs locally |
-| Admin | Foundation + Leadership + Domain (+ per-domain if split) | Full set required |
-
-Team Members, Product Owners, and Domain Leads do not normally need the Leadership clone unless they are reviewing cross-domain strategy artefacts.
-
----
-
-## 5. Onboarding sequence
-
-1. Clone Foundation first (the `@import` in this repo's CLAUDE.md resolves to `../organisationos-foundation/`).
-2. Clone this repo as a sibling.
-3. Update `.github/CODEOWNERS` with real GitHub handles.
-4. The role→`additionalDirectories` mapping has one canonical source: Foundation's `standards/templates/onboarding/` (5 role-specific files). Copy the file matching your role — `../organisationos-foundation/standards/templates/onboarding/settings.local.json.example-<role>` — to `.claude/settings.local.json`, and the matching `claude-local-<role>.example.md` to `CLAUDE.local.md`. This repo's own `.claude/settings.local.json.example`, if present, is a pointer to that folder, not a second copy of the mapping. On a role change, re-copy from the updated onboarding file (see the monthly-DRI checklist).
-5. Install the pre-commit hook from Foundation: `cp ../organisationos-foundation/.github/hooks/banned-string-pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit`.
-
----
-
-## 6. Generic worked example — GreenLeaf Research Lab
+## Worked example — GreenLeaf Research Lab
 
 GreenLeaf Research Lab uses the three-repo set. A CDR for a new anonymisation standard merges in the Foundation repo. Admin sees the merge notification and opens a propagation log entry in `cadence/propagation-log.md` with the CDR number and links to the three downstream implementation PRs opened in the Domain repo (one per affected domain: research, operations, compliance).
 
 At the next Leadership Forum, the Leader reviews `cadence/propagation-log.md` to confirm all three implementation PRs have merged. The outcome is recorded as an addendum in the Forum minutes. The propagation cycle closes when all three domain PRs are merged and the log entry is marked complete.
 
----
+## Further reading
 
-## 7. Pointer to Foundation
+- Foundation's [`FORMATS.md`](https://github.com/<adopter-org>/organisationos-foundation/blob/main/FORMATS.md) is mirrored here as `FORMATS.md`; the Foundation copy is canonical and `format-gate` fails a PR if the mirror drifts.
+- Foundation's [`CHANGELOG.md`](https://github.com/<adopter-org>/organisationos-foundation/blob/main/CHANGELOG.md) announces merged substrate changes.
 
-For source of truth on standards, CDRs, NFRs, interfaces, and shared CI, see the Foundation repo (`../organisationos-foundation/`). Leadership references Foundation content — it does not copy or redefine it.
+These templates originate from [2SSilver/organisationos-leadership](https://github.com/2SSilver/organisationos-leadership), MIT licensed.
