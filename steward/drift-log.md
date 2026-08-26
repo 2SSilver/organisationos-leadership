@@ -7,7 +7,7 @@ The Admin's rolling backlog of harness drift and improvement items. This is **no
 - Findings from the monthly maintenance issue (see README): stale CLAUDE.md, stale interfaces, stale wiki content, accumulated drafts, banned-pattern-list gaps.
 - Improvement-loop proposals — the one-harness-change-per-month the Admin-Engineer drafts as a Foundation PR.
 - Reasoning for harness-substrate changes (workflows, templates, role docs) that do not warrant a CDR.
-- Admin/Leader disagreements recorded per Leadership Forum cadence (Leadership repo, cadence/) escalation.
+- Admin/Leader disagreements, recorded here when escalated at the Leadership Forum (`cadence/`).
 
 ## Format
 
