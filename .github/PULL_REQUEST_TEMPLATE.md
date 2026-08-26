@@ -22,7 +22,7 @@ None | <list, with one line each>. If cross-domain, has a CDR been raised in Fou
 
 ## Approval checklist (cross-domain / substrate PRs only)
 
-Canonical rule (spec §10/§11.2/§12): the Leader + the Domain Lead of each
+Canonical rule (the CDR process — standards/templates/cdr-template.md; docs/concepts.md → How a decision travels; Leadership Forum cadence — Leadership repo, cadence/; branch protection and CODEOWNERS — docs/setup-org.md → Step 7): the Leader + the Domain Lead of each
 affected domain (+ Product Owner and Admin where the CDR template lists
 them). CODEOWNERS lists the fallback superset; this checklist records the
 actual affected set. (Note: this repo's own `/cadence/` minutes/propagation

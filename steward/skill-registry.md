@@ -1,8 +1,8 @@
 # Skill registry
 
-OrganisationOS-native skills that route around `superpowers:` or other plugin skills via description-based routing (see v3.1 §15).
+OrganisationOS-native skills that route around `superpowers:` or other plugin skills via description-based routing.
 
-The Admin maintains this file. Reviewed at monthly DRI (§13).
+The Admin maintains this file. Reviewed at the monthly maintenance issue (see README).
 
 ## Format
 

@@ -1,0 +1,23 @@
+name: monthly-dri
+
+# Opens the Admin's monthly maintenance issue from .github/ISSUE_TEMPLATE/monthly-dri.md
+# on the 1st of each month. The mechanism is Foundation's reusable; this file owns the
+# cadence and the checklist. Set the ADMIN_HANDLE repository variable so the issue is
+# assigned (Foundation docs/setup-org.md, Step 8). Safe to run from the Actions tab:
+# the reusable exits without creating a duplicate if this month's issue exists.
+
+on:
+  schedule:
+    - cron: '0 9 1 * *'   # 09:00 UTC on the 1st of every month
+  workflow_dispatch:
+
+jobs:
+  call:
+    # Job-scoped write: the reusable OPENS AN ISSUE, so it needs issues: write.
+    permissions:
+      issues: write
+      contents: read
+    uses: <adopter-org>/organisationos-foundation/.github/workflows/monthly-dri.yml@v1  # pin to a released tag or commit SHA; bump via a two-approver Foundation PR that also rolls the tag
+    with:
+      assignee: ${{ vars.ADMIN_HANDLE }}
+      body-file: .github/ISSUE_TEMPLATE/monthly-dri.md

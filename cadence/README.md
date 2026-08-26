@@ -4,7 +4,7 @@ Leadership Forum minutes, agendas, and propagation log.
 
 ## Adopted cadence
 
-> Replace this block with the adopter's chosen cadence per v3.1 §11 scale shapes.
+> Replace this block with the adopter's chosen cadence — pick the scale shape (frequency, quorum) that fits headcount, as below.
 
 - **Forum name:** Leadership Forum (rename to fit culture: Council, Forum, Round Table, etc.)
 - **Frequency:** Monthly (default; adjust to fortnightly for <20 people or split-session for 50+)
