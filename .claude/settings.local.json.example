@@ -1,4 +1,6 @@
 {
   "//": "Generic example for working IN the Leadership repo. For role-specific examples (the canonical role→additionalDirectories mapping), copy from ../organisationos-foundation/standards/templates/onboarding/settings.local.json.example-<role>.",
-  "additionalDirectories": []
+  "permissions": {
+    "additionalDirectories": []
+  }
 }
