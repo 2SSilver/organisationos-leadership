@@ -47,7 +47,7 @@ outright, and mis-attributed the third mechanism's real capability to the
 wrong place. Both repo-root `CLAUDE.md` files asserted that a sibling
 repository's rules load into context automatically once it sits next to the
 working repo on disk — false for the import line, corrected 2026-08-26. The
-same false claim survived five days longer in the role onboarding
+same false claim survived six days longer in the role onboarding
 templates, the files a joiner copies verbatim, and was not corrected until
 2026-09-01. The settings entry carried a separate false claim of
 its own: Domain's and Leadership's `AGENTS.md` stated that Foundation's
@@ -305,7 +305,7 @@ here in full rather than by reference to Foundation, because a cross-repo
 active." Both restatements date to 2026-08-26 (Domain `5acd566`, Leadership
 `224fb78`). Foundation `CHANGELOG.md`'s 2026-09-01 entry records a later,
 separate correction of the same false claim in the role onboarding
-templates — the files a joiner copies verbatim — five days after the
+templates — the files a joiner copies verbatim — six days after the
 repo-root files were fixed: "corrected the six sites across the three role
 onboarding templates... that claimed Foundation's rules load automatically
 once it's a sibling repo."
