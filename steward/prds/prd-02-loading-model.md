@@ -44,10 +44,12 @@ expect it to work.
 
 The harness's own documentation got two of the three mechanisms wrong
 outright, and mis-attributed the third mechanism's real capability to the
-wrong place. Onboarding material and both repo-root `CLAUDE.md` files
-asserted that a sibling repository's rules load into context automatically
-once it sits next to the working repo on disk — false for the import line,
-corrected 2026-08-26. The settings entry carried a separate false claim of
+wrong place. Both repo-root `CLAUDE.md` files asserted that a sibling
+repository's rules load into context automatically once it sits next to the
+working repo on disk — false for the import line, corrected 2026-08-26. The
+same false claim survived five days longer in the role onboarding
+templates, the files a joiner copies verbatim, and was not corrected until
+2026-09-01. The settings entry carried a separate false claim of
 its own: Domain's and Leadership's `AGENTS.md` stated that Foundation's
 shared agents "are loaded by Claude via `additionalDirectories`," crediting
 the settings entry with a capability it does not have. That capability
@@ -300,10 +302,12 @@ rule in full, with the identical explanatory sentence: "This rule is stated
 here in full rather than by reference to Foundation, because a cross-repo
 `@import` does not put Foundation's rules into context — see Foundation
 `docs/loading-model.md`. Restating the rule here is what makes it reliably
-active." Foundation `CHANGELOG.md`, 2026-09-01 entry, on the correction that
-made this restatement necessary in wording as well as in fact: "corrected
-the six sites across the three role onboarding templates — the files a
-joiner copies verbatim — that claimed Foundation's rules load automatically
+active." Both restatements date to 2026-08-26 (Domain `5acd566`, Leadership
+`224fb78`). Foundation `CHANGELOG.md`'s 2026-09-01 entry records a later,
+separate correction of the same false claim in the role onboarding
+templates — the files a joiner copies verbatim — five days after the
+repo-root files were fixed: "corrected the six sites across the three role
+onboarding templates... that claimed Foundation's rules load automatically
 once it's a sibling repo."
 
 A rule that must hold in every session, regardless of whether Foundation is
@@ -311,8 +315,10 @@ reachable, MUST be written in full inside every repository's own
 `CLAUDE.md`, not merely referenced from Foundation's copy of the same rule.
 
 - The confidentiality rule appears in full, in the same words, in
-  Foundation's, Domain's and Leadership's `CLAUDE.md` files, each explaining
-  why the restatement exists rather than pointing elsewhere for it.
+  Domain's and Leadership's `CLAUDE.md` files, each explaining why the
+  restatement exists rather than pointing elsewhere for it. Foundation's
+  own `CLAUDE.md` carries the rule as its source, without that
+  restatement framing — it has no other repo's copy to restate from.
 - No onboarding material states or implies that a sibling repository's
   rules become active in a session merely because that repository is a
   sibling clone on disk.
@@ -322,7 +328,7 @@ reachable, MUST be written in full inside every repository's own
 
 Open question, not settled by this requirement: the restatements are
 correct today because someone reread and rewrote all three by hand during
-the 2026-09-01 correction. Nothing checks that the next change to
+the 2026-08-26 correction. Nothing checks that the next change to
 Foundation's confidentiality wording gets carried into Domain's and
 Leadership's copies — see section 8.
 
@@ -466,7 +472,7 @@ role- or identity-selecting step.
   domain folder is relying on a reading of this path that nothing confirms.
 - **Open question — restatement drift (FR-02.4).** Domain's and
   Leadership's confidentiality sections are correct today because both were
-  reread and rewritten by hand during the 2026-09-01 correction. No check
+  reread and rewritten by hand during the 2026-08-26 correction. No check
   compares their wording against Foundation's `CLAUDE.md` on an ongoing
   basis; a future edit to Foundation's confidentiality rule could go
   uncarried into either restatement with nothing surfacing the mismatch.
