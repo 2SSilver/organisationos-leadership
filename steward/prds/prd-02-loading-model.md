@@ -42,17 +42,23 @@ skills and agents. One grants filesystem reach and loads nothing else. None
 of the three raises an error when used the way an operator would naturally
 expect it to work.
 
-The harness's own documentation got this wrong for a period, and got it
-wrong in every one of the three mechanisms at once: onboarding material
-across all three repos asserted that a sibling repository's rules load
-automatically once it sits next to the working repo on disk. That claim was
-false for the import line, false for the launch flag, and false for the
-settings entry — and false silently, because none of the three mechanisms
-signals its own limits. A session that reached nothing behaved, on the
-surface, exactly like a session that had everything it needed: it started,
-it answered questions, and it never said what it could not see. An operator
-trusting a confidentiality rule to be active, or a shared command to be
-available, had no signal from the session itself that neither was true.
+The harness's own documentation got two of the three mechanisms wrong
+outright, and mis-attributed the third mechanism's real capability to the
+wrong place. Onboarding material and both repo-root `CLAUDE.md` files
+asserted that a sibling repository's rules load into context automatically
+once it sits next to the working repo on disk — false for the import line,
+corrected 2026-08-26. The settings entry carried a separate false claim of
+its own: Domain's and Leadership's `AGENTS.md` stated that Foundation's
+shared agents "are loaded by Claude via `additionalDirectories`," crediting
+the settings entry with a capability it does not have. That capability
+belongs to the launch flag — which was never itself misdescribed; its real
+behaviour was simply attributed to the wrong mechanism. Both the import
+claim and the settings claim failed silently: neither mechanism signals its
+own limits. A session that reached nothing behaved, on the surface, exactly
+like a session that had everything it needed: it started, it answered
+questions, and it never said what it could not see. An operator trusting a
+confidentiality rule to be active, or a shared command to be available, had
+no signal from the session itself that neither was true.
 
 Foundation's `CHANGELOG.md` records the correction directly: the 2026-08-26
 entry states the harness "corrected what the harness claims about session
@@ -261,6 +267,15 @@ from any of them started without complaint and reached nothing. Leadership's
 own history carries the same fix as a standalone commit predating this
 correction, titled "Fix `additionalDirectories` nesting in shipped settings
 example."
+
+A second, separate defect over-attributed capability to this same
+mechanism. Domain's and Leadership's `AGENTS.md` (both corrected
+2026-08-26) previously stated that Foundation's shared agents "are loaded
+by Claude via `additionalDirectories`" — a capability the settings entry
+has never had; agents load only via the mount flag described in FR-02.2.
+The current text names the mount flag as the actual mechanism and states
+plainly that "the `additionalDirectories` entry in `settings.local.json`
+grants file access and loads no agents."
 
 A settings-file directory-reach entry MUST grant filesystem reach into the
 named directory and MUST NOT load that directory's skills, commands,
