@@ -6,6 +6,7 @@
 # The check proves no file is undocumented. It does NOT prove any file is
 # documented well — that is a review concern, not a tooling one.
 set -u
+shopt -s nullglob   # a zero-PRD directory must not leave the literal glob in $f
 BASE="$(cd "$(dirname "$0")/../../.." && pwd)"   # parent of the three clones
 REPOS="organisationos-foundation organisationos-leadership organisationos-domain"
 for r in $REPOS; do
