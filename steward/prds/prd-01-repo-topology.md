@@ -233,7 +233,7 @@ folder in Domain).
 
 Status: CONVENTION
 Evidence: `organisationos-foundation/docs/concepts.md`, "What lives where"
-table, mapping fourteen artefact types (CDR, org-wide ADR, domain-local ADR,
+table, mapping sixteen artefact types (CDR, org-wide ADR, domain-local ADR,
 interface contract, org-wide NFR, cross-domain term, domain-unique term,
 template, banned-pattern list, format whitelist, strategy/OKRs, forum
 minutes and propagation log, drift log and skill registry, short-lived
