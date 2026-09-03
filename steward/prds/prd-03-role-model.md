@@ -27,16 +27,18 @@ small to hand every role to a different person.
 A knowledge-work organisation running human-agent collaboration needs every
 merged artefact to have passed a named human, and needs the review weight to
 track the artefact's blast radius rather than being uniform across every
-change. At the organisation sizes this kind of harness targets — a few
-dozen people up to a few hundred — the number of distinct humans available
-to staff review roles is routinely smaller than the number of roles the
-model calls for: one person holds two or three functions at once. A model
-that assigns review purely by job title breaks the first time a title-holder
-is also the person proposing the change: either the pull request has no
-valid approver left, or the same human's judgement is counted twice under
-two different labels. A model that instead insists on a fully distinct human
-for every slot breaks differently — at a handful of employees some slots
-simply have no second candidate, and review stalls rather than degrading.
+change. `docs/concepts.md` names the organisation size where this bites: at
+20–50 people, "one human often holds two or three roles" (line 45), and "up
+to roughly 50 people, one Admin wears both hats" (line 47). At that size,
+the number of distinct humans available to staff review roles is routinely
+smaller than the number of roles the model calls for: one person holds two
+or three functions at once. A model that assigns review purely by job title
+breaks the first time a title-holder is also the person proposing the
+change: either the pull request has no valid approver left, or the same
+human's judgement is counted twice under two different labels. A model that
+instead insists on a fully distinct human for every slot breaks
+differently — toward the bottom of that same 20–50 range, some slots simply
+have no second candidate, and review stalls rather than degrading.
 
 The harness's own template repositories show the case this has to remain
 honest about rather than design around. Foundation's `main` branch, as
@@ -242,8 +244,9 @@ every substrate path names a dedicated owner beyond the default match.
 Status: CONVENTION
 Evidence: `organisationos-foundation/.github/CODEOWNERS`, two-approver block
 (`/standards/`, `/.github/workflows/`, `/.github/hooks/`, `/.github/agents/`,
-`/.claude/`, `/CLAUDE.md`, `/AGENTS.md`, `/FORMATS.md`, `/.mcp.json`, each
-naming `@placeholder-admin @placeholder-leader`). Foundation `CLAUDE.md`:
+`/.github/ISSUE_TEMPLATE/`, `/.claude/`, `/CLAUDE.md`, `/AGENTS.md`,
+`/FORMATS.md`, `/.mcp.json`, each naming
+`@placeholder-admin @placeholder-leader`). Foundation `CLAUDE.md`:
 "Treat every PR to this repo as a substrate change (two-approver minimum for
 `/standards/`, `/.github/`, `/.claude/`)." `docs/setup-org.md` Step 7 gives
 the branch-protection table and the `gh api` command that would turn this
@@ -330,6 +333,22 @@ approve rule.
   Admin-only ownership of the rest of `steward/`.
 - Both cases are encoded directly in CODEOWNERS as a second, path-specific
   handle, not left to a reviewer to work out from the escalation rule alone.
+
+Caveat: this requirement is demonstrated, not universal. Its two pieces of
+evidence are both in Leadership; Domain's own CODEOWNERS carries an
+unaddressed counterexample. `organisationos-domain/.github/CODEOWNERS` lines
+59–60 name only `@placeholder-admin` for `/domain-*/methods/` and
+`/domain-*/prompts/` — no Domain Lead, no other alternate. Those two
+patterns are more specific than, and are listed after, the `/domain-N/`
+block (lines 15–33) that names each domain's Domain Lead; GitHub's
+CODEOWNERS matching is last-match-wins, so for a file under one of those two
+folders the later, narrower pattern overrides the domain-wide one and only
+the Admin is a listed owner. An Admin-proposed pull request touching
+`domain-N/methods/` or `domain-N/prompts/` therefore has exactly one listed
+owner and no named alternate — the same deadlock shape FR-03.6 solves
+everywhere else, left open here. (FR-03.3 is not affected by this: its claim
+is only that CODEOWNERS binds roles to handles, and never asserts that the
+resulting reviewer count is correct for every path.)
 
 ### FR-03.7 — Admin splits into Steward and Engineer; distributes beyond roughly 50 people
 
@@ -467,7 +486,7 @@ identity verification.
 
 Files specified by this PRD (`specifies:` above) are the three repositories'
 `.github/CODEOWNERS` files. All three were last touched on 2026-08-26
-(Foundation `8bb2c85`, Leadership `5acd566`, Domain `adc560a`) and were read
+(Foundation `adc560a`, Leadership `8bb2c85`, Domain `5acd566`) and were read
 in full on 2026-09-02, against Foundation tag `v1.1.2`.
 
 Every `CONVENTION` claim above was verified by reading the cited file at the
