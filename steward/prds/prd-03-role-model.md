@@ -17,7 +17,7 @@ foundation-tag: v1.1.2
 
 Every artefact that leaves a draft state passes a named human whose
 ownership is legible from the repository and path alone, and the weight of
-that review lands at the narrowest level able to bear it — a domain's own
+that review lands at the narrowest level able to bear it: a domain's own
 note reviewed by one domain-local human, a harness-wide standard reviewed by
 more than one. The model must keep working when the organisation is too
 small to hand every role to a different person.
@@ -37,7 +37,7 @@ breaks the first time a title-holder is also the person proposing the
 change: either the pull request has no valid approver left, or the same
 human's judgement is counted twice under two different labels. A model that
 instead insists on a fully distinct human for every slot breaks
-differently — toward the bottom of that same 20–50 range, some slots simply
+differently: toward the bottom of that same 20–50 range, some slots simply
 have no second candidate, and review stalls rather than degrading.
 
 The harness's own template repositories show the case this has to remain
@@ -49,8 +49,8 @@ recently merged pull request, #6, was authored and merged by the same
 account with no recorded reviews (`gh pr view 6 -R
 2SSilver/organisationos-foundation --json reviews,author,mergedBy` returns
 `"reviews":[]` and an identical `author.login` and `mergedBy.login`). A
-single-maintainer instance of the harness — exactly the shape these three
-template repositories are today — is a live example of the scarcity the
+single-maintainer instance of the harness, exactly the shape these three
+template repositories are today, is a live example of the scarcity the
 role model has to survive, not an edge case to exclude from its design.
 
 ## 3. Outcomes
@@ -94,22 +94,22 @@ can be checked against for a given path. Renaming a role's label changes
 neither the path bindings nor the function it covers.
 
 The primary flow: a contributor opens a pull request. The path it touches
-determines, via CODEOWNERS, which role or roles are the required reviewers —
+determines, via CODEOWNERS, which role or roles are the required reviewers:
 one domain-local reviewer for a change confined to that domain's folder, two
 harness-level reviewers for a change to Foundation's substrate, a wider set
 (the Leader plus every affected domain's Domain Lead) for a cross-domain
 artefact. If the proposer is also one of the required reviewers for that
 path, the slot does not simply go unfilled or get satisfied by the
-proposer's own approval: it escalates one step up a fixed ladder — Product
-Owner to Domain Lead to Leader — until it lands on someone who is not the
-proposer. Where the organisation is too small for that ladder to reach a
+proposer's own approval: it escalates one step up a fixed ladder
+(Product Owner to Domain Lead to Leader) until it lands on someone who is not
+the proposer. Where the organisation is too small for that ladder to reach a
 distinct person, a named alternate already listed in CODEOWNERS countersigns
 instead.
 
 Key rules:
 
-- Role labels are adopter-renameable defaults; the five functions — what
-  each role owns — are what has to travel, not the label text.
+- Role labels are adopter-renameable defaults; the five functions, what
+  each role owns, are what has to travel, not the label text.
 - A consumer (someone who reads without committing) never appears in
   CODEOWNERS and needs no role binding; being listed as a stakeholder in a
   domain's README carries no reviewer obligation.
@@ -123,7 +123,7 @@ Key rules:
   actual merge gate only once branch protection is configured deliberately;
   until then, every reviewer-set rule here is advisory.
 
-Important states: the template state, as published — placeholder handles in
+Important states: the template state, as published: placeholder handles in
 every CODEOWNERS entry, no branch protection applied anywhere, verified
 directly on Foundation's own repository above; the adopter-bound state,
 once real handles replace the placeholders; the protected state, once
@@ -147,7 +147,7 @@ Alternatives rejected:
   change would need the identical reviewer set, collapsing the distinction
   the split is for.
 - **A CI-computed mapping from GitHub account to role, checked against a
-  diff's actual risk.** Rejected — it would need an account-to-role registry
+  diff's actual risk.** Rejected because it would need an account-to-role registry
   the harness does not ship, duplicating what CODEOWNERS already expresses
   declaratively, and nothing in the current design maintains such a
   registry.
@@ -171,8 +171,8 @@ each with a one-line ownership statement. `organisationos-foundation/CLAUDE.md`,
 one-line ownership ("Product Owner — owns what the domain offers", "Team
 Member — owns how the work is done", and so on).
 
-The harness MUST define five committer roles — Product Owner, Team Member,
-Domain Lead, Leader, Admin — each with one documented line of ownership, and
+The harness MUST define five committer roles (Product Owner, Team Member,
+Domain Lead, Leader, Admin), each with one documented line of ownership, and
 MUST state that the role labels are adopter-renameable while the five
 functions travel intact.
 
@@ -235,7 +235,7 @@ every substrate path names a dedicated owner beyond the default match.
   `@placeholder-domain-N-lead`); the binding mechanism is wired and
   structurally validated, but names no real reviewer until an adopter
   substitutes handles.
-- An adopter completes the binding — not the mechanism itself — by running
+- An adopter completes the binding, not the mechanism itself, by running
   `docs/setup-org.md` Step 4; nothing before that step causes any CODEOWNERS
   entry to name an actual person.
 
@@ -288,8 +288,8 @@ rule the harness relies on."
 
 When a role-holder who is also the proposer of a pull request would
 otherwise be one of that pull request's required reviewers, the slot MUST
-escalate one step up a fixed ladder — Product Owner to Domain Lead to
-Leader — rather than being satisfied by the proposer's own approval or left
+escalate one step up a fixed ladder (Product Owner to Domain Lead to
+Leader) rather than being satisfied by the proposer's own approval or left
 unfilled.
 
 - `docs/concepts.md` states the ladder and the one-human-two-slots rule in
@@ -298,9 +298,9 @@ unfilled.
 - The PR template carries a dedicated "Second required reviewer if proposer
   wears multiple roles" line, so the escalation is something the proposer
   records at the point of opening the PR, not something inferred later.
-- GitHub's own platform behaviour guarantees the narrower case — a proposer
-  cannot approve their own PR — independent of any harness configuration;
-  the harness's own contribution is the escalation ladder for the broader
+- GitHub's own platform behaviour guarantees the narrower case: a proposer
+  cannot approve their own PR, independent of any harness configuration. The
+  harness's own contribution is the escalation ladder for the broader
   case of one human holding two *different* required-reviewer roles.
 - Nothing in Foundation's CI computes which GitHub account holds which
   role, so nothing checks that an escalation was actually followed, or that
@@ -328,8 +328,8 @@ approve rule.
 - When the Leader authors a pull request touching only `cadence/`, a Domain
   Lead is already listed as a second valid owner for that path, so
   proposer-cannot-approve does not leave zero valid approvers.
-- When the Admin proposes a routine `drift-log.md` update, the Leader — not
-  the Admin — is the owner named for that specific path, distinct from the
+- When the Admin proposes a routine `drift-log.md` update, the Leader, not
+  the Admin, is the owner named for that specific path, distinct from the
   Admin-only ownership of the rest of `steward/`.
 - Both cases are encoded directly in CODEOWNERS as a second, path-specific
   handle, not left to a reviewer to work out from the escalation rule alone.
@@ -338,14 +338,14 @@ Caveat: this requirement is demonstrated, not universal. Its two pieces of
 evidence are both in Leadership; Domain's own CODEOWNERS carries an
 unaddressed counterexample. `organisationos-domain/.github/CODEOWNERS` lines
 59–60 name only `@placeholder-admin` for `/domain-*/methods/` and
-`/domain-*/prompts/` — no Domain Lead, no other alternate. Those two
+`/domain-*/prompts/`: no Domain Lead, no other alternate. Those two
 patterns are more specific than, and are listed after, the `/domain-N/`
 block (lines 15–33) that names each domain's Domain Lead; GitHub's
 CODEOWNERS matching is last-match-wins, so for a file under one of those two
 folders the later, narrower pattern overrides the domain-wide one and only
 the Admin is a listed owner. An Admin-proposed pull request touching
 `domain-N/methods/` or `domain-N/prompts/` therefore has exactly one listed
-owner and no named alternate — the same deadlock shape FR-03.6 solves
+owner and no named alternate. This is the same deadlock shape FR-03.6 solves
 everywhere else, left open here. (FR-03.3 is not affected by this: its claim
 is only that CODEOWNERS binds roles to handles, and never asserts that the
 resulting reviewer count is correct for every path.)
@@ -363,7 +363,7 @@ roughly 50 people, one Admin wears both hats (about 0.3 FTE). Beyond that,
 stewardship distributes to per-domain stewards chaired by a lead Admin; the
 Engineer function stays singular so the improvement loop keeps one voice."
 
-The Admin role MUST be documented as two functions — Steward and Engineer —
+The Admin role MUST be documented as two functions (Steward and Engineer),
 held by one person up to roughly 50 people, with stewardship distributing to
 per-domain stewards beyond that size while the Engineer function stays
 singular.
@@ -387,7 +387,7 @@ singular.
   decision from a domain into Foundation once `promotion-lint` fires; the
   reviewer identities this PRD defines are what that flow calls on, not
   something PRD-07 itself specifies.
-- **PRD-13** owns the tool-permission gate — the second of the harness's two
+- **PRD-13** owns the tool-permission gate, the second of the harness's two
   gates, governing individual high-risk tool calls inside a session. This
   PRD is scoped to the first gate alone: the named human who signs off when
   an artefact leaves a draft state.
@@ -454,8 +454,8 @@ built on top.
    paths, two reviewers for Foundation's substrate paths, and the wider
    Leader-plus-affected-Domain-Leads set for cross-domain artefacts.
 4. Wherever a single default owner on a path would deadlock against
-   proposer-cannot-approve — a Leader authoring Leadership Forum minutes, an
-   Admin proposing a scheduled drift-log update — add a second, path-specific
+   proposer-cannot-approve (a Leader authoring Leadership Forum minutes, an
+   Admin proposing a scheduled drift-log update), add a second, path-specific
    handle as the named alternate, rather than leaving the deadlock to be
    discovered at review time.
 5. Add a `codeowners-lint` check that fails if any substrate path lacks a
@@ -486,7 +486,7 @@ identity verification.
 
 Files specified by this PRD (`specifies:` above) are the three repositories'
 `.github/CODEOWNERS` files. All three were last touched on 2026-08-26
-(Foundation `adc560a`, Leadership `8bb2c85`, Domain `5acd566`) and were read
+(Foundation `adc560a`, Domain `5acd566`, Leadership `8bb2c85`) and were read
 in full on 2026-09-02, against Foundation tag `v1.1.2`.
 
 Every `CONVENTION` claim above was verified by reading the cited file at the
