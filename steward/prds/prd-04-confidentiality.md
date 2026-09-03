@@ -309,8 +309,15 @@ block (lines 14-33) naming each domain's Domain Lead; GitHub's CODEOWNERS
 matching is last-match-wins, so the narrower, later pattern is the one that
 applies. Check 8 confirms both lines directly; Check 8a confirms live that
 `organisationos-domain`'s `main` branch also carries no branch protection
-(`gh api .../branches/main/protection` → 404), so nothing enforces even the
-one named owner.
+(`gh api .../branches/main/protection` → 404, re-confirmed 2026-09-03).
+That absence applies equally to every mechanism this requirement names, not
+only the review: on the published Domain repository as it stands, nothing
+currently compels the cap check or the cool-off check to run as a merge
+gate either, since a required-status-checks rule is what branch protection
+would supply and none is configured. `ENFORCED (local)` for the cap and
+cool-off records that the extracted logic produces the correct verdict when
+run; it does not claim that anything on the live repository currently
+forces that logic to run before a merge.
 
 A pull request labelled `back-flow` MUST NOT merge if it changes more than
 500 net new lines, and MUST NOT merge within 24 hours of being opened.
@@ -332,6 +339,12 @@ A pull request labelled `back-flow` MUST NOT merge if it changes more than
   folders the harness names as where back-flow content lands — CODEOWNERS
   names one owner, not two, and no branch protection enforces even that one
   on the published Domain repository.
+- The published Domain repository carries no branch protection on `main`
+  at all (`gh api .../branches/main/protection` → 404), so the same absence
+  applies equally to the cap and cool-off checks: nothing on the live
+  repository currently compels either check to run as a merge gate, even
+  though both were independently verified to produce the correct verdict
+  when run.
 
 ### FR-04.5 — Six leak categories CI cannot detect, each with a named defence
 
