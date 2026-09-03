@@ -20,15 +20,15 @@ foundation-tag: v1.1.2
 ## 1. Intent
 
 Everything committed to any of the three repositories stays reviewable by
-diff, and anything that lives in a live system — a dashboard, a scheduling
-tool, a CRM — is pointed at from the harness rather than copied into it, so
+diff, and anything that lives in a live system (a dashboard, a scheduling
+tool, a CRM) is pointed at from the harness rather than copied into it, so
 the repositories never silently become a stale export of somewhere else.
 
 ## 2. Problem & evidence
 
 A harness built for human-agent collaboration accumulates two kinds of
 content: material the audience reads as text, and material generated
-elsewhere — a rendered slide deck, a dashboard snapshot, a live tool's
+elsewhere: a rendered slide deck, a dashboard snapshot, a live tool's
 export. Committing the second kind as a binary blob buys convenience once
 and a cost forever after: the file cannot be diffed, a reviewer cannot see
 what changed, and nothing prevents a git history from filling with
@@ -39,7 +39,7 @@ rule directly (lines 46-49, "### Format policy"): "Only formats on
 dashboards, live-data artefacts) are referenced in a domain's
 `references.md`, not committed."
 
-`FORMATS.md` itself must exist identically in all three repositories — a
+`FORMATS.md` itself must exist identically in all three repositories: a
 contributor working in Domain or Leadership needs to know the same rule a
 Foundation contributor knows, without opening a fourth repository to find
 it. Left unenforced, a mirror drifts the moment one repository's copy is
@@ -65,7 +65,7 @@ same thing everywhere it is read.
 - Choosing the whitelist's contents for an adopter. The three principles
   and the shipped list are a starting point; adopters extend or narrow it
   for their own formats.
-- Specifying `references.md`'s own mechanics — how a reference entry is
+- Specifying `references.md`'s own mechanics: how a reference entry is
   structured, or how staleness in a referenced live system is caught. That
   belongs to PRD-09.
 - Building a scanner that infers whether a committed file was actually
@@ -80,7 +80,7 @@ same thing everywhere it is read.
 One reusable workflow, defined once in Foundation and called by all three
 repositories, is the single place every one of this policy's checks lives.
 Leadership's and Domain's own `format-gate.yml` files carry no logic of
-their own — each is a short caller pinned to a Foundation tag. A pull
+their own: each is a short caller pinned to a Foundation tag. A pull
 request's changed files are read from a git diff against the PR's base
 branch, not from the working tree, so every check below runs against
 `added` or `modified` files only.
@@ -88,8 +88,8 @@ branch, not from the working tree, so every check below runs against
 Four things happen in sequence when the gate runs: first, the workflow
 confirms its own hardcoded whitelist has not drifted from `FORMATS.md`'s
 published table, so the two descriptions of "what is allowed" cannot say
-different things inside the same repository. Second — skipped when running
-inside Foundation itself, since there is nothing to compare against —
+different things inside the same repository. Second (skipped when running
+inside Foundation itself, since there is nothing to compare against),
 it checks out Foundation's canonical `FORMATS.md` and fails if the calling
 repository's own mirror has diverged from it. Third, every added or
 modified file in the pull request is checked against the whitelist by
@@ -160,7 +160,7 @@ Alternatives rejected:
   repository, and by this same gate running in that repository's own
   context; a stub would leave both without a body to read.
 - **A single shared repository instead of three, avoiding the mirror
-  question entirely.** Out of this PRD's scope — that split is PRD-01's,
+  question entirely.** Out of this PRD's scope. That split is PRD-01's,
   and this PRD's mirror-and-drift-check exists because of it.
 
 ## 6. Requirements
@@ -168,7 +168,7 @@ Alternatives rejected:
 ### FR-05.1 — Three format principles
 
 Status: CONVENTION
-Evidence: `organisationos-foundation/FORMATS.md` lines 5-7 — "1. **Prefer
+Evidence: `organisationos-foundation/FORMATS.md` lines 5-7: "1. **Prefer
 diffable text** where the audience reads text.", "2. **Reference, do not
 commit, anything generated from a live system** (dashboards, scheduling
 tools, CRM exports).", "3. **Cap binary size per file**, with
@@ -177,8 +177,8 @@ format-specific limits." `organisationos-foundation/CLAUDE.md` lines 46-49
 in the repo-wide rules a session reads without opening `FORMATS.md`
 separately.
 
-The harness MUST publish three format principles — prefer diffable text,
-reference rather than commit live-system output, and cap binary size — and
+The harness MUST publish three format principles (prefer diffable text,
+reference rather than commit live-system output, and cap binary size) and
 MUST state them as the basis the whitelist and caps below apply.
 
 - The three principles are documented once, in `FORMATS.md`, and restated
@@ -193,9 +193,9 @@ MUST state them as the basis the whitelist and caps below apply.
 Status: ENFORCED (local) — with a reproducible defect in the extraction
 logic, described below
 Evidence: `organisationos-foundation/.github/workflows/format-gate.yml`,
-step "Verify changed files against FORMATS.md whitelist" — line 66,
+step "Verify changed files against FORMATS.md whitelist": line 66,
 `ext="${f##*.}"`, then `if ! echo "$allowed_extensions" | grep -wq "$ext"`.
-Red/green log: `$SCRATCH/verification/prd-05.md`, Check 1 (2026-09-03) — a
+Red/green log: `$SCRATCH/verification/prd-05.md`, Check 1 (2026-09-03): a
 scratch git repo branch adding `report.xlsx` failed with `::error
 file=report.xlsx::extension '.xlsx' is not on FORMATS.md's whitelist.`; the
 same repo with only a `.md` file added passed cleanly.
@@ -214,18 +214,18 @@ offending file and its extension in the failure.
   everything after a filename's last dot (`ext="${f##*.}"`), so a filename
   with more than one dot yields whatever follows the final one as its
   "extension," regardless of the file's real type. Six files in Foundation
-  are shaped this way — `.claude/settings.local.json.example` and the five
+  are shaped this way: `.claude/settings.local.json.example` and the five
   `standards/templates/onboarding/settings.local.json.example-<role>`
   files (`-admin`, `-domain-lead`, `-leader`, `-product-owner`,
-  `-team-member`) — yielding "extensions" `example` and
+  `-team-member`), yielding "extensions" `example` and
   `example-<role>`, none of which are on the whitelist. `git log --oneline`
   against each of the six shows exactly two commits per file: the initial
   commit and `7ce3b32` ("Fix additionalDirectories nesting in shipped
-  settings examples", 2026-09-01) — the first change to any of their
+  settings examples", 2026-09-01), the first change to any of their
   content since the repository's initial commit. That live pull request's
   own CI run (`gh api .../commits/7ce3b32.../check-runs`) shows
   `format-gate / format` as the one `failure` among thirteen checks, with
-  file-level annotations naming exactly these six files and extensions —
+  file-level annotations naming exactly these six files and extensions;
   confirmed against GitHub, not only reproduced locally. The commit landed
   on `main` regardless, since Foundation's `main` carries no branch
   protection (`gh api .../branches/main/protection` → 404, confirmed
@@ -233,7 +233,7 @@ offending file and its extension in the failure.
   producing the correct verdict on both a violating and a clean input; this
   is a defect in what counts as an "extension" for these six specific
   filenames, not a failure of the check to run. Left unfixed here per
-  instruction — the source is read-only for this PRD.
+  instruction: the source is read-only for this PRD.
 
 ### FR-05.3 — Size caps: per-file by format, aggregate per PR
 
@@ -243,8 +243,8 @@ lines 83-90 (per-format cap table: `svg) cap=204800`, `png|pdf)
 cap=2097152`, `excalidraw|drawio) cap=512000`) and lines 63, 95-98
 (`per_pr_cap_mb=10`, aggregate sum and comparison). `FORMATS.md` lines
 19-22 and 25 publish the same caps in KB/MB form. Red/green log: Check 2
-(per-file — a 3,145,728-byte PNG against the 2,097,152-byte cap failed
-naming both figures; a 102,400-byte PNG passed) and Check 3 (aggregate — six
+(per-file: a 3,145,728-byte PNG against the 2,097,152-byte cap failed
+naming both figures; a 102,400-byte PNG passed) and Check 3 (aggregate: six
 PNGs each exactly 2,097,152 bytes, none individually over its own cap,
 summed to 12 MB and failed the 10 MB aggregate cap with no per-file error
 alongside it; two of the same files, 4 MB total, passed).
@@ -271,7 +271,7 @@ whole pull request, whichever is exceeded first.
 Status: ENFORCED (local)
 Evidence: `organisationos-foundation/.github/workflows/format-gate.yml`,
 steps "SSOT check — allowed_extensions must match FORMATS.md (MR-18a)" and
-"SSOT check — FORMATS.md byte-identical to canonical (MR-18b)" —
+"SSOT check — FORMATS.md byte-identical to canonical (MR-18b)":
 the latter's comparison, `diff -q <(tail -n +3 FORMATS.md)
 _foundation-canonical/FORMATS.md`, is the one the Leadership README
 describes at line 70 ("the Foundation copy is canonical and `format-gate`
@@ -284,9 +284,9 @@ line-for-line identical past the trigger and the job body). `diff <(tail -n
 +3 organisationos-leadership-prds/FORMATS.md)
 organisationos-foundation/FORMATS.md` and the same comparison for Domain
 both report identical, confirming no drift exists in the shipped mirrors as
-read today. Red/green log: Check 4 (MR-18b — an appended line to a scratch
+read today. Red/green log: Check 4 (MR-18b: an appended line to a scratch
 copy of Leadership's `FORMATS.md` failed the diff against Foundation's
-canonical copy; the unmodified copy passed) and Check 5 (MR-18a — an added
+canonical copy; the unmodified copy passed) and Check 5 (MR-18a: an added
 row to a scratch copy of Foundation's own whitelist table, not matched by
 the workflow's hardcoded list, produced the same drift error the workflow
 would emit; the unmodified file passed).
@@ -335,13 +335,13 @@ source exists.
 - `build-deck.md` documents at least one concrete build path per format
   family it covers.
 - `references.md`'s own structure, and how staleness in what it points to
-  is caught, are out of this PRD's scope — see PRD-09.
+  is caught, are out of this PRD's scope: see PRD-09.
 
 ### FR-05.6 — Adopters extend the whitelist by applying the principles; format changes are two-approver PRs
 
 Status: CONVENTION
 Evidence: `organisationos-foundation/FORMATS.md`, "Adopter customisation"
-section — "The whitelist is a placeholder, not a fixed list. Add formats by
+section: "The whitelist is a placeholder, not a fixed list. Add formats by
 applying the three principles," with worked examples for research labs,
 design orgs, and marketing teams, and the closing line: "Add to
 `FORMATS.md`, then update `.github/workflows/format-gate.yml` to match.
@@ -361,7 +361,7 @@ Leader.
   protection question: Foundation's `main` carries no branch protection
   (confirmed above, FR-05.2's evidence), so nothing on the published
   repository currently forces a two-approver review before a `FORMATS.md`
-  change merges — the same absence this PRD set has found wherever a
+  change merges. This is the same absence this PRD set has found wherever a
   CODEOWNERS-based review claim was checked against live branch
   protection.
 
@@ -370,7 +370,7 @@ Leader.
 - **PRD-01** establishes the three-repo split this policy applies inside:
   a single `FORMATS.md` and a single gate definition, read identically by
   all three, rather than three independently maintained copies.
-- **PRD-09** owns `references.md`'s own mechanics — its structure and how
+- **PRD-09** owns `references.md`'s own mechanics: its structure and how
   staleness in a referenced live system is caught. FR-05.5 states only that
   a built output is referenced rather than committed; it does not specify
   how.
@@ -397,7 +397,7 @@ Leader.
   `-<role>` variants) fail the whitelist check on any pull request that
   modifies them, independent of their actual content. Reproduced locally
   and confirmed against the live CI run that hit it (commit `7ce3b32`).
-  Not fixed here — the source files are read-only for this PRD.
+  Not fixed here: the source files are read-only for this PRD.
 - **Open question — no inventory of which past PRs merged with
   `format-gate` red.** Commit `7ce3b32` is confirmed; whether other merges
   share this history is not checked here.
@@ -429,7 +429,7 @@ size caps, the mirror-drift check, and the built-output convention.
    (skipped when the caller is Foundation itself); every changed file's
    extension checked against the whitelist; and per-file plus aggregate
    size caps applied to whitelisted binaries. You will hit the same
-   extension-parsing choice this PRD's evidence flags (FR-05.2) — decide
+   extension-parsing choice this PRD's evidence flags (FR-05.2): decide
    deliberately whether a filename may carry more than one dot.
 4. In Leadership and Domain, write `format-gate.yml` as a short caller:
    `on: pull_request`, one job invoking Foundation's reusable pinned to a
@@ -477,7 +477,7 @@ steps, which compare on-disk files directly; no git repository was needed
 for those two. Check 6 (FR-05.2's N5 qualifier) combined a repository-wide
 scan for affected filenames, a per-file `git log` confirming the one commit
 that touched each, a scratch-repo reproduction of the failure, and a live
-`gh api` read of the actual CI run on that commit — the last of these is
+`gh api` read of the actual CI run on that commit: the last of these is
 the one piece of evidence in this PRD drawn from GitHub rather than
 reproduced locally, included because it was available and corroborates the
 local finding exactly, file for file. Limits: no check here exercised the
