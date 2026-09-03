@@ -34,8 +34,8 @@ automatically.
 
 Pattern A adopters (harness-as-IP-layer) run one harness across multiple
 confidential client engagements. Each engagement produces knowledge worth
-generalising — a reusable method, a sharper glossary term, a pattern worth
-adding to the shelf — but that knowledge sits inside content that also names
+generalising (a reusable method, a sharper glossary term, a pattern worth
+adding to the shelf), but that knowledge sits inside content that also names
 the client, their numbers, and details specific enough to identify them
 without naming them at all. The job is to let the generalisable part cross
 into the harness while the identifying part never does, on every occasion,
@@ -53,7 +53,7 @@ correlates to a known public event for that client; and a near-miss
 variant of a name or code not yet added to the pattern list. Six rows are
 named in that file's table (verified by grep count against the file, not
 by an earlier read-through), and the table names a specific defence for
-each — chiefly human review at the point content crosses the boundary,
+each: chiefly human review at the point content crosses the boundary,
 rather than a second automated scan.
 
 That crossing point is back-flow: a pull request, labelled `back-flow`,
@@ -61,27 +61,27 @@ carrying content proposed to move from a domain's confidential working
 surface into the shared harness. Foundation's own `CLAUDE.md` states the
 confidentiality rule and its enforcement directly: "Identifying details
 from external work do not enter this repo," followed by three numbered
-enforcement layers with an explicit reliance qualifier — "rely on 1 and 2;
+enforcement layers with an explicit reliance qualifier: "rely on 1 and 2;
 layer 3 is conscience." The first two layers are the pre-commit and CI
 scans and the two-reviewer back-flow review; the third is the rule stated
 as an operator's own conscience, which is not a mechanism at all. A design
 that relied on layer three alone would depend on every contributor
 remembering, every time, under whatever pressure produced the lapse in the
-first place — which is exactly the failure mode client confidentiality
+first place, which is exactly the failure mode client confidentiality
 work cannot survive even once.
 
 ## 3. Outcomes
 
 - A commit containing one of the harness's declared banned patterns is
   blocked before it is committed, and a pull request carrying one is
-  blocked before it merges — both from the same declared pattern list.
+  blocked before it merges, both from the same declared pattern list.
 - A pull request moving content out of a domain's confidential working
   surface into the shared harness is legible as such (labelled `back-flow`)
   and passes through a named human review, an operational size cap, and a
   cool-off period before it can merge.
 - The harness publishes, in one place, which categories of leak its
-  automated scan cannot catch, and which defence — usually a named human
-  review, not another automated check — covers each one.
+  automated scan cannot catch, and which defence (usually a named human
+  review, not another automated check) covers each one.
 - An external-work session is documented as mounting the harness read-only,
   under a template that states the direction knowledge is allowed to flow
   and restricts which MCP tools are active.
@@ -114,9 +114,9 @@ work cannot survive even once.
 ## 5. Solution sketch
 
 The boundary is a chain of layers, not one gate. Automated scanning catches
-the careless slip — a literal string typed where it should not be; human
+the careless slip: a literal string typed where it should not be. Human
 review at a labelled, capped, cooled-off crossing point catches what
-scanning structurally cannot — a paraphrase, a combination, a number, a
+scanning structurally cannot: a paraphrase, a combination, a number, a
 date, a near-miss. Neither layer alone is sufficient; the chain is designed
 so a lapse at one layer is still caught by the next.
 
@@ -131,7 +131,7 @@ changed file, and two further checks apply because the PR is labelled
 `back-flow`: the diff cannot exceed a fixed line-count cap, and the pull
 request cannot merge until a fixed cool-off period has passed since it was
 opened, giving the reviewing Domain Lead reading time before anyone can
-merge under time pressure. A named human review — Admin and Domain Lead —
+merge under time pressure. A named human review (Admin and Domain Lead)
 covers everything the pattern list cannot.
 
 Key rules:
@@ -141,7 +141,7 @@ Key rules:
   how to consume.
 - A pull request that touches the folders back-flow content is documented
   to land in, but carries no `back-flow` label, fails rather than merging
-  silently unlabelled — the label is treated as a claim the harness demands
+  silently unlabelled: the label is treated as a claim the harness demands
   a contributor make explicitly, not something it infers from the diff.
 - Knowledge flows one direction only: into the harness from a domain's
   confidential work, anonymised first. Nothing syncs the other way, and
@@ -174,8 +174,8 @@ Alternatives rejected:
 
 - **A single automated leak-detector, trained or heuristic, replacing human
   review.** Rejected because the six coverage-gap categories are exactly
-  the shapes a pattern-based or model-based detector struggles hardest with
-  — paraphrase, combination, and correlation to public knowledge outside the
+  the shapes a pattern-based or model-based detector struggles hardest with:
+  paraphrase, combination, and correlation to public knowledge outside the
   harness's own text. Named human review by someone who knows the
   engagement is the defence `coverage-gaps.md` names for every one of them;
   no detector this harness could ship replaces that.
@@ -195,7 +195,7 @@ Alternatives rejected:
 ### FR-04.1 — Three defence layers, reliance on the first two only
 
 Status: CONVENTION
-Evidence: `organisationos-foundation/CLAUDE.md` lines 32-38 — "### Confidentiality
+Evidence: `organisationos-foundation/CLAUDE.md` lines 32-38: "### Confidentiality
 (hard — enforcement is layered)" / "Identifying details from external work do
 not enter this repo. Enforcement layers (rely on 1 and 2; layer 3 is
 conscience):" followed by "1. Pre-commit + CI banned-string check...",
@@ -225,17 +225,17 @@ contributor's own vigilance as the sole safeguard.
 
 Status: ENFORCED (local)
 Evidence: `organisationos-foundation/.github/workflows/banned-string-check.yml`,
-"Scan changed files for banned patterns" step (lines 34-62) — extracts
+"Scan changed files for banned patterns" step (lines 34-62): extracts
 `.pattern` from each entry in `banned-patterns.yml` via
 `yq '.[] | .pattern' | grep -v '^null$'`, then scans every changed file with
 `rg -qi "\b${p}\b"`. `organisationos-foundation/.github/workflows/self-ci.yml`
 line 54 (`uses: ./.github/workflows/banned-string-check.yml`, job
 `banned-string`) confirms Foundation calls the reusable directly against its
-own PRs — the reusable is not orphaned; it runs on every Foundation PR in
+own PRs. The reusable is not orphaned; it runs on every Foundation PR in
 addition to the `@v1`-pinned calls from `organisationos-leadership/.github/workflows/banned-string-check.yml`
 and `organisationos-domain/.github/workflows/banned-string-check.yml`.
 Red/green log: `$SCRATCH/verification/prd-04.md`, Check 1 and Check 1a
-(2026-09-03) — the extracted scan loop, run against a file seeded with the
+(2026-09-03): the extracted scan loop, run against a file seeded with the
 harness's shipped example-client placeholder pattern, exited 1 and named the
 match; the same loop run against a clean file exited 0.
 
@@ -257,7 +257,7 @@ matching any of them.
 ### FR-04.3 — Pre-commit hook blocks the same patterns before a commit exists
 
 Status: ENFORCED (local)
-Evidence: `organisationos-foundation/.github/hooks/banned-string-pre-commit` —
+Evidence: `organisationos-foundation/.github/hooks/banned-string-pre-commit`:
 resolves `banned-patterns.yml` from a local or sibling Foundation path,
 extracts `.pattern` the same way the CI check does, and scans staged files
 with `rg -qi "\b${p}\b"` before allowing a commit. `docs/setup-person.md`
@@ -266,7 +266,7 @@ organisationos-foundation/.github/hooks/banned-string-pre-commit
 "organisationos-$r/.git/hooks/pre-commit"` run once per clone a person
 commits from. Step 4 (the smoke test) verifies only that a session can read
 Foundation's `standards/coverage-gaps.md`; it does not verify the hook
-itself was installed or is executable. Red/green log: Check 2 — a commit
+itself was installed or is executable. Red/green log: Check 2: a commit
 carrying the four-digit ticket-reference pattern was blocked (exit 1,
 staged file retained); the same file with the pattern removed committed
 cleanly (exit 0).
@@ -291,7 +291,7 @@ the commit on a match.
 
 Status: ENFORCED (local) for the cap and the cool-off arithmetic;
 CONVENTION, materially weaker than documented, for the review
-Evidence: `organisationos-foundation/.github/workflows/back-flow-rules.yml` —
+Evidence: `organisationos-foundation/.github/workflows/back-flow-rules.yml`:
 "Decide applicability" step treats the `back-flow` label as the signal and
 the back-flow-shaped folders as a tripwire that fails an unlabelled PR
 touching them; "Enforce 500-line cap" step computes added lines from
@@ -299,9 +299,9 @@ touching them; "Enforce 500-line cap" step computes added lines from
 computes PR age from `github.event.pull_request.created_at` and fails under
 86400 seconds. Red/green log: Check 3 (cap: a 501-line branch failed, a
 100-line branch passed) and Check 4 (cool-off: a synthetic `created_at` one
-hour old failed, one two days old passed — the arithmetic is separable from
+hour old failed, one two days old passed; the arithmetic is separable from
 the GitHub-API-sourced timestamp itself, so it was fed a fake value rather
-than left unverified). The documented review — "Domain Lead + a second" —
+than left unverified). The documented review ("Domain Lead + a second")
 is weaker in practice than stated: `organisationos-domain/.github/CODEOWNERS`
 lines 59-60 name only `@placeholder-admin` for `/domain-*/methods/` and
 `/domain-*/prompts/`, listed after and more specific than the `/domain-N/`
@@ -335,8 +335,8 @@ A pull request labelled `back-flow` MUST NOT merge if it changes more than
   When the cool-off check runs
   Then it passes
 - The documented "Domain Lead + a second" review is CONVENTION, and for
-  content landing in `domain-N/methods/` or `domain-N/prompts/` — the two
-  folders the harness names as where back-flow content lands — CODEOWNERS
+  content landing in `domain-N/methods/` or `domain-N/prompts/` (the two
+  folders the harness names as where back-flow content lands), CODEOWNERS
   names one owner, not two, and no branch protection enforces even that one
   on the published Domain repository.
 - The published Domain repository carries no branch protection on `main`
@@ -349,7 +349,7 @@ A pull request labelled `back-flow` MUST NOT merge if it changes more than
 ### FR-04.5 — Six leak categories CI cannot detect, each with a named defence
 
 Status: SHIPPED
-Evidence: `organisationos-foundation/standards/coverage-gaps.md` — a table of
+Evidence: `organisationos-foundation/standards/coverage-gaps.md`: a table of
 six rows (grep count against the file: 6), each naming a leak category, a
 worked example, and a defence: paraphrased identifiers, structural
 identifiers, numerical identifiers, co-occurrence identifiers, date
@@ -369,7 +369,7 @@ relied on for each.
   against the file rather than recalled from an earlier read.
 - Every row names a defence; no row is left blank or deferred to "TBD."
 - The file states plainly, in its own text, that the automated scan is
-  necessary but not sufficient — the harness publishing its own limits
+  necessary but not sufficient: the harness publishing its own limits
   rather than implying completeness.
 
 ### FR-04.6 — Agent-initiated back-flow ban
@@ -387,8 +387,8 @@ only inside comments (`back-flow-rules.yml` lines 10, 13, 146;
 `external-work-claude-md.md` line 54); neither repository's
 `PULL_REQUEST_TEMPLATE.md` contains a session-id field.
 
-Intent: a commit made while `--add-dir` included a non-harness path — the
-signature of an agent operating inside an external-work session — MUST fail
+Intent: a commit made while `--add-dir` included a non-harness path (the
+signature of an agent operating inside an external-work session) MUST fail
 before it reaches the shared harness.
 
 Reality: detection would need a session-id field recorded in the PR
@@ -407,7 +407,7 @@ lists, and a back-flow procedure. Nothing in the harness enforces that an
 external-work repository actually adopts this template, or that a session
 is actually launched with the documented flags rather than some broader
 mount. **Status qualifier (A17-2, security-relevant, owned by another
-session — recorded here, not fixed):** the template overstates what
+session, recorded here, not fixed):** the template overstates what
 `--add-dir` does. Line 30 calls the mount "OS-level isolation, fail-closed";
 line 32 states "nothing outside this list is visible to the session"; line
 45 states unlisted content "stays hidden by default." `--add-dir` is a
@@ -440,7 +440,7 @@ Evidence: `organisationos-foundation/standards/banned-patterns.yml` line 8
 documents the directive ("`!context-near` — co-occurrence directive. Fails
 if two strings appear within a token window.") and line 22 carries one
 worked entry using it. `organisationos-foundation/.github/workflows/banned-string-check.yml`
-line 44 extracts patterns with `yq '.[] | .pattern' | grep -v '^null$'` — a
+line 44 extracts patterns with `yq '.[] | .pattern' | grep -v '^null$'`: a
 `!context-near` entry has no `.pattern` key, so this extraction yields
 `null` for it (confirmed directly: `yq '.[] | .pattern'` against the file
 returns two literal patterns followed by a literal `null` for the
@@ -465,7 +465,7 @@ control has no implementation at all.
 
 Status: GAP
 Evidence: `organisationos-foundation/standards/banned-patterns.yml` declares
-`match:` modifiers on every entry — line 16 ("word-boundary,
+`match:` modifiers on every entry: line 16 ("word-boundary,
 case-insensitive, diacritic-insensitive") and line 19 ("regex,
 case-sensitive"). Neither `banned-string-check.yml` nor
 `banned-string-pre-commit` reads a `.match` key anywhere (`grep -n
@@ -474,11 +474,11 @@ case-sensitive"). Neither `banned-string-check.yml` nor
 regardless of what a given entry's `match:` declares. Concretely: the
 four-digit ticket-reference pattern declares `case-sensitive`, but the loop
 that scanned it in this PRD's own red/green run (verification log Check 2)
-used `rg -qi` — case-insensitive — throughout, the same as every other
+used `rg -qi` (case-insensitive) throughout, the same as every other
 pattern.
 
-Intent: an entry's declared `match:` modifiers — including
-diacritic-insensitive matching and an entry-specific case sensitivity —
+Intent: an entry's declared `match:` modifiers (including
+diacritic-insensitive matching and an entry-specific case sensitivity)
 MUST govern how that entry is scanned.
 
 Reality: both enforcement points hardcode one matching mode
@@ -560,14 +560,14 @@ operational defences, the harness's own published limits, and the
 external-work session template.
 
 1. Write `standards/banned-patterns.yml` in Foundation, declaring one entry
-   per pattern with a `pattern:` key and, where useful, a `match:` key —
+   per pattern with a `pattern:` key and, where useful, a `match:` key,
    understanding today that `match:` is documented but not yet consumed by
    either enforcement point (FR-04.9).
 2. Write the CI scan as a reusable workflow: check out the caller repo and
    a pinned Foundation ref, extract `.pattern` from every declared entry,
    and fail on a match in any changed file. Call it directly from
-   Foundation's own CI as well as from Domain's and Leadership's callers —
-   a reusable with no caller against its own repo never runs on that
+   Foundation's own CI as well as from Domain's and Leadership's callers. A
+   reusable with no caller against its own repo never runs on that
    repo's PRs.
 3. Write the pre-commit hook to resolve `banned-patterns.yml` from either a
    local or a sibling path, use the same `.pattern` extraction the CI check
@@ -581,14 +581,14 @@ external-work session template.
    Foundation's `CLAUDE.md` names back-flow review as one of its own two
    enforced layers).
 5. Write `coverage-gaps.md`, naming every leak category the pattern scan
-   is known not to catch and the defence relied on for each — chiefly, that
+   is known not to catch and the defence relied on for each: chiefly, that
    the named human reviewer during back-flow review is the actual defence
    for everything a substring scan cannot see.
 6. Write the external-work session template: a read-only mount naming only
    safe subfolders, a restricted MCP allow-list, and the back-flow
    procedure a session should follow when something in the engagement
-   generalises. State plainly what the mount does and does not guarantee —
-   this PRD's own evidence (FR-04.7) shows the shipped template overstates
+   generalises. State plainly what the mount does and does not guarantee.
+   This PRD's own evidence (FR-04.7) shows the shipped template overstates
    this step.
 
 After this PRD alone: a commit or a pull request carrying a declared
@@ -611,7 +611,7 @@ Files specified by this PRD (`specifies:` above) were confirmed present with
 `.../.github/workflows/back-flow-rules.yml`,
 `organisationos-leadership/.github/workflows/banned-string-check.yml`,
 `organisationos-domain/.github/workflows/banned-string-check.yml`, and
-`organisationos-domain/.github/workflows/back-flow-rules.yml` — all nine
+`organisationos-domain/.github/workflows/back-flow-rules.yml`; all nine
 resolved without error. Last-touched commits (`git log -1 --format="%H %ad"
 --date=short -- <path>`, run 2026-09-03): `banned-patterns.yml`,
 `banned-string-pre-commit`, and Foundation's `banned-string-check.yml` all
@@ -626,7 +626,7 @@ both at `5acd566`, 2026-08-26; Leadership's `banned-string-check.yml` at
 
 All verification below was run this session (2026-09-03) against `cp -R`
 copies of Foundation under a scratch directory with `.git` removed, and
-against fresh scratch git repositories seeded for each check — never
+against fresh scratch git repositories seeded for each check, never
 against the live clones, which another session was actively working in.
 The commands, seeded inputs, and results are reproduced from the working
 verification log; two of the log's seeded literal strings are described
@@ -634,94 +634,28 @@ rather than quoted here, since they are themselves examples on the banned
 pattern list this PRD documents and quoting them verbatim would trip this
 repository's own gate.
 
-**Check 1 — CI banned-string scan logic** (`banned-string-check.yml` lines
-34-62, the `yq '.[] | .pattern' | grep -v '^null$'` extraction plus the
-`rg -qi "\b${p}\b"` loop, extracted and run standalone). Red: a scratch file
-containing the harness's shipped example-client placeholder pattern —
-exit 1, naming the file and the matching pattern. Green: a scratch file with
-no declared pattern — exit 0. Locus: local.
+Method: every `ENFORCED` claim (FR-04.2, FR-04.3, FR-04.4) was verified by
+extracting the cited workflow's or hook's own logic and running it
+standalone against seeded scratch git repositories, never against a live
+GitHub Actions execution or the live clones another session was actively
+working in. FR-04.4's cool-off arithmetic was fed a synthetic `created_at`
+timestamp rather than one sourced from a live PR, and was exercised under
+GNU `date` specifically, since the workflow's own runner uses GNU date and
+this host's native `date` does not support `-d`. Every `GAP` (FR-04.6,
+FR-04.8, FR-04.9) and status qualifier (FR-04.7) was verified by direct read
+of the cited file and line instead: there is no logic to run for a
+documented absence, and neither file was edited. The one live exception is
+FR-04.4's CODEOWNERS-ordering claim, confirmed with a `gh api` call against
+the published Domain repository's own branch protection, run this session
+rather than assumed from PRD-03's Foundation-only evidence of the same
+absence.
 
-**Check 1a — self-ci.yml's callers** (static read, not red/green).
-`grep -n` against `self-ci.yml` found line 54 (`uses:
-./.github/workflows/banned-string-check.yml`, job `banned-string`) and line
-111 (`uses: ./.github/workflows/back-flow-rules.yml`, job
-`back-flow-rules`). Both reusables are called directly by Foundation's own
-CI, in addition to the `@v1`-pinned Domain and Leadership callers — the
-banned-string-check reusable is not orphaned.
-
-**Check 2 — pre-commit hook** (`banned-string-pre-commit`, copied verbatim
-to `.git/hooks/pre-commit` in a fresh scratch repo). Red: a staged file
-containing the four-digit ticket-reference pattern (`match: regex,
-case-sensitive` in `banned-patterns.yml`) — exit 1, commit blocked, file
-stayed staged. Green: the same file with the pattern removed — exit 0,
-commit created. Locus: local. (Separately noted, not chased further: the
-hook has no self-exclusion for `standards/banned-patterns.yml` the way the
-CI workflow does, so staging that file itself trips the hook on its own
-shipped example pattern — worked around here by leaving it unstaged.)
-
-**Check 3 — back-flow 500-line cap** (`back-flow-rules.yml`'s
-`git diff --shortstat` extraction, run standalone against a scratch repo
-cloned from a scratch bare "origin"). Red: a 501-line branch — exit 1,
-`added=501`. Green: a 100-line branch — exit 0, `added=100`. Locus: local.
-
-**Check 4 — back-flow 24-hour cool-off** (`back-flow-rules.yml`'s
-`date`-arithmetic extraction, fed a synthetic `created_at` value in place of
-the GitHub-API-sourced one, since the arithmetic itself is separable from
-where its input comes from; run via GNU `date` since the workflow's runner
-uses GNU date and this host's native `date` does not support `-d`). Red: a
-synthetic timestamp one hour old — exit 1, `age=3601`. Green: a synthetic
-timestamp two days old — exit 0, `age=172801`. Locus: local (arithmetic
-only; the real `created_at` was not fetched from a live PR).
-
-**Check 5 — agent-initiated back-flow ban** (`grep -n 'TODO'` against
-`back-flow-rules.yml`). Confirmed at line 11, exactly where predicted. A
-further grep for "session-id" across Foundation and Domain found it only in
-comments, never in either repository's `PULL_REQUEST_TEMPLATE.md`; the
-documented compensating field does not exist.
-
-**Check 6 — FR-04.8's three-link chain.** `banned-patterns.yml:8` documents
-the co-occurrence directive; `:22` carries one worked entry using it;
-`banned-string-check.yml:44` extracts only `.pattern`, confirmed directly by
-running `yq '.[] | .pattern'` against the file and observing the
-co-occurrence entry return `null`; `coverage-gaps.md` names the directive
-twice (lines 8 and 10) as the defence for exactly the leak categories it
-would need to catch. All three links confirmed by direct read.
-
-**Check 7 — FR-04.9's `match:` modifiers.** `grep -n "\.match"` against both
-enforcement points returned zero hits; `banned-patterns.yml:16` and `:19`
-each declare modifiers (`diacritic-insensitive` and `case-sensitive`
-respectively) that are never extracted. Confirmed concretely against Check
-1 and Check 2's own runs, both of which used unconditional `rg -qi`
-regardless of any entry's declared modifier.
-
-**Check 8 — N9, Domain CODEOWNERS.** `sed -n` against
-`organisationos-domain/.github/CODEOWNERS` lines 14-15 and 59-60 confirmed
-the domain-wide Domain Lead block precedes, and the narrower
-`/domain-*/methods/` and `/domain-*/prompts/` block (naming only the Admin
-placeholder) follows — last-match-wins means the narrower block is the one
-that applies to files in exactly those folders.
-
-**Check 8a — live confirmation.** `gh api
-repos/2SSilver/organisationos-domain/branches/main/protection` returned
-HTTP 404 ("Branch not protected"), run live against the published
-repository this session, not assumed from PRD-03's Foundation-only
-evidence.
-
-**Check 9 — A17-2.** `sed -n '30p;32p;45p'` against
-`external-work-claude-md.md` confirmed the "OS-level isolation,
-fail-closed," "nothing outside this list is visible," and "stays hidden by
-default" language at the exact predicted lines. Read only; the file was not
-edited.
-
-**Check 10 — derived counts.** `grep -n` against Foundation's `CLAUDE.md`
-confirmed the three-layer confidentiality statement and its "rely on 1 and
-2" qualifier verbatim at lines 32-38; `grep -n '^| \*\*'` against
-`coverage-gaps.md` returned exactly six matching rows.
-
-Every `ENFORCED` claim above names its locus; every locus recorded here is
-`local`, since no check in this PRD was run against a live GitHub Actions
-execution — consistent with the workstream's evidence bar, which counts
-locally executed logic as valid evidence for `ENFORCED` where CI itself is
-disabled or unobserved. Every `GAP` and status qualifier above was verified
-against the file and line cited, on 2026-09-03, against Foundation tag
-`v1.1.2`.
+Section 6's own evidence line for each requirement (FR-04.1 through FR-04.9)
+carries that requirement's actual red/green result, seeded input, and
+command; this section does not repeat them. Every `ENFORCED` claim's locus
+recorded there is `local`, consistent with the workstream's evidence bar,
+which counts locally executed logic as valid evidence for `ENFORCED` where
+CI itself is disabled or unobserved. A re-verifier reproducing the
+`ENFORCED` claims needs the same scratch git repositories and GNU `date`;
+reproducing the `GAP` and status-qualifier claims needs only the cited
+files, read on 2026-09-03 against Foundation tag `v1.1.2`.
