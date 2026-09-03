@@ -24,7 +24,7 @@ foundation-tag: v1.1.2
 ## 1. Intent
 
 An operator can rely on knowing which rules are actually active in any
-session, and rules that must always hold, always hold — regardless of which
+session, and rules that must always hold, always hold regardless of which
 repository or folder the session was launched in. The harness must not let a
 session look configured while quietly reaching nothing, and must not let a
 rule the operator believes is universal turn out to depend on which repo
@@ -46,14 +46,14 @@ The harness's own documentation got two of the three mechanisms wrong
 outright, and mis-attributed the third mechanism's real capability to the
 wrong place. Both repo-root `CLAUDE.md` files asserted that a sibling
 repository's rules load into context automatically once it sits next to the
-working repo on disk — false for the import line, corrected 2026-08-26. The
-same false claim survived six days longer in the role onboarding
+working repo on disk. That claim is false for the import line, corrected
+2026-08-26. The same false claim survived six days longer in the role onboarding
 templates, the files a joiner copies verbatim, and was not corrected until
 2026-09-01. The settings entry carried a separate false claim of
 its own: Domain's and Leadership's `AGENTS.md` stated that Foundation's
 shared agents "are loaded by Claude via `additionalDirectories`," crediting
 the settings entry with a capability it does not have. That capability
-belongs to the launch flag — which was never itself misdescribed; its real
+belongs to the launch flag, which was never itself misdescribed; its real
 behaviour was simply attributed to the wrong mechanism. Both the import
 claim and the settings claim failed silently: neither mechanism signals its
 own limits. A session that reached nothing behaved, on the surface, exactly
@@ -74,7 +74,7 @@ automatically once it's a sibling repo."
 
 - An operator can name, for any session, exactly which of the three reach
   mechanisms is active and what it does and does not put in context.
-- A rule that must hold in every session — confidentiality above all —
+- A rule that must hold in every session, confidentiality above all,
   holds regardless of whether the other two repositories are reachable,
   because it is written into the repo the session actually starts in.
 - A session in a stale clone is flagged before work begins, without any
@@ -90,7 +90,7 @@ automatically once it's a sibling repo."
 - Building an automated check that a restated rule stays word-for-word in
   sync with Foundation's version. Section 8 records this as an open
   question; nothing in the harness closes it today.
-- Enforcing `pull-check` at a technical level — blocking a session, or
+- Enforcing `pull-check` at a technical level: blocking a session, or
   failing a commit, when staleness goes unreported. It remains an
   instruction inside each `CLAUDE.md`, not a hook or a CI gate.
 - Specifying the anchor for a relative path inside `additionalDirectories`
@@ -111,7 +111,7 @@ mechanism grants a different combination of filesystem reach and in-context
 content, and an operator who treats any one of them as doing what the other
 two do will misjudge what the session actually knows.
 
-The primary flow: an operator launches a session inside one repository — a
+The primary flow: an operator launches a session inside one repository. A
 domain folder is the common case for a Product Owner, Team Member or Domain
 Lead. That repository's own `CLAUDE.md` and `CLAUDE.local.md` load
 automatically, and its own `.claude/` commands, skills and agents are
@@ -125,19 +125,19 @@ repositories is optional and mechanism-specific:
 - A session launched with a directory-mount flag (or the equivalent
   mid-session command) gains filesystem reach into that directory, gains its
   `.claude/` skills with live reload, and gains its commands and agents
-  without live reload — the launching repository's own command wins any
+  without live reload. The launching repository's own command wins any
   name clash. It does not, by itself, put the mounted directory's
   `CLAUDE.md` into context.
-- A settings-file entry granting a directory reach — nested correctly, it
+- A settings-file entry granting a directory reach (nested correctly, it
   must sit under the settings file's permissions block, not at the file's
-  top level — grants filesystem reach and nothing else: no skills, no
+  top level) grants filesystem reach and nothing else: no skills, no
   commands, no agents, no `CLAUDE.md`.
 
 Key rules:
 
 - Reach is necessary and never sufficient. All three mechanisms let a
   session read files in the other repository; none of them puts that
-  content into context on its own. Something still has to retrieve it — an
+  content into context on its own. Something still has to retrieve it: an
   operator asking for it, or a knowledge-retrieval command going and getting
   it.
 - A rule that must hold in every session cannot live only in the repository
@@ -461,13 +461,13 @@ role- or identity-selecting step.
 - **GAP — the anchor for a relative `additionalDirectories` path is
   unspecified.** Domain roles are told, in `setup-person.md` step 4, to
   launch a session "in the folder you will actually work from —
-  `organisationos-domain/domain-N/` for domain roles" — a folder one level
-  deeper than the repository root the matching settings file is copied to
-  (`organisationos-domain/.claude/settings.local.json`). That settings
-  file's `additionalDirectories` entry reads `"../organisationos-foundation"`
-  — correct if the path is resolved against the settings file's own
-  location, wrong by one level if it is resolved against the session's
-  launch directory instead. No document in either repository states which
+  `organisationos-domain/domain-N/` for domain roles." That folder sits one
+  level deeper than the repository root the matching settings file is copied
+  to (`organisationos-domain/.claude/settings.local.json`). That settings
+  file's `additionalDirectories` entry reads `"../organisationos-foundation"`:
+  correct if the path is resolved against the settings file's own location,
+  wrong by one level if it is resolved against the session's launch
+  directory instead. No document in either repository states which
   anchor the tool actually uses. A Domain Lead who launches from inside a
   domain folder is relying on a reading of this path that nothing confirms.
 - **Open question — restatement drift (FR-02.4).** Domain's and
@@ -504,25 +504,25 @@ session loading built on top of them yet.
 
 1. Write each repository's own `CLAUDE.md` so it restates, in full, every
    rule that must hold regardless of which other repositories are
-   reachable — the confidentiality rule above all. Do not write a rule only
+   reachable, the confidentiality rule above all. Do not write a rule only
    once in Foundation and reference it from Domain or Leadership; a
    reference resolves only if something retrieves it, and this rule cannot
    depend on that.
 2. Add a single `@import` line near the top of Domain's and Leadership's
    `CLAUDE.md`, pointing at Foundation's `CLAUDE.md`. Document, next to it,
    that the line is a pointer for a human reader and not a loading
-   mechanism — this is where the two past corrections (2026-08-26 and
+   mechanism. This is where the two past corrections (2026-08-26 and
    2026-09-01) both intervened, and skipping this note reintroduces the
    same false claim.
 3. Ship one settings-file example per committer role, each carrying its
    role's directory list nested under the settings file's permissions
-   block. Verify the nesting directly — run a session against one of the
+   block. Verify the nesting directly: run a session against one of the
    shipped examples and confirm the mounted directory is actually readable,
    rather than trusting that the JSON parses.
 4. Write the reach probe into both the loading-model documentation and the
    person-onboarding documentation: a question whose answer requires a fact
    from a Foundation-only file, one neither Domain nor Leadership carries a
-   copy of. Verify the probe can fail — run it against a session with no
+   copy of. Verify the probe can fail: run it against a session with no
    Foundation reach configured and confirm it reports the file missing
    rather than answering correctly by coincidence.
 5. Add the `pull-check` instruction as the first step of every repository's
@@ -560,11 +560,7 @@ either the underlying agent tool's behaviour (not something this harness's
 own CI executes) or a documentation convention, and this PRD did not itself
 execute anything to observe a verdict.
 
-The 2026-08-26 verification note originally scoped for FR-02.1–FR-02.3
-described "seven headless runs with an in-project import as control." The
-file read for this PRD on 2026-09-02 instead carries a 2026-09-01 note
-describing "an eight-cell, negative-controlled experiment." Both describe a
-tested distinction between an in-project import (which inlines) and a
-cross-repo import (which does not); this PRD records what the file said on
-the day it was read, per the workstream's standing rule that the file wins
-over a prior prediction.
+FR-02.1's evidence block already records the wording drift behind this
+test (seven headless runs, as originally scoped, versus the eight-cell
+experiment the file carries as read) and the standing rule that the file
+wins over a prior prediction; see that entry rather than a repeat here.
