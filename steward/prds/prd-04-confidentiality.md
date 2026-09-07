@@ -234,8 +234,7 @@ line 54 (`uses: ./.github/workflows/banned-string-check.yml`, job
 own PRs. The reusable is not orphaned; it runs on every Foundation PR in
 addition to the `@v1`-pinned calls from `organisationos-leadership/.github/workflows/banned-string-check.yml`
 and `organisationos-domain/.github/workflows/banned-string-check.yml`.
-Red/green log: `$SCRATCH/verification/prd-04.md`, Check 1 and Check 1a
-(2026-09-03): the extracted scan loop, run against a file seeded with the
+Verified 2026-09-03: the extracted scan loop, run against a file seeded with the
 harness's shipped example-client placeholder pattern, exited 1 and named the
 match; the same loop run against a clean file exited 0.
 
