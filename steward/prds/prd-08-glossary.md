@@ -201,14 +201,15 @@ PRD-01's FR-01.4 rather than restating the table's existence).
 `.github/CODEOWNERS` (Foundation) line 53 routes `/glossary.md` to
 `@placeholder-leader @placeholder-admin`, with the preceding comment (lines
 48-52): "Glossary: 1 Leader + Admin (substrate, lower-stakes than
-standards)," followed by a note that CODEOWNERS "cannot express 'affected
-domain' for a cross-domain glossary entry" and defers that judgement to the
-PR-template Approval checklist. `.github/CODEOWNERS` (Domain) lines 16, 21,
-26, 31 route each `domain-N/glossary.md` to that domain's own Lead
-placeholder only. `docs/setup-org.md` line 116 names this the
-"notification-only tier" and states plainly: "GitHub branch protection is
-per-branch, not per-path, so it cannot express that distinction natively
-... the notification-only tier is a convention."
+standards)." The same comment adds that CODEOWNERS "cannot express
+'affected domain' for a cross-domain glossary entry" and defers that
+judgement to the PR-template Approval checklist. `.github/CODEOWNERS`
+(Domain) lines 16, 21, 26, 31 route each `domain-N/glossary.md` to that
+domain's own Lead placeholder only. `docs/setup-org.md` line 116 names this
+the "notification-only tier" and states plainly: "GitHub branch protection
+is per-branch, not per-path, so it cannot express that distinction
+natively ... the notification-only tier is a convention: Domain Leads
+approve glossary and draft PRs promptly rather than reading them closely."
 
 The harness MUST route a term used by two or more domains into Foundation's
 `glossary.md`, and a term unique to one domain into that domain's own
@@ -228,9 +229,10 @@ The harness MUST route a term used by two or more domains into Foundation's
   already lists, a narrower and one-directional comparison than the
   ≥2-domain threshold itself.
 - No branch protection exists on Foundation's or Domain's published `main`
-  (`gh api .../branches/main/protection` → `404` on both, confirmed
-  2026-09-07), so the CODEOWNERS routing above does not currently force
-  any review before a `glossary.md` change merges.
+  (`gh api .../branches/main/protection` → `404` on both; a point-in-time
+  reading, checked 2026-09-07 ~11:54 UTC), so the CODEOWNERS routing above
+  does not currently force any review before a `glossary.md` change
+  merges.
 
 ### FR-08.2 — `glossary-consistency` flags domain-Foundation term conflicts, advisory only
 
@@ -238,14 +240,16 @@ Status: ENFORCED (local) for the comparison logic, on both a violating and
 a clean input; advisory only by design, and never executed on the published
 repository
 Evidence: `organisationos-domain/.github/workflows/glossary-consistency.yml`.
-Its own header comment: "flags — never blocks — domain-artefact terms that
-disagree with Foundation's cross-domain glossary.md," and "Domain-only:
-there is no Leadership equivalent ... and no Foundation-side reusable
-counterpart, so this file carries the check inline." Step "Checkout
-Foundation repo (for glossary.md)" (lines 25-33) checks out
-`<adopter-org>/organisationos-foundation` at `ref: main`, with its own
-comment explaining the unpinned ref: "this reads live glossary *content*,
-not a workflow version." Step "Compare domain-artefact terms against the
+Its own header comment states: "flags — never blocks — domain-artefact
+terms that disagree with Foundation's cross-domain glossary.md." It goes
+on: "Domain-only: there is no Leadership equivalent (Leadership has no
+domain-N/ artefacts) and no Foundation-side reusable counterpart, so this
+file carries the check inline rather than calling out to a Foundation
+`workflow_call` reusable." Step "Checkout Foundation repo (for
+glossary.md)" (lines 25-33) checks out `<adopter-org>/organisationos-foundation`
+at `ref: main`, with its own comment explaining the unpinned ref: "this
+reads live glossary *content*, not a workflow version; the caller wants
+the current glossary, not a frozen copy." Step "Compare domain-artefact terms against the
 Foundation glossary" (lines 34-69): extracts changed `domain-[0-9]+/*.md`
 files from the caller's diff, builds a term list from Foundation's "##
 OrganisationOS terms" bolded bullets, and for each changed file, wherever it
@@ -265,25 +269,35 @@ Red/green log: `$SCRATCH/verification/prd-08.md`, extracted into
 `$SCRATCH/fr0802-test/extracted-compare.sh` (the workflow's own lines 37-69,
 copied verbatim and de-indented) and run in a scratch git repository seeded
 with an actual copy of Foundation's `glossary.md` and Domain's
-`domain-1/glossary.md`. A `violating` branch redefining `domain-1/glossary.md`'s
-`**CDR**` bullet as "A note captured during any team meeting" (Foundation's
-own definition: "Cross-Domain Decision Record. Lives in Foundation's
+`domain-1/glossary.md`. The shipped `domain-1/glossary.md` carries only its
+placeholder `<term>` bullet, not a real `**CDR**` entry, so both branches
+replace that placeholder line with an invented `**CDR**` bullet rather than
+modifying an existing one. A `violating` branch's invented bullet reads "A
+note captured during any team meeting" (Foundation's own definition:
+"Cross-Domain Decision Record. Lives in Foundation's
 `cross-domain-decisions/`. Distinguished from ADRs (single-domain
-decisions).") produced `flagged=true`, naming the file and term in
-`_flagged.txt`. A `clean` branch redefining the same bullet with Foundation's
-own wording verbatim produced `flagged=false`.
+decisions).") and produced `flagged=true`, naming the file and term in
+`_flagged.txt`. A `clean` branch's invented bullet instead reused
+Foundation's own wording verbatim and produced `flagged=false`.
 
-`gh api repos/2SSilver/organisationos-domain/actions/workflows/338581282/runs`
-(checked 2026-09-07) returns `total_count: 0`: this workflow has never
-recorded a single run on the published repository, not even the one failed
-push-triggered registration run FR-07.1 records for `promotion-lint.yml`
-and two other `<adopter-org>`-pinned callers. `gh api
-repos/2SSilver/organisationos-domain/actions/permissions` (checked
-2026-09-07, ~11:22 UTC) returns `enabled: false`: Domain's Actions are
-currently disabled at the repository level, an independent reason no
+`gh api repos/2SSilver/organisationos-domain/actions/workflows/338581282/runs`,
+a point-in-time reading checked 2026-09-07 ~11:54 UTC, returns
+`total_count: 0`: this workflow has never recorded a single run on the
+published repository, not even the one failed push-triggered registration
+run FR-07.1 records for `promotion-lint.yml` and two other
+`<adopter-org>`-pinned callers. `gh api
+repos/2SSilver/organisationos-domain/actions/permissions`, checked the same
+2026-09-07 ~11:54 UTC window, returns `enabled: false`: Domain's Actions
+are currently disabled at the repository level, an independent reason no
 `pull_request` trigger of this workflow could fire, on top of the
 unresolvable `<adopter-org>` reference FR-07.1 and FR-07.4 record for other
-callers.
+callers. The same window's `gh api
+repos/2SSilver/organisationos-foundation/actions/permissions` returns
+`enabled: true`, and `gh api
+repos/2SSilver/organisationos-leadership/actions/permissions` returns
+`enabled: false`: the disabled state is not universal across the three
+reference repositories, it is Domain's (and separately Leadership's) own
+setting.
 
 The harness MUST flag, without blocking a merge, a domain pull request that
 changes a file bolding a term Foundation's `glossary.md` already defines,
@@ -315,17 +329,18 @@ Evidence: `organisationos-foundation/.claude/agents/glossary-check.md`
 frontmatter: `description: Check a changed file against the domain's
 glossary. Flag terms used without definition, terms defined differently
 elsewhere, and candidates for glossary inclusion.`, `tools: [read, search]`.
-"What to check": "Undefined terms — domain-specific vocabulary used without
-a glossary definition," "Conflicting definitions — a term whose meaning
-here differs from its glossary definition," "Candidate additions — terms
-used >2 times in the file that warrant glossary entries." "Constraints":
-"Read-only," and "Prefer extending the domain's glossary; only escalate to
+"What to check" names three bullets, each its own sentence: "Undefined
+terms — domain-specific vocabulary used without a glossary definition."
+"Conflicting definitions — a term whose meaning here differs from its
+glossary definition." "Candidate additions — terms used >2 times in the
+file that warrant glossary entries." "Constraints" separately states:
+"Read-only." and "Prefer extending the domain's glossary; only escalate to
 Foundation's `glossary.md` if the term spans ≥2 domains."
 `standards/coverage-gaps.md` names it as a defence: "Paraphrased
 identifiers | ... | Back-flow review (Domain Lead + Admin), `glossary-check`
 agent" (cross-referencing PRD-04's territory, not re-deriving it).
 `standards/templates/onboarding/claude-local-domain-lead.example.md` line
-33: "The `glossary-check.md` agent is good for catching vocabulary drift."
+33: "The `glossary-check.md` agent is good for catching vocabulary drift".
 
 The harness MUST provide an on-demand check, invocable against any changed
 file, that surfaces undefined terms, conflicting definitions, and glossary
@@ -352,29 +367,33 @@ promotion candidates for a human to act on.
 Status: SHIPPED
 Evidence: `organisationos-foundation/standards/templates/vocabulary-workshop.md`.
 "Purpose": "Surface domain-boundary disagreements before they encode into
-folders." Format runs four rounds over 4 hours: independent drafting,
+folders." Format runs four rounds over 4 hours: independent drafting;
 pairwise reads surfacing "Vocabulary clashes (same word, different meaning
-across domains)," a plenary sorting each clash into Resolved / Renamed /
-Merged / Deferred, and a written output including "Glossary additions
-(terms with their resolved meanings)." "Exit criteria": "≥2 unresolved
-'Deferred' items: do not adopt yet. The bounded contexts are not bounded;
-fix the vocabulary before the folders," and "0–1 Deferred items: adopt with
-the Deferred items as the first CDR candidates in the new harness."
+across domains)"; a plenary sorting each clash into Resolved / Renamed /
+Merged / Deferred; and a written output including "Glossary additions
+(terms with their resolved meanings)". "Exit criteria" states two rules in
+full: "≥2 unresolved 'Deferred' items: do not adopt yet. The bounded
+contexts are not bounded; fix the vocabulary before the folders." Then:
+"0–1 Deferred items: adopt with the Deferred items as the first CDR
+candidates in the new harness."
 
 `domain-1/glossary.md` and `domain-1/README.md` link the template by its
 full relative path (`../../organisationos-foundation/standards/templates/vocabulary-workshop.md`),
 as does `domain-2/README.md`. `domain-3/README.md` and `domain-4/README.md`
-instead read "the vocabulary workshop is the right time to write the real
-content," naming it without a path or link (confirmed by diff:
-`domain-1/README.md` and `domain-2/README.md` are identical apart from the
-domain number and one charter sentence; `domain-3/README.md` and
-`domain-4/README.md` are identical apart from the domain number, and both
-omit the linked phrasing the first two carry). `domain-2/glossary.md`,
+instead read: "The vocabulary workshop is the right time to write the real
+content." That sentence names it without a path or link. Confirmed by
+`diff`: `domain-1/README.md` and `domain-2/README.md` are identical apart
+from a domain-number substitution occurring in three places (the title,
+the charter-paragraph question, and the numbered `glossary.md`-reading
+step); `domain-3/README.md` and `domain-4/README.md` are identical apart
+from that same substitution in the title alone, and neither carries the
+linked phrasing the first two do. `domain-2/glossary.md`,
 `domain-3/glossary.md`, and `domain-4/glossary.md` reference the workshop
-only via "Seed during the vocabulary workshop," with no link; `domain-1/glossary.md`
-instead carries the full linked path. `organisationos-leadership/cadence/README.md`
-line 26 names the template's own output artefact and links back to it:
-"`vocabulary-YYYY-MM-DD.md` — output of any vocabulary workshop (see
+only via "Seed during the vocabulary workshop." with no link;
+`domain-1/glossary.md` instead carries the full linked path.
+`organisationos-leadership/cadence/README.md` line 26 names the template's
+own output artefact and links back to it: "`vocabulary-YYYY-MM-DD.md` —
+output of any vocabulary workshop (see
 `../../organisationos-foundation/standards/templates/vocabulary-workshop.md`)."
 
 The harness MUST provide a documented, repeatable format for surfacing
@@ -401,7 +420,7 @@ Status: ENFORCED (local) for the detection logic, established by PRD-07's
 FR-07.1; the deployed Domain caller has never actually triggered it on a
 pull request (not re-verified here, cross-referenced)
 Evidence: `organisationos-foundation/.github/workflows/promotion-lint.yml`
-lines 4-9, its `workflow_call.inputs` block: `foundation-repo` (`type:
+lines 4-12, its `workflow_call.inputs` block: `foundation-repo` (`type:
 string`, `required: true`, `description: 'Foundation repo in owner/name
 format (for glossary domain-name lookup)'`), and `foundation-ref` (`type:
 string`, `default: main`). This is the "glossary lookup" the input's own
@@ -470,8 +489,9 @@ hardcoded into the workflow file itself.
 - **External constraint — no branch protection on Foundation's or Domain's
   published `main`.** `gh api repos/2SSilver/organisationos-foundation/branches/main/protection`
   and the same call against `organisationos-domain` both returned `404`
-  ("Branch not protected"), confirmed 2026-09-07. CODEOWNERS routing cited
-  in FR-08.1 determines who GitHub suggests as a reviewer for a
+  ("Branch not protected"); a point-in-time reading, checked 2026-09-07
+  ~11:54 UTC. CODEOWNERS routing cited in FR-08.1 determines who GitHub
+  suggests as a reviewer for a
   `glossary.md` change; without branch protection, nothing forces that
   review to occur before the change merges.
 - **External constraint — the `<adopter-org>` placeholder makes
@@ -483,14 +503,21 @@ hardcoded into the workflow file itself.
   `propagation-sla.yml`.
 - **External constraint — Domain's Actions are currently disabled at the
   repository level**, independent of the placeholder above. `gh api
-  repos/2SSilver/organisationos-domain/actions/permissions` returned
-  `enabled: false`, checked 2026-09-07 ~11:22 UTC. This is a deviation from
-  PRD-07's own section 10, which recorded "Domain's Actions are enabled but
-  the caller's own reference is unresolvable as shipped" against the same
-  `verified: 2026-09-07` date; this PRD records what its own check found at
-  the time stated above and does not resolve or edit PRD-07's claim. Either
-  the live setting changed between the two checks, or between sessions
-  working the same repository concurrently.
+  repos/2SSilver/organisationos-domain/actions/permissions`, a
+  point-in-time reading checked 2026-09-07 ~11:54 UTC, returns `enabled:
+  false`; the same window's checks against Foundation and Leadership are
+  recorded above. PRD-07's own section 10 (its "fix round 3" revision,
+  commit `7293f77`) independently reaches the same reading — "Domain's
+  Actions are disabled at the repository level (`gh api
+  repos/2SSilver/organisationos-domain/actions/permissions` → `enabled:
+  false`, verified 2026-09-07T11:34Z)" — and traces an earlier, opposite
+  claim in that same PRD to a different field: the per-workflow `state:
+  active` value FR-07.1's evidence cites, not the repository-level
+  `actions/permissions` setting this PRD and PRD-07's own correction both
+  query. Per PRD-07's own account, no accessible history distinguishes a
+  genuine state change from that earlier miscited field, so this PRD
+  treats the two readings as consistent rather than as an open
+  discrepancy between PRDs.
 
 ## 8. Known gaps & open questions
 
@@ -513,9 +540,10 @@ hardcoded into the workflow file itself.
   live adopter content, but as shipped the four domains do not read alike.
 - **Open question — whether Domain's Actions-disabled state (section 7) is
   deliberate or drift.** It directly affects whether `glossary-consistency`
-  could ever fire even with `<adopter-org>` resolved, and it contradicts a
-  same-day claim in PRD-07's own section 10; recorded here as a live
-  discrepancy rather than settled by this PRD.
+  could ever fire even with `<adopter-org>` resolved. PRD-07's own
+  correction (section 7 above) now reaches the same `enabled: false`
+  reading independently, so the two PRDs are consistent; what remains open
+  is adopter intent, not a discrepancy between this PRD and PRD-07.
 
 ## 9. Rebuild guide
 
@@ -591,13 +619,21 @@ repositories directly, rather than reproduced locally: `glossary-consistency.yml
 own run history (FR-08.2, `total_count: 0`), Domain's, Leadership's, and
 Foundation's Actions-permissions state (FR-08.2, section 7), and the
 absence of branch protection on Foundation and Domain (FR-08.1, section 7).
-All were checked 2026-09-07, distinct from the local-execution evidence the
-`ENFORCED` claim rests on.
+All six calls were run within the same 2026-09-07 ~11:54 UTC window, a
+point-in-time reading distinct from the local-execution evidence the
+`ENFORCED` claim rests on and from the committed-file evidence the
+`CONVENTION` and `SHIPPED` claims rest on; a later query against the same
+endpoints could return a different answer, as PRD-07's own history of this
+exact question (section 7) demonstrates.
 
-**Limits.** FR-08.2's scratch verification supplies Foundation's
-`glossary.md` as a static file copy rather than a live `actions/checkout`
-of the Foundation repository at `ref: main`; the checkout mechanics
-themselves were not exercised. It resolves `origin/${GITHUB_BASE_REF}` via
+**Limits.** FR-08.2's scratch verification seeds both the violating and
+clean test cases by replacing `domain-1/glossary.md`'s placeholder
+`<term>` bullet with an invented `**CDR**` entry; the shipped file carries
+no real `**CDR**` bullet to redefine, so the seed is invented content, not
+a modification of anything the published repository actually ships. It
+supplies Foundation's `glossary.md` as a static file copy rather than a
+live `actions/checkout` of the Foundation repository at `ref: main`; the
+checkout mechanics themselves were not exercised. It resolves `origin/${GITHUB_BASE_REF}` via
 a hand-created local `refs/remotes/origin/main` ref pointing at the scratch
 repository's own baseline commit, rather than an actual `git fetch` against
 a real GitHub remote; the scratch repository carries no remote at all. It
