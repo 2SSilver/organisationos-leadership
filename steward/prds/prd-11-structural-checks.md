@@ -73,7 +73,7 @@ later tries to follow it.
 
 `.markdownlint.jsonc`'s own comment on its `MD025` setting records a second
 incident of the same shape, from a different check: "the previous value
-`{ "front_matter_title": "" }` did NOT disable this rule... so 22 violations
+{ "front_matter_title": "" } did NOT disable this rule... so 22 violations
 went unnoticed for as long as CI never ran." A rule can be configured,
 documented, and still enforce nothing, and the gap is invisible until
 someone runs it and counts what it finds.
@@ -443,9 +443,8 @@ disabled.
 
 ### FR-11.5 — Links resolve; the one documented false positive is ignored
 
-Status: ENFORCED (local); Foundation's own CI history shows this check
-failing twice, but for a reason upstream of its own broken-link logic, not
-as a substitute for the local verification below
+Status: ENFORCED (CI); run `32485676303` (red) and run `32741967207`
+(green), both on real Foundation pull requests
 Evidence: `organisationos-foundation/.github/workflows/link-check.yml` calls
 `lycheeverse/lychee-action@v2` against `**/*.md`. The one file it consults
 for exceptions, `.lycheeignore`, is byte-identical across all three
@@ -455,44 +454,78 @@ explains the pattern is written without the angle brackets deliberately,
 because lychee percent-encodes them before matching, so a pattern
 containing a literal `<` or `>` would silently never match anything.
 
-Verified: `lychee --offline --no-progress`, run directly against scratch
-files, using a copy of the shared `.lycheeignore`. A file linking to a
-missing relative file: lychee reports the target "File not found. Check if
-file exists and path is correct" and exits 2. A file linking to a file that
-exists in the same directory: one link checked, zero errors, exit 0. A file
-linking to a `github.com` URL containing the literal, unsubstituted
-placeholder: zero errors and one link excluded, exit 0, confirming the
-ignore file is genuinely read and genuinely excludes the one pattern it
-documents, not merely present and unused.
+`gh api .../actions/runs/32485676303/jobs` shows the job `link-check /
+links` failing, with its "Check links with lychee" step itself reaching
+failure (not skipped, not an upstream setup error): the run's own log
+reports "🚫 Errors | 3" and, under "Errors in
+standards/templates/references-template.md", three identical lines:
+"[ERROR] <error:> (at 10:31) | Cannot parse 'https://…' into a URL: invalid
+international domain name" (repeated at 11:43 and 9:19). This is the
+check's own logic genuinely rejecting real file content, not an upstream
+configuration failure: `git show 5fa85c9:standards/templates/references-template.md`
+shows the file, at Foundation's initial commit (2026-08-20), carried the
+literal string `https://…` (an ellipsis character, not three periods) as a
+placeholder URL in three worked-example table rows; lychee correctly cannot
+parse that string as a URL. Commit `f5d083f3` ("style: bring markdownlint
+to zero, and fix the MD025 config bug", 2026-08-21T13:21:55Z, roughly nine
+minutes after the red run) replaced all three instances with `<url>`, plain
+placeholder text no longer offered to lychee as something to parse; the
+live file today carries zero `https://` occurrences. `gh api
+.../actions/runs/32741967207/jobs`, a later run (2026-08-24), shows
+`link-check / links` succeeding, with "Check links with lychee" itself
+`success` (reached and passed, not skipped) and the failure-only comment
+step correctly `skipped`. The pair isolates the variable: same job, same
+underlying tool, differing only in whether the unparseable placeholder was
+present in the tree at run time.
 
-`gh api .../actions/runs/32484132031/jobs` shows the corresponding job
-failing twice in Foundation's recorded history, but its own log shows the
-lychee step itself reporting "No links were found. This usually indicates a
-configuration error," an upstream cause independent of any real broken
-link, followed by a second, permission-related failure in the
-comment-posting step gated behind it. Neither failure demonstrates this
-check's own broken-link logic being exercised; this is why the status rests
-on the local reproduction above rather than this run history.
+A second, earlier run also failed this job: `gh api
+.../actions/runs/32484132031/jobs` shows the same job failing for an
+unrelated, upstream reason — its own log reports the lychee step itself
+"No links were found. This usually indicates a configuration error,"
+independent of any real broken link, followed by a second, permission-related
+failure in the comment-posting step gated behind it. This run does not
+demonstrate the check's own broken-link logic and is not part of the
+red/green pair cited above; it is recorded here only to distinguish it from
+`32485676303`, since both are failures of the same job for materially
+different reasons.
+
+Supplementary local verification, disclosed as a substitution:
+`lychee --offline --no-progress`, run directly against scratch files, using
+a copy of the shared `.lycheeignore`. A file linking to a missing relative
+file: lychee reports the target "File not found. Check if file exists and
+path is correct" and exits 2. A file linking to a file that exists in the
+same directory: one link checked, zero errors, exit 0. A file linking to a
+`github.com` URL containing the literal, unsubstituted placeholder: zero
+errors and one link excluded, exit 0, confirming the ignore file is
+genuinely read and genuinely excludes the one pattern it documents, not
+merely present and unused.
 
 The system MUST fail, on every pull request across all three repositories,
 if a linked file or URL fails to resolve, except for the one documented
 placeholder every published template still carries.
 
-- Given a file linking to a path that does not exist
-  When the check runs, offline, against file links
-  Then it fails, naming the missing target
-- Given a file linking only to targets that exist
+- Given a pull request whose Markdown links to a string lychee cannot parse
+  as a URL
   When the check runs
-  Then it passes
+  Then it fails, naming the file, the exact position, and the parse error,
+    as observed on a real Foundation pull request
+- Given a pull request whose links all resolve or are excluded
+  When the check runs
+  Then it passes, the lychee step itself reached and green, as observed on
+    a later Foundation pull request
+- Given a file linking to a path that does not exist
+  When the check runs locally, offline, against file links
+  Then it fails, naming the missing target, reproduced as supplementary
+    local evidence
 - Given a file linking to a URL containing the literal, unsubstituted
   adopter-organisation placeholder
   When the check runs
   Then it is excluded, not flagged, on the strength of the shared
     `.lycheeignore` alone
-- Foundation's own CI history shows this check's job failing twice, neither
-  time for its own broken-link logic; both failures are an upstream tool
-  misconfiguration and a downstream permission gate, not a red case this
-  requirement can claim
+- A second, earlier CI failure of this job (`32484132031`) is a materially
+  different, upstream cause (a lychee configuration failure reporting no
+  links found at all) and is not part of the red/green pair this
+  requirement claims
 
 ### FR-11.6 — `.github/agents/` and `.claude/agents/` cannot drift
 
@@ -593,12 +626,17 @@ checked on every Foundation pull request.
   `cross-domain-decisions/` and `interfaces/` folders each hold only a
   `README.md` today, so this PRD's own scratch seed is the only execution
   of that half of the check's logic against a genuine violation to date.
-- **GAP — none of the six checks has ever produced a genuine red result in
-  Foundation's own CI history, except `markdown-lint`.** FR-11.1, FR-11.2,
-  FR-11.3, and FR-11.6 each record that their job has reported success on
-  every one of the nine recorded Foundation `self-ci` runs; FR-11.5 records
-  two recorded failures that are not the check's own logic. Only FR-11.4 has
-  a genuine CI-locus red and green pair to cite.
+- **GAP — four of the six checks have never been observed rejecting
+  anything in real CI.** `structure-check`, `claude-md-length`,
+  `stale-path-check`, and `agent-mirror-sync` (FR-11.1, FR-11.2, FR-11.3,
+  FR-11.6) each record that their job has reported success on every one of
+  the nine recorded Foundation `self-ci` runs; their `ENFORCED` status rests
+  entirely on this PRD's own local reproduction. Two of the six,
+  `markdown-lint` (FR-11.4) and `link-check` (FR-11.5), each have a genuine
+  CI-locus red and green pair to cite; `link-check`'s CI history also
+  carries a second, earlier failure of the same job that is not part of its
+  cited pair, for an unrelated, upstream reason recorded in FR-11.5's own
+  evidence.
 - **Open question — whether `structure-check` should gain a Leadership
   caller.** FR-11.1's evidence shows Leadership carries no `structure-check`
   caller at all, unlike the other four reusable checks in this PRD; nothing
@@ -681,25 +719,29 @@ and `lint.yml` both at `0a64f335`, 2026-08-21; `.lycheeignore` at `581cf4bb`,
 to `d70bafc83acd1942e807ff35da888901ac45f255`, 2026-09-02, the same commit
 `v1` resolves to.
 
-**Method.** FR-11.1, FR-11.2, FR-11.3, FR-11.5, and FR-11.6 were each
-verified by extracting the check's own shell logic verbatim from its
-workflow file and running it against a scratch copy or a scratch-seeded
-file, once on a violating input and once on a clean input, per the evidence
-bar in the PRD template's section 3.5. FR-11.1 and FR-11.6 used a `.git`-stripped
-`cp -R` of, respectively, `organisationos-domain` and
-`organisationos-foundation`, so the live working trees were never touched.
-FR-11.2, FR-11.3, and FR-11.5 used files constructed directly in scratch
-directories rather than a copied repository, since the logic they test does
-not depend on surrounding repository content. FR-11.4 rests on Foundation's
-own recorded CI history instead: a genuine red run (`32484132031`) and a
-genuine green run (`33501983753`) were each checked by reading the run's own
-log, to confirm the failure and the pass are both the check's own logic and
-not an upstream or downstream cause; a supplementary local run of the same
-tool against a narrower, single-rule seed is recorded alongside it and
-disclosed as a substitution. FR-11.5's own CI history was checked by the
-same standard and found not to isolate the variable, an outcome recorded directly in its
-evidence rather than smoothed into a stronger claim; its `ENFORCED` status
-rests on the local reproduction alone.
+**Method.** FR-11.1, FR-11.2, FR-11.3, and FR-11.6 were each verified by
+extracting the check's own shell logic verbatim from its workflow file and
+running it against a scratch copy or a scratch-seeded file, once on a
+violating input and once on a clean input, per the evidence bar in the PRD
+template's section 3.5. FR-11.1 and FR-11.6 used a `.git`-stripped `cp -R`
+of, respectively, `organisationos-domain` and `organisationos-foundation`,
+so the live working trees were never touched. FR-11.2 and FR-11.3 used
+files constructed directly in scratch directories rather than a copied
+repository, since the logic they test does not depend on surrounding
+repository content. FR-11.4 and FR-11.5 each rest on Foundation's own
+recorded CI history instead: for FR-11.4, a genuine red run
+(`32484132031`) and a genuine green run (`33501983753`); for FR-11.5, a
+genuine red run (`32485676303`) and a genuine green run (`32741967207`).
+Each pair was checked the same way: reading the run's own log, to confirm
+the failure and the pass are both the check's own logic and not an
+upstream or downstream cause, and, for FR-11.5's red run, tracing the
+unparseable content it flagged to a specific commit in
+`references-template.md`'s own git history. A supplementary local run of
+each tool, against a hand-constructed seed, is recorded alongside both and
+disclosed as a substitution. A second, earlier CI failure of FR-11.5's job
+(`32484132031`) was checked by the same standard and found not to isolate
+the variable — a materially different, upstream cause from the genuine
+pair — and is recorded as such rather than folded into the claimed pair.
 
 Every one of the six checks' presence in Foundation's own `self-ci.yml`, and
 in Leadership's and Domain's respective workflow directories, was confirmed
@@ -734,13 +776,16 @@ produced a red result in Foundation's own recorded CI history at all, so
 their `ENFORCED` status rests entirely on this PRD's local reproduction,
 disclosed as such rather than implied to carry live-CI confirmation.
 Foundation's own workflow-run retention is bounded; the specific run IDs
-FR-11.4 cites may age out for a future re-verifier even though the
-workflow files and their config do not.
+FR-11.4 and FR-11.5 cite may age out for a future re-verifier even though
+the workflow files and their config do not.
 
 A re-verifier reproducing FR-11.1, FR-11.2, FR-11.3, or FR-11.6's scratch
 result needs only the cited `run:` block or job step, extracted from the
 named workflow file, and a scratch copy or scratch file constructed as
 described in section 6, not GitHub access. A re-verifier checking FR-11.4's
-CI-locus claim needs public read access to the three repositories and the
-two cited run IDs, or a fresh run history mined the same way if those age
-out.
+or FR-11.5's CI-locus claim needs public read access to the three
+repositories and the two run IDs each requirement cites, or a fresh run
+history mined the same way if those age out; FR-11.5's red run additionally
+depends on `standards/templates/references-template.md`'s own git history
+at Foundation's initial commit, which does not age out the way a workflow
+run's retention does.
