@@ -243,7 +243,8 @@ cross-repository reference at all; each repository applies the logic to its
 own `.github/labels.yml`, which is why it is duplicated rather than called.
 `self-ci.yml`'s own comment names one further, narrower exception:
 "Domain's `glossary-consistency.yml`... is a separate case — it is
-Domain-only and follows the Category B two-checkout caller shape instead."
+Domain-only and follows the Category B two-checkout caller shape instead;
+see that file's header comment."
 
 The harness MUST keep every shared check's logic in exactly one file in
 Foundation, with Leadership and Domain calling it by reference rather than
@@ -415,8 +416,8 @@ ever runs it.
 
 ### FR-10.4 — Job-scoped permissions: a caller grants `pull-requests: write` only where the reusable posts a comment
 
-Status: ENFORCED (CI); the same permission grant observed failing without
-it and succeeding with it, on real Foundation pull requests
+Status: SHIPPED; the grant is present and correctly job-scoped in the
+caller, but no observed run isolates it
 Evidence: `organisationos-foundation/.github/workflows/self-ci.yml`'s
 `link-check` job carries `permissions: {pull-requests: write, contents:
 read}` with the comment: "Job-scoped write: this job's reusable posts a PR
@@ -431,13 +432,25 @@ mirrors the same pattern at the caller level, verified character-for-character:
 additionally cannot start at all without it, since its reusable declares
 pull-requests: write and a read-default caller cannot pass that down."
 
-Run `32484132031` (2026-08-21T12:54:17Z) failed `link-check/links` with
-exactly the error the current comment describes: "Unhandled error: HttpError:
-Resource not accessible by integration", recorded before this job carried
-its job-scoped grant. Run `33501983753` (2026-09-01T11:20:28Z) shows
-`link-check/links` succeeding, the grant present in the file read at the same
-time. Both runs are real Foundation pull-request executions, roughly 11 days
-apart.
+`organisationos-foundation/.github/workflows/link-check.yml`'s own "Plain-English
+failure comment" step carries `if: failure()`: it only runs at all when the
+preceding lychee step has already failed, on its own terms, for its own
+reasons. Run `32484132031` (2026-08-21T12:54:17Z) shows exactly why this
+gate defeats a clean before/after comparison. The lychee step itself failed
+first, independent of any permission question: its own summary reports
+"No links were found. This usually indicates a configuration error." and
+the step exits 1 on that basis. Only then does the gated comment step run,
+and it does fail with "Unhandled error: HttpError: Resource not accessible
+by integration" — but the job was already going to report failure from
+lychee's own defect, so this run does not isolate the permission grant; it
+shows one failure caused by something else, with a second, permission-
+related failure riding along behind it. Run `33501983753` (2026-09-01T11:20:28Z)
+shows the opposite half of the same problem: `gh api
+.../actions/runs/33501983753/jobs`'s own step list for this job shows
+"Check links with lychee" as `success` and "Plain-English failure comment"
+as `skipped` — the underlying check passed cleanly, so the permission-gated
+step never executed at all. Neither run demonstrates the grant working
+correctly on a genuine violating input paired with a genuine clean one.
 
 The harness MUST grant `pull-requests: write` to a calling job only when the
 reusable it invokes posts a PR comment, and MUST leave every other job on
@@ -450,9 +463,12 @@ the repository's read-only default.
   `structure-check`, `stale-path-check`, `claude-md-length`, `banned-string`,
   and the four inline integrity jobs, post no comment and carry no
   `permissions:` block, staying on read-only.
-- The violating case (permission absent, job fails on the comment step) and
-  the clean case (permission present, job succeeds) are both drawn from real
-  CI runs on the same job in the same file, not reproduced locally.
+- No observed CI run isolates this requirement: the one available red run
+  for `link-check` failed upstream of the permission-gated step, and the
+  only available green run skipped that step entirely because `if:
+  failure()` never fired. A clean red/green pair would need a lychee run
+  that fails on a real broken link (so the comment step is reached on its
+  own terms) with the permission grant first absent, then present.
 
 ### FR-10.5 — `label-sync` applies `labels.yml` via the `gh` CLI, deliberately not a third-party action
 
@@ -562,7 +578,9 @@ without requesting `pages:` or `id-token:` scopes.
 
 ### FR-10.7 — Leadership and Domain ship with Actions disabled until placeholder substitution; enabling them before substitution produces parse-time failures
 
-Status: SHIPPED-as-designed
+Status: SHIPPED; deliberately, not as a defect. Leadership and Domain ship
+with Actions off by design, so their callers never having executed is
+intended template state
 Evidence: `docs/setup-org.md` Step 5: "Actions are disabled on the published
 Leadership and Domain templates precisely because Step 3 has not run on
 them. Now that it has, enable them..." Step 3 names the placeholder itself:
@@ -813,18 +831,25 @@ delivers a change. Every `ENFORCED` and `SHIPPED` claim in section 6
 therefore rests on run history mined directly from the three published
 repositories via `gh run list`, `gh run view --log-failed`, and `gh api
 .../actions/runs/<id>/jobs`, rather than on logic extracted and executed
-locally. FR-10.3 and FR-10.4 meet the `ENFORCED` bar with locus CI: each
-cites a specific failing run's actual log content alongside a specific
+locally. FR-10.3 meets the `ENFORCED` bar with locus CI: it cites a
+specific failing run's actual log content alongside a specific
 later-or-earlier succeeding run of the identical job, both against real
-Foundation pull requests. FR-10.1, FR-10.2, FR-10.5, FR-10.6, and FR-10.8
-were verified by reading each cited file directly and, where a run history
-existed to check, mining it rather than assuming from the file's own
-claims. FR-10.5 and FR-10.6 in particular rest on run histories that
-returned, respectively, zero recorded runs and a defect that has kept the
-mechanism's central behaviour from ever firing. FR-10.7 combines a
-point-in-time `gh api` reading of repository-level Actions-permissions
-state with four specific run IDs' own duration, job count, and `gh run
-view` text.
+Foundation pull requests, and neither run's own failure or success rests on
+anything but the requirement's own logic. FR-10.4 was checked against the
+same kind of pair and did not meet that bar: its cited red run failed for an
+independent reason first (lychee's own "No links were found" defect), and
+its cited green run's own job steps show the permission-gated comment step
+as `skipped`, never reached at all. Neither run isolates the grant, so
+FR-10.4 stays `SHIPPED` rather than `ENFORCED`, with the confound recorded
+in its own evidence rather than smoothed over. FR-10.1, FR-10.2, FR-10.5,
+FR-10.6, and FR-10.8 were verified by reading each cited file directly and,
+where a run history existed to check, mining it rather than assuming from
+the file's own claims. FR-10.5 and FR-10.6 in particular rest on run
+histories that returned, respectively, zero recorded runs and a defect that
+has kept the mechanism's central behaviour from ever firing. FR-10.7
+combines a point-in-time `gh api` reading of repository-level
+Actions-permissions state with four specific run IDs' own duration, job
+count, and `gh run view` text.
 
 Live GitHub state (run histories, job-level logs, repository-level
 Actions-permissions, branch-protection status, and label lists) was read
