@@ -195,7 +195,7 @@ logic, described below
 Evidence: `organisationos-foundation/.github/workflows/format-gate.yml`,
 step "Verify changed files against FORMATS.md whitelist": line 66,
 `ext="${f##*.}"`, then `if ! echo "$allowed_extensions" | grep -wq "$ext"`.
-Red/green log: `$SCRATCH/verification/prd-05.md`, Check 1 (2026-09-03): a
+Verified 2026-09-03: a
 scratch git repo branch adding `report.xlsx` failed with `::error
 file=report.xlsx::extension '.xlsx' is not on FORMATS.md's whitelist.`; the
 same repo with only a `.md` file added passed cleanly.
@@ -464,9 +464,9 @@ Foundation tag `v1.1.2` resolves to `d70bafc`, 2026-09-02.
 
 All verification was run this session (2026-09-03) against `cp -R` copies
 and fresh scratch git repositories under a scratch directory, never against
-the live clones, which another session was actively working in. The full
-log, including every command, seeded input, and result, is at
-`$SCRATCH/verification/prd-05.md`; it is not reproduced here.
+the live clones, which another session was actively working in. Each
+check's command, seeded input, and result is reproduced inline in the
+relevant requirement's evidence above.
 
 Method: Checks 1-3 (FR-05.2, FR-05.3) exercise the "Verify changed files"
 step, which reads a git diff rather than the working tree, so each ran
