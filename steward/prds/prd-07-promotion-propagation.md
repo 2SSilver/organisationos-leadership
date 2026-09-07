@@ -229,9 +229,9 @@ caller (`wc -l`; 11 non-blank), `on: pull_request`, `paths:
 ['domain-*/adrs/**.md']`, `uses:
 <adopter-org>/organisationos-foundation/.github/workflows/promotion-lint.yml@v1`.
 
-Red/green log: `$SCRATCH/verification/prd-07.md`, extracted into
-`$SCRATCH/fr0701-test/extracted-detect.sh` and run against a scratch git
-repository seeded with Foundation's actual four-domain glossary list. A
+Verified: the "Detect promotion candidates" step's `run:` block, extracted
+verbatim and run against a scratch git repository seeded with Foundation's
+actual four-domain glossary list. A
 domain-1 ADR with `shared: true` and neither `promoted-to:` nor
 `local-reasoning:` set, body naming both domain-1 and domain-2, failed
 (exit 1), naming the file and the missing-field condition. The same
@@ -366,13 +366,13 @@ this verification — which is what makes local execution of the scan step
 alone a legitimate `ENFORCED` locus for this requirement, rather than a
 substitute for evidence the real mechanism cannot produce.
 
-Red/green log: `$SCRATCH/verification/prd-07.md`. Date derivation: `date
+Date derivation: `date
 -v-31d +%Y-%m-%d`, run 2026-09-07, output `2026-08-07`; `date -v+30d
 +%Y-%m-%d`, same run, output `2026-10-07`. The scan step's logic, extracted
 verbatim (substituting `gdate` for `date`, since this host's native `date`
 does not support `-d`, matching PRD-04's FR-04.4 verification for the same
-reason) into `$SCRATCH/fr0704-test/extracted-scan.sh`: run against a seeded
-log with one unchecked row deadlined `2026-08-07` (31 days past), it
+reason), was run against a seeded
+log with one unchecked row deadlined `2026-08-07` (31 days past); it
 reported `result=stale` and named the exact row; run against a seeded log
 with one unchecked row deadlined `2026-10-07` (a future date), it reported
 `result=clean`.
@@ -635,8 +635,8 @@ workflow's own named `run:` block and executing it in the session
 scratchpad against a scratch git repository (FR-07.1) or a seeded flat
 file (FR-07.4), each carrying both a violating and a clean input, per the
 evidence bar in the PRD template's section 3.5. Their red/green
-transcripts are in section 6's own evidence blocks and in
-`$SCRATCH/verification/prd-07.md`; they are not repeated here.
+transcripts — command, seeded inputs, and both results — are in
+section 6's own evidence blocks above.
 
 Live GitHub state — workflow run history and branch-protection status —
 was read via `gh api` against the published repositories directly, rather
@@ -680,7 +680,9 @@ setting, so no pull-request- or schedule-triggered execution of either
 requirement's logic has ever occurred on the published repositories,
 consistent with the workstream's evidence bar treating local execution as
 equally valid where CI itself cannot be observed. A re-verifier reproducing
-the `ENFORCED` claims needs the scratch git repository and scratch-file
-steps recorded in `$SCRATCH/verification/prd-07.md`, not GitHub access; a
-re-verifier checking the `gh api` findings needs only public read access
-to the three repositories.
+the `ENFORCED` claims needs only FR-07.1's and FR-07.4's own `run:` blocks
+(section 6), a scratch git repository or seeded flat file of the shapes
+described there, and the substitutions this Limits paragraph discloses
+(static glossary snapshot, literal `BASE_REF`, local `yq`, `gdate`) — not
+GitHub access; a re-verifier checking the `gh api` findings needs only
+public read access to the three repositories.
