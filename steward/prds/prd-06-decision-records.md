@@ -401,9 +401,10 @@ affected"` against every `cross-domain-decisions/*.md` file, excluding
 domain`). `docs/concepts.md` line 81: "Foundation's `structure-check`
 confirms the CDR follows the template." `organisationos-foundation/README.md`
 line 103 repeats the same claim. Red/green, run locally on 2026-09-07
-against the extracted `run:` logic in `$SCRATCH/fr0607-test/` and
-`$SCRATCH/fr0607-test2/`: a CDR file carrying only `## Status` and `##
-Domains affected`, and nothing else the full `cdr-template.md` requires
+against the two `grep -q` checks above, extracted verbatim from
+`structure-check.yml` and run against seeded scratch files: a CDR file
+carrying only `## Status` and `## Domains affected`, and nothing else the
+full `cdr-template.md` requires
 (`## Context`, `## Decision`, `## Consequences per domain`, `## Approval`,
 `## Propagation actions (Admin)` all absent) exits 0; a CDR file missing `##
 Status` and an interface file missing `## Consuming domain` both exit 1,
