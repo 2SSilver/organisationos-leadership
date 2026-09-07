@@ -506,14 +506,13 @@ hardcoded into the workflow file itself.
   repos/2SSilver/organisationos-domain/actions/permissions`, a
   point-in-time reading checked 2026-09-07 ~11:54 UTC, returns `enabled:
   false`; the same window's checks against Foundation and Leadership are
-  recorded above. PRD-07's own section 10 (its "fix round 3" revision,
-  commit `7293f77`) independently reaches the same reading — "Domain's
-  Actions are disabled at the repository level (`gh api
+  recorded above. PRD-07's section 10 records the same reading —
+  "Domain's Actions are disabled at the repository level (`gh api
   repos/2SSilver/organisationos-domain/actions/permissions` → `enabled:
   false`, verified 2026-09-07T11:34Z)" — and traces an earlier, opposite
   claim in that same PRD to a different field: the per-workflow `state:
   active` value FR-07.1's evidence cites, not the repository-level
-  `actions/permissions` setting this PRD and PRD-07's own correction both
+  `actions/permissions` setting this PRD and PRD-07's section 10 both
   query. Per PRD-07's own account, no accessible history distinguishes a
   genuine state change from that earlier miscited field, so this PRD
   treats the two readings as consistent rather than as an open
@@ -540,10 +539,10 @@ hardcoded into the workflow file itself.
   live adopter content, but as shipped the four domains do not read alike.
 - **Open question — whether Domain's Actions-disabled state (section 7) is
   deliberate or drift.** It directly affects whether `glossary-consistency`
-  could ever fire even with `<adopter-org>` resolved. PRD-07's own
-  correction (section 7 above) now reaches the same `enabled: false`
-  reading independently, so the two PRDs are consistent; what remains open
-  is adopter intent, not a discrepancy between this PRD and PRD-07.
+  could ever fire even with `<adopter-org>` resolved. PRD-07's section 10
+  records the same `enabled: false` reading (section 7 above), so the two
+  PRDs are consistent; what remains open is adopter intent, not a
+  discrepancy between this PRD and PRD-07.
 
 ## 9. Rebuild guide
 
