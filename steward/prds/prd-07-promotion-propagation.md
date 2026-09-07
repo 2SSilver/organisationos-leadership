@@ -507,7 +507,7 @@ archived to a dated file annually.
   runs on Foundation's own schedule, against a repository with no
   propagation log.** The reusable workflow declares `on: schedule` at its
   own top level, not only `on: workflow_call`; Foundation's `self-ci.yml`
-  lines 25-28 document excluding it from Foundation's own composite CI
+  lines 25-29 document excluding it from Foundation's own composite CI
   because it and two other weekly-scheduled workflows "already run on
   their own schedule/workflow_dispatch trigger, so adding them here would
   just duplicate that trigger on every PR:" (the comment then lists three
