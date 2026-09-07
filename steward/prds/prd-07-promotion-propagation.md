@@ -224,8 +224,9 @@ and neither field is set.
 `organisationos-foundation/glossary.md` "## Domains" section: "This list is
 referenced by the promotion-lint workflow to detect cross-domain mentions
 in ADR bodies," followed by four bullets, `domain-1` through `domain-4`.
-`organisationos-domain/.github/workflows/promotion-lint.yml`: an eight-line
-caller (`on: pull_request`, `paths: ['domain-*/adrs/**.md']`), `uses:
+`organisationos-domain/.github/workflows/promotion-lint.yml`: a 13-line
+caller (`wc -l`; 11 non-blank), `on: pull_request`, `paths:
+['domain-*/adrs/**.md']`, `uses:
 <adopter-org>/organisationos-foundation/.github/workflows/promotion-lint.yml@v1`.
 
 Red/green log: `$SCRATCH/verification/prd-07.md`, extracted into
@@ -509,10 +510,11 @@ archived to a dated file annually.
   lines 25-28 document excluding it from Foundation's own composite CI
   because it and two other weekly-scheduled workflows "already run on
   their own schedule/workflow_dispatch trigger, so adding them here would
-  just duplicate that trigger on every PR." That independent schedule is
-  what produced the run the spec's own worked example cites as `ENFORCED`
-  evidence for FR-07.4 — against a repository that structurally cannot
-  exercise the requirement's logic.
+  just duplicate that trigger on every PR:" (the comment then lists three
+  excluded workflows, `propagation-sla.yml` among them). That independent
+  schedule is what produced the run the spec's own worked example cites as
+  `ENFORCED` evidence for FR-07.4 — against a repository that structurally
+  cannot exercise the requirement's logic.
 - **External constraint — GitHub's CODEOWNERS format has no per-pull-
   request scope.** FR-07.2's "Leader and Domain Lead of each affected
   domain" is a documented review target; CODEOWNERS can only name a fixed
@@ -649,7 +651,16 @@ distinct from the local-execution evidence the `ENFORCED` claims rest on.
 glossary.md` as a static snapshot of Foundation's actual "## Domains"
 section rather than a live `actions/checkout` of the Foundation repository
 at a pinned ref; the checkout mechanics themselves were not exercised.
-FR-07.4's date arithmetic was run under `gdate` rather than this host's
+It also supplies `BASE_REF` as a literal parameter (`main`, the scratch
+repo's own base branch) in place of the workflow's own
+`${GITHUB_BASE_REF:-main}` expression; the GitHub Actions expression
+syntax itself was not exercised, only the `git diff` comparison it would
+otherwise resolve to. It also runs against this host's locally installed
+`yq` (Homebrew, `v4.53.6`, macOS binary) rather than the workflow's own
+"Install yq" step, which `wget`s the latest `yq_linux_amd64` release at
+run time; the two were not confirmed to parse the seeded frontmatter
+identically beyond this verification's own passing runs. FR-07.4's date
+arithmetic was run under `gdate` rather than this host's
 native `date`, for the same reason PRD-04's FR-04.4 verification recorded:
 the workflow's own runner uses GNU date, and this host's native `date`
 does not support `-d`. Neither `ENFORCED` claim exercises a live GitHub
