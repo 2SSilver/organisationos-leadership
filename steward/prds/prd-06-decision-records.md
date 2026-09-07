@@ -247,7 +247,7 @@ Status: SHIPPED
 Evidence: `organisationos-foundation/standards/templates/cdr-template.md`
 (full template: `## Status`, `## Domains affected`, `## Context`,
 `## Decision`, `## Consequences per domain`, `## Approval`, `## Propagation
-actions`); `organisationos-foundation/standards/templates/cdr-light-template.md`
+actions (Admin)`); `organisationos-foundation/standards/templates/cdr-light-template.md`
 (same `## Status` / `## Domains affected` / `## Context` / `## Decision` /
 `## Consequences` / `## Approval` / `## Follow-up actions` skeleton, titled
 `# ADR-XXX` rather than `# CDR-XXX`); `organisationos-foundation/cross-domain-decisions/README.md`,
@@ -326,7 +326,7 @@ non-functional requirements that every domain is expected to meet.
 Status: CONVENTION
 Evidence: `organisationos-foundation/syntheses/README.md`, "Why a separate
 folder": "Read-only synthesis across domains is permitted and requires no
-CDR (see Foundation `CLAUDE.md`, Absolute rules, Cross-domain)"; same
+CDR (see Foundation `CLAUDE.md`, Absolute rules — Cross-domain)"; same
 README's "What belongs here" and "What does NOT belong here" sections,
 distinguishing a cross-domain read from a domain-owned artefact, from
 Leadership's strategy surface, and from a CDR ("If a synthesis's
@@ -405,7 +405,7 @@ against the extracted `run:` logic in `$SCRATCH/fr0607-test/` and
 `$SCRATCH/fr0607-test2/`: a CDR file carrying only `## Status` and `##
 Domains affected`, and nothing else the full `cdr-template.md` requires
 (`## Context`, `## Decision`, `## Consequences per domain`, `## Approval`,
-`## Propagation actions` all absent) exits 0; a CDR file missing `##
+`## Propagation actions (Admin)` all absent) exits 0; a CDR file missing `##
 Status` and an interface file missing `## Consuming domain` both exit 1,
 each naming the correct missing heading.
 
@@ -418,7 +418,8 @@ overstate what that logic covers.
   Then it exits non-zero, naming that file and the missing heading
 - Given the same file with `## Status` restored but every other
   `cdr-template.md` section still absent (`## Context`, `## Decision`,
-  `## Consequences per domain`, `## Approval`, `## Propagation actions`)
+  `## Consequences per domain`, `## Approval`, `## Propagation actions
+  (Admin)`)
   When `structure-check` runs
   Then it exits zero: the mechanism does not detect the five missing
     sections
