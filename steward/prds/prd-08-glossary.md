@@ -265,9 +265,9 @@ The Domain PR template's own reviewer checklist (line 43) names it:
 "Glossary check run? (advisory — review any flagged terms against
 `organisationos-foundation/glossary.md`)".
 
-Red/green log: `$SCRATCH/verification/prd-08.md`, extracted into
-`$SCRATCH/fr0802-test/extracted-compare.sh` (the workflow's own lines 37-69,
-copied verbatim and de-indented) and run in a scratch git repository seeded
+Verified: the "Compare domain-artefact terms against the Foundation
+glossary" step's `run:` block (the workflow's own lines 37-69, copied
+verbatim and de-indented), run in a scratch git repository seeded
 with an actual copy of Foundation's `glossary.md` and Domain's
 `domain-1/glossary.md`. The shipped `domain-1/glossary.md` carries only its
 placeholder `<term>` bullet, not a real `**CDR**` entry, so both branches
@@ -434,9 +434,8 @@ purpose than FR-08.1's term-placement rule.
 
 PRD-07's FR-07.1 verified this detection logic red/green in a scratch git
 repository seeded with Foundation's actual four-domain glossary list, both
-against a violating and a clean input (its own evidence block and
-`$SCRATCH/verification/prd-07.md`); that verification is cross-referenced
-here, not reproduced.
+against a violating and a clean input (its own evidence block, section 6);
+that verification is cross-referenced here, not reproduced.
 
 `promotion-lint`'s domain-name lookup MUST read Foundation's actual
 `glossary.md` "## Domains" section at run time, rather than a domain list
@@ -606,9 +605,9 @@ by extracting `glossary-consistency.yml`'s own "Compare domain-artefact
 terms" step verbatim and executing it in a scratch git repository seeded
 with real copies of Foundation's and Domain's own glossary files, carrying
 both a violating and a clean input, per the evidence bar in the PRD
-template's section 3.5. Its red/green transcript is in section 6's own
-evidence block and in `$SCRATCH/verification/prd-08.md`; it is not repeated
-here. FR-08.5 cites PRD-07's FR-07.1 as its verification rather than
+template's section 3.5. Its red/green transcript — command, seeded inputs,
+and both results — is in section 6's own evidence block above.
+FR-08.5 cites PRD-07's FR-07.1 as its verification rather than
 reproducing it, since both requirements describe the same underlying
 detection logic reading the same file's "## Domains" section.
 
@@ -653,7 +652,11 @@ repository, and Domain's Actions are currently disabled at the repository
 level, independent of the `<adopter-org>` placeholder issue recorded in
 section 7.
 
-A re-verifier reproducing the `ENFORCED` claim needs the scratch git
-repository steps recorded in `$SCRATCH/verification/prd-08.md`, not GitHub
-access; a re-verifier checking the `gh api` findings needs only public read
+A re-verifier reproducing the `ENFORCED` claim needs only the "Compare"
+step's own `run:` block (section 6), a scratch git repository seeded with
+glossary files of the shapes described there, and the five substitutions
+this Limits paragraph discloses (invented `**CDR**` seed, static glossary
+file copy, hand-created `origin/main` ref, hand-set `GITHUB_BASE_REF`/
+`GITHUB_OUTPUT`, native macOS `grep`/`sed`/`awk`) — not GitHub access; a
+re-verifier checking the `gh api` findings needs only public read
 access to the two repositories.
