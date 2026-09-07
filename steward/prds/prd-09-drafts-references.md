@@ -238,7 +238,10 @@ aged past it.
 
 ### FR-09.2 — `draft-staleness` detects drafts past shelf life weekly
 
-Status: SHIPPED
+Status: ENFORCED (local) for the detection logic, on both a violating and
+a clean input; no live locus (CI or otherwise) has ever exercised this
+logic against a populated `_drafts/` folder on any of the three published
+repositories
 Evidence: `organisationos-foundation/.github/workflows/draft-staleness.yml`.
 Its `on.schedule` block carries a nine-line comment (lines 5-13) explaining
 why the cron lives here at all: "Runs weekly on Monday at 09:00 UTC; the
@@ -458,9 +461,9 @@ committing those artefacts.
   item; the check that does exist lives in a different command's report
   format, not automated CI, and is not itself named by the template's
   citation.
-- No workflow in this PRD's evidence scans `references.md` for a Last-
-  verified date past its retention period; the only mechanism that reads
-  that column at all is the on-demand `drift-check` report.
+- No workflow in this PRD's evidence scans `references.md` for a
+  Last-verified date past its retention period; the only mechanism that
+  reads that column at all is the on-demand `drift-check` report.
 
 ### FR-09.5 — Handover template for role transitions
 
@@ -565,9 +568,10 @@ committing any of them, leaving the operator to decide what merges.
 - **PRD-07 (promotion & propagation flow)** owns the propagation log FR-09.5's
   handover template snapshots; this PRD cites that snapshot only as one
   section of the handover template's own structure.
-- **PRD-08 (glossary & terminology)** records the same four-domains-are-not-
-  uniform pattern this PRD's FR-09.4 finds in the domain `references.md`
-  copies, for the glossary and README scaffolding instead; cited here as a
+- **PRD-08 (glossary & terminology)** records the same
+  four-domains-are-not-uniform pattern this PRD's FR-09.4 finds in the
+  domain `references.md` copies, for the glossary and README scaffolding
+  instead; cited here as a
   precedent for the finding's shape, not re-derived.
 - **PRD-03 (role model)** owns CODEOWNERS bindings and reviewer identity
   generally; this PRD cites CODEOWNERS only to show that `_drafts/`,
@@ -696,36 +700,47 @@ through `domain-4/references.md` all at `5acd566`, 2026-08-26; Leadership's
 resolves to `d70bafc`, 2026-09-02 (`git log -1` against the tag), the same
 commit `v1` resolves to.
 
-**Method.** FR-09.1, FR-09.3, FR-09.4, FR-09.5, and FR-09.6 (`CONVENTION`
-and `SHIPPED`) were verified by reading each cited file at its cited
+**Method.** FR-09.1, FR-09.3, and FR-09.6 (`CONVENTION`) and FR-09.4 and
+FR-09.5 (`SHIPPED`) were verified by reading each cited file at its cited
 section, on 2026-09-07, against Foundation tag `v1.1.2`, plus the `diff`
 comparisons FR-09.4 records directly in its own evidence block. FR-09.2
-(`SHIPPED`) was verified by extracting `draft-staleness.yml`'s own "Find
-drafts older than 14 days" step verbatim and executing it in two scratch
-git repositories (one seeded with a 37-day-old and a 1-day-old `_drafts/`
-file, one with only the 1-day-old file), per the evidence bar in the PRD
-template's section 3.5. Both directions are reproduced in section 6's own
-evidence block above; it is recorded `SHIPPED` rather than `ENFORCED`
-because, unlike FR-07.4 and FR-08.2's comparable extractions, no locus in
-this PRD's evidence has ever exercised the comparison logic against a
-populated `_drafts/` folder on any of the three published repositories:
-both live runs this requirement's own evidence names are green-by-
-construction against a repository with no `_drafts/` folder at all, which is
-a weaker locus than the scratch execution itself, not a stronger one. The
-scratch execution demonstrates the logic behaves correctly; it does not
-establish that this specific logic, as opposed to the extracted copy, has
-ever produced that verdict anywhere the workstream can point to as a
-locus independent of this PRD's own verification.
+(`ENFORCED (local)`) was verified by extracting `draft-staleness.yml`'s own
+"Find drafts older than 14 days" step verbatim and executing it in two
+scratch git repositories (one seeded with a 37-day-old and a 1-day-old
+`_drafts/` file, one with only the 1-day-old file), per the evidence bar in
+the PRD template's section 3.5, which requires the logic executed and
+observed producing the correct verdict on both a violating and a clean
+input with the locus recorded — not that a live CI locus have exercised it.
+Both directions are reproduced in section 6's own evidence block above,
+each naming the correct file and none other. This is the same standard
+FR-07.4 and FR-08.2 met under materially identical conditions: no live
+locus (CI or otherwise) has ever exercised any of the three requirements'
+comparison logic against a populated input on the published repositories,
+which is why the status carries the `(local)` qualifier rather than being
+withheld. Both live scheduled runs of this workflow remain
+green-by-construction against a repository (Foundation) with no
+`_drafts/` folder at all, and no `pull_request`- or `schedule`-triggered
+run of Domain's or Leadership's callers has ever executed past a
+push-triggered registration failure; both facts are recorded in section 6
+as exactly what they are: evidence that the workflow runs, not evidence
+that its comparison logic has ever been exercised outside this
+verification.
 
 Live GitHub state (workflow run history and Actions-permissions state)
 was read via `gh api` against the published repositories directly: run
 histories for `draft-staleness.yml` on all three repositories, and
 Actions-permissions state for all three, all read within the 2026-09-07
-~12:18-12:19 UTC window recorded in section 6 and section 7. Branch-
-protection absence on all three repositories was read in the same window.
-None of these calls write to a live repository.
+~12:18-12:19 UTC window recorded in section 6 and section 7.
+Branch-protection absence on all three repositories was read in the same
+window. None of these calls write to a live repository.
 
-**Limits.** The scratch verification for FR-09.2 substitutes `gdate` for
+**Limits.** The scratch verification for FR-09.2 constructs its 37-day-old
+`_drafts/` file with a backdated `GIT_AUTHOR_DATE`/`GIT_COMMITTER_DATE`
+(`2026-08-01`) rather than a file that actually aged 37 days on disk; the
+workflow's own `git log -1 --format=%ct` reads exactly this commit
+timestamp regardless of how it was set, so the substitution changes how
+the age was produced, not what the logic reads, but it is a substitution
+and is disclosed as one. It also substitutes `gdate` for
 `date` (this host's native `date` lacks `-d`; the workflow's own
 `ubuntu-latest` runner uses GNU date), the same substitution PRD-07's
 FR-07.4 and PRD-08's FR-08.2 disclosed for the identical reason. It supplies
@@ -747,7 +762,8 @@ callers have never executed past a push-triggered registration failure.
 A re-verifier reproducing the scratch result needs only the "Find drafts
 older than 14 days" step's own `run:` block (section 6), two scratch git
 repositories seeded with `_drafts/` files of the ages described there, and
-the three substitutions this Limits paragraph discloses (`gdate` in place
+the four substitutions this Limits paragraph discloses (a backdated commit
+timestamp in place of a file that aged 37 days on disk, `gdate` in place
 of `date`, hand-created git repositories in place of an Actions checkout,
 hand-created `$GITHUB_OUTPUT`), not GitHub access; a re-verifier checking
 the `gh api` findings needs only public read access to the three
