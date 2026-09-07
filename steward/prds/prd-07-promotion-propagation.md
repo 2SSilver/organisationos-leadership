@@ -664,9 +664,19 @@ arithmetic was run under `gdate` rather than this host's
 native `date`, for the same reason PRD-04's FR-04.4 verification recorded:
 the workflow's own runner uses GNU date, and this host's native `date`
 does not support `-d`. Neither `ENFORCED` claim exercises a live GitHub
-Actions run: Domain's Actions are enabled but the caller's own reference
-is unresolvable as shipped, and Leadership's Actions are disabled outright
-(section 7), so no pull-request- or schedule-triggered execution of either
+Actions run: Domain's Actions are disabled at the repository level
+(`gh api repos/2SSilver/organisationos-domain/actions/permissions` →
+`enabled: false`, verified 2026-09-07T11:34Z), the same as Leadership's
+(section 7). The earlier claim in this paragraph that Domain's Actions
+were enabled rested on the per-workflow `state: active` field FR-07.1's
+evidence cites, not on this repository-level permission itself, which was
+never separately checked at the time; no accessible history (the public
+events API records pushes, PRs, and member changes, not a permissions
+toggle) establishes whether the repository-level setting changed between
+then and this correction, so the earlier claim is treated as unverified
+rather than as a state change. Either way, the caller's own `<adopter-org>`
+reference (section 7) remains unresolvable regardless of the permission
+setting, so no pull-request- or schedule-triggered execution of either
 requirement's logic has ever occurred on the published repositories,
 consistent with the workstream's evidence bar treating local execution as
 equally valid where CI itself cannot be observed. A re-verifier reproducing
