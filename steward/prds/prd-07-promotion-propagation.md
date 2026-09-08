@@ -47,15 +47,15 @@ contain, and nothing about drafting it in the usual place flags that fact
 to anyone outside the domain.
 
 The same section names the consequence on the other side of acceptance:
-once a cross-domain decision merges into Foundation, its work is not done —
-every affected domain still has an implementation PR to write and merge.
+once a cross-domain decision merges into Foundation, its work is not done.
+Every affected domain still has an implementation PR to write and merge.
 `organisationos-foundation/cross-domain-decisions/README.md`'s "Audit trail"
 section states the tracking mechanism directly: "Every PR that closes a
 propagation action carries `Closes CDR-XXX` in its description. The Admin
 records the merged PR's SHA in the Leadership repo's
 `cadence/propagation-log.md`." A checklist item sitting unchecked past its
 own stated deadline is, structurally, indistinguishable from one nobody has
-looked at in weeks — nothing about an unchecked box itself surfaces that
+looked at in weeks. Nothing about an unchecked box itself surfaces that
 distinction to the Admin or the Forum.
 
 Both problems share a shape: a decision or an obligation whose true scope
@@ -147,7 +147,7 @@ Key rules:
 - A propagation-log row is a checkbox, not a status field: "closed" means
   ticked, and a ticked row records the closing PR alongside it.
 - The weekly staleness scan is a calendar fact (today minus the row's own
-  stated deadline), not a judgement call — it does not ask whether the work
+  stated deadline), not a judgement call. It does not ask whether the work
   is actually late for a good reason before flagging it.
 
 Important states: a domain-local ADR before promotion-lint has run against
@@ -244,7 +244,7 @@ extraction run against a domain-1 ADR with `shared: false`,
 commit), with zero jobs under it. Two other `<adopter-org>`-pinned Domain
 callers checked for the same shape (`back-flow-rules.yml`,
 `banned-string-check.yml`) show an identical single push-event failure
-with zero jobs at the same commit — consistent with a workflow-registration
+with zero jobs at the same commit, consistent with a workflow-registration
 failure from the unresolvable `<adopter-org>/organisationos-foundation`
 reference, not an execution of any of these workflows' own declared
 triggers. No `pull_request`-triggered run of `promotion-lint.yml` has ever
@@ -270,7 +270,7 @@ from Foundation's own glossary, unless the ADR also sets `promoted-to:` or
   "How a decision arrives here" step 2 describes the check as one that
   "posts a PR comment with the promote-or-keep-local choice"; nothing in
   `promotion-lint.yml` posts a PR comment (confirmed: zero matches for
-  `comment`, `github-script`, or `issues.create` in the file) — the actual
+  `comment`, `github-script`, or `issues.create` in the file). The actual
   mechanism is a failing check with an inline `::error` annotation on
   whichever frontmatter field the author already chose before pushing, not
   an interactive prompt offering a choice
@@ -290,7 +290,7 @@ reviewed by a Leader and the Domain Lead of every affected domain."
 `organisationos-foundation/.github/CODEOWNERS` lines 43-45 route
 `/interfaces/`, `/cross-domain-decisions/`, and `/architectural-decisions/`
 each to the same six-owner superset (Admin, Leader, all four Domain Leads),
-not a subset scoped to only the affected domains named in a given PR —
+not a subset scoped to only the affected domains named in a given PR,
 the same CODEOWNERS-cannot-express-per-PR-scope limitation PRD-06's
 FR-06.3/FR-06.4 evidence records for the identical three paths, cited here
 rather than re-derived.
@@ -362,7 +362,7 @@ no GitHub API call: it reads a file, computes an `age` in seconds per row,
 and writes `result=clean` or `result=stale` plus a `list` of matching rows
 to its own step output. Detection is therefore separable from the
 issue-opening call by construction, not by an extraction choice made for
-this verification — which is what makes local execution of the scan step
+this verification, which is what makes local execution of the scan step
 alone a legitimate `ENFORCED` locus for this requirement, rather than a
 substitute for evidence the real mechanism cannot produce.
 
@@ -380,7 +380,7 @@ with one unchecked row deadlined `2026-10-07` (a future date), it reported
 This resolves a contradiction in the spec's own worked example, which cites
 run `33418204703` (2026-08-31, `conclusion: success`) as this requirement's
 `ENFORCED` evidence. `gh api` resolves that run against
-**`organisationos-foundation`**, not Leadership — the same reusable
+**`organisationos-foundation`**, not Leadership. The same reusable
 workflow also carries `on: schedule` at its own top level and runs weekly
 against Foundation's own repository, which has no `cadence/` folder at all.
 `gh api .../actions/runs/33418204703/jobs` shows the "Post SLA-breach issue"
@@ -407,7 +407,7 @@ unchecked more than 30 days past its stated deadline.
 - Given no `cadence/propagation-log.md` file at all (Foundation's own
   case, since the reusable also runs on Foundation's own schedule)
   When the weekly scan runs
-  Then it exits clean immediately, without evaluating any item — the
+  Then it exits clean immediately, without evaluating any item, the
     actual shape of the only live run this requirement's spec-level
     evidence cites
 - The issue-creation step carries no check against an already-open
@@ -513,7 +513,7 @@ archived to a dated file annually.
   just duplicate that trigger on every PR:" (the comment then lists three
   excluded workflows, `propagation-sla.yml` among them). That independent
   schedule is what produced the run the spec's own worked example cites as
-  `ENFORCED` evidence for FR-07.4 — against a repository that structurally
+  `ENFORCED` evidence for FR-07.4, against a repository that structurally
   cannot exercise the requirement's logic.
 - **External constraint — GitHub's CODEOWNERS format has no per-pull-
   request scope.** FR-07.2's "Leader and Domain Lead of each affected
@@ -553,9 +553,9 @@ archived to a dated file annually.
   Foundation's own composite CI (section 7), not an oversight; but it is
   also the run the spec's own worked example mistook for evidence that the
   requirement's actual logic had been exercised. Recorded here as a live
-  design question — whether the reusable should skip itself entirely when
-  no propagation log is present, rather than reporting a bare `success` —
-  rather than settled by this PRD.
+  design question, not settled by this PRD: whether the reusable should
+  skip itself entirely when no propagation log is present, rather than
+  reporting a bare `success`.
 
 ## 9. Rebuild guide
 
@@ -574,7 +574,7 @@ staleness scan at the Foundation-to-Leadership seam.
    and `local-reasoning` frontmatter, count distinct domain-name mentions
    in the body against your glossary's list, and fail when either trigger
    condition holds with neither field set. Decide deliberately whether you
-   want an inline check-annotation only, or an actual PR comment — this
+   want an inline check-annotation only, or an actual PR comment. This
    PRD's evidence shows the shipped version is the former even though its
    own documentation describes the latter.
 3. In Domain, write `promotion-lint.yml` as a short caller: `on:
@@ -596,10 +596,10 @@ staleness scan at the Foundation-to-Leadership seam.
    caller's own checkout, flags any unchecked row more than 30 days past
    its deadline, and opens an issue naming the stale rows. Decide
    deliberately whether to guard the issue-creation step against a
-   duplicate already open for the same row — the shipped version does not.
+   duplicate already open for the same row. The shipped version does not.
 7. In Leadership, write `propagation-sla.yml` as a short caller (`on:
    schedule`, pinned to the same released tag) carrying `issues: write`
-   permission, and turn Actions on for the repository — without both,
+   permission, and turn Actions on for the repository. Without both,
    the scheduled run this PRD's evidence shows never having fired here
    still will not fire.
 
@@ -683,6 +683,6 @@ equally valid where CI itself cannot be observed. A re-verifier reproducing
 the `ENFORCED` claims needs only FR-07.1's and FR-07.4's own `run:` blocks
 (section 6), a scratch git repository or seeded flat file of the shapes
 described there, and the substitutions this Limits paragraph discloses
-(static glossary snapshot, literal `BASE_REF`, local `yq`, `gdate`) — not
+(static glossary snapshot, literal `BASE_REF`, local `yq`, `gdate`), not
 GitHub access; a re-verifier checking the `gh api` findings needs only
 public read access to the three repositories.
