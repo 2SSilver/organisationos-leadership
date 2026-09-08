@@ -303,7 +303,7 @@ artefact or one verified state.
   mechanism's own history is PRD-02's FR-02.5, cited above rather than
   re-verified here.
 - Section 5's `/onboard` step is the path's last state; the document names
-  nothing beyond it except "When your role changes."
+  nothing beyond it except a closing "When your role changes" heading.
 
 ### FR-16.3 — Ten role onboarding files, correctly nested, restating the empty-list warning
 
