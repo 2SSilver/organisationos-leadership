@@ -657,6 +657,6 @@ step's own `run:` block (section 6), a scratch git repository seeded with
 glossary files of the shapes described there, and the five substitutions
 this Limits paragraph discloses (invented `**CDR**` seed, static glossary
 file copy, hand-created `origin/main` ref, hand-set `GITHUB_BASE_REF`/
-`GITHUB_OUTPUT`, native macOS `grep`/`sed`/`awk`) — not GitHub access; a
+`GITHUB_OUTPUT`, native macOS `grep`/`sed`/`awk`), not GitHub access; a
 re-verifier checking the `gh api` findings needs only public read
 access to the two repositories.
