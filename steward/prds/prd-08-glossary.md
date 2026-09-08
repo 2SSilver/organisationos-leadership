@@ -143,7 +143,7 @@ Key rules:
   conflicting domain-local definition from merging.
 - The vocabulary workshop's own exit criteria gate adoption readiness, not
   any later terminology change: two or more unresolved "Deferred" items
-  means "the bounded contexts are not bounded," and the workshop itself
+  means "The bounded contexts are not bounded ..." and the workshop itself
   recommends against adopting yet.
 
 Important states: a term that exists in exactly one domain's glossary
