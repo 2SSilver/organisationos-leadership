@@ -152,7 +152,7 @@ all affected Domain Leads present or formally delegated." The Minutes
 template's "Agenda" list (lines 40–44) names "1. Propagation review (Admin
 presents `propagation-log.md`)" and "2. CDR-NNN proposed by @<handle>" as
 standing items, and its "Decisions" section (lines 46–48) records "CDR-NNN:
-Accepted | Deferred | Rejected — rationale." `organisationos-foundation/docs/concepts.md`
+Accepted | Deferred | Rejected — rationale". `organisationos-foundation/docs/concepts.md`
 line 40 names the chair's ownership directly: "**Leader** — owns
 cross-domain alignment and strategy. Chairs the Leadership Forum, approves
 CDRs, co-signs harness changes. Does not commit inside any single domain."
@@ -185,9 +185,10 @@ exactly two files: `README.md` and `propagation-log.md` (verified by
 directory listing, 2026-09-08); no `YYYY-MM-DD.md` minutes file is present.
 `cadence/README.md`'s "File pattern" section (lines 25–26): "`YYYY-MM-DD.md`
 — minutes of each forum. Commit within one working day." and
-"`vocabulary-YYYY-MM-DD.md` — output of any vocabulary workshop." The
-Minutes template's closing sections (lines 50–51) read "## Open propagation
-actions" followed by "(Cross-link to `propagation-log.md`)." `organisationos-leadership/CLAUDE.md`,
+"`vocabulary-YYYY-MM-DD.md` — output of any vocabulary workshop (see
+`../../organisationos-foundation/standards/templates/vocabulary-workshop.md`)."
+The Minutes template's closing sections (lines 50–51) read "## Open propagation
+actions" followed by "(Cross-link to `propagation-log.md`)". `organisationos-leadership/CLAUDE.md`,
 "Rules specific to Leadership": "Leadership Forum minutes in `cadence/` are
 append-only. Corrections are addenda, not edits." The root `README.md`'s
 worked example states the same practice concretely: "At the next Leadership
@@ -276,7 +277,7 @@ resolution, via two distinct documented paths.
   the Leader chairs.
 - **PRD-07 (promotion and propagation flow)** owns the propagation mechanics
   the Forum reviews. FR-07.5 already states, and this PRD cross-references
-  rather than restates, that "the propagation cycle for an accepted CDR
+  rather than restates it: "The propagation cycle for an accepted CDR
   MUST close only when the Leadership Forum has seen every implementation
   PR merged and marks the propagation-log entry complete." FR-07.4's
   overdue-item detection is the mechanism FR-14.4 names as the source of one
@@ -357,9 +358,11 @@ touched by commit `224fb782` (2026-08-26); `strategy/README.md` by commit
 `503a9746` (2026-08-21); both durable history on `organisationos-leadership`'s
 own `main` branch.
 
-All four requirements are `CONVENTION`, consistent with this PRD's subject:
-a meeting rhythm and two folders, neither of which has any CI or hook
-watching it. FR-14.1 and FR-14.3 rest on reading the two specified files
+Three of the four requirements are `CONVENTION` outright; the fourth,
+FR-14.2, splits `SHIPPED` for the file that exists and `CONVENTION` for
+the practice around it — consistent with this PRD's subject: a meeting
+rhythm and two folders, neither of which has any CI or hook watching it.
+FR-14.1 and FR-14.3 rest on reading the two specified files
 directly. FR-14.2's split status rests on a directory listing of `cadence/`
 at template state (two files present, no minutes file) alongside the same
 README's documented pattern — a structural fact and a documented practice,
