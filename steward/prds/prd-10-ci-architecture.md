@@ -63,7 +63,7 @@ carries none of the tag history a pinned caller expects: `gh repo create
 steps (from creating the three repositories, Step 1, through installing a
 pre-commit hook, Step 9, and setting up a person, Step 10) never once
 instruct creating one. The only tag-related instruction in the document
-appears after Step 10, in "Afterwards," and it assumes the tag already
+appears after Step 10, in "Afterwards", and it assumes the tag already
 exists: "When Foundation's workflows change, roll the `v1` tag forward in a
 Foundation PR (two approvers) — callers pick the change up on their next
 run." A literal reading of the setup guide leaves every `@v1` caller in
@@ -641,7 +641,7 @@ explaining a design choice rather than only what the file does.
 `organisationos-foundation/.github/workflows/self-ci.yml`'s header explains
 why the file exists at all: "without this file, Foundation PRs run zero CI
 even though Domain and Leadership run the full suite against Foundation's
-reusables," and separately why Foundation calls its own reusables
+reusables." and separately why Foundation calls its own reusables
 differently from everyone else: "Foundation calls its own reusables by LOCAL
 path... not the cross-repo pinned-tag form (`@v1`) Domain/Leadership callers
 use — the reusable lives in this same repo, so there is no cross-repo
