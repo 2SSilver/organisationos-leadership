@@ -203,13 +203,13 @@ its purpose in one line.
   has "`require-code-owner-review` off on `domain-N/_drafts/`" and cites
   `docs/setup-org.md` Step 7 as the source. Step 7 itself (line 116) says the
   opposite of what is cited: "GitHub branch protection is per-branch, not
-  per-path, so it cannot express that distinction natively," and names the
-  notification-only tier a documented convention with no enforcement behind
-  it, not an actual per-path setting. The command's own description of its
-  low-ceremony path names a mechanism the file it cites says does not exist.
-  This does not change the command's SHIPPED status: the file exists and is
-  wired. It does mean a reader following `update-wiki`'s own citation to Step
-  7 finds Step 7 contradicting it.
+  per-path, so it cannot express that distinction natively." Step 7 goes on
+  to name the notification-only tier a documented convention with no
+  enforcement behind it, not an actual per-path setting. The command's own
+  description of its low-ceremony path names a mechanism the file it cites
+  says does not exist. This does not change the command's SHIPPED status:
+  the file exists and is wired. It does mean a reader following
+  `update-wiki`'s own citation to Step 7 finds Step 7 contradicting it.
 - Definitions existing is what this requirement claims; whether a given
   session invokes a given command in a given week is not observed by
   anything cited here.
@@ -232,9 +232,9 @@ agent). Each agent file's frontmatter carries both `description:` and
 - `reviewer`: "Read a changed file and produce a structured review against
   the harness's standards. Read-only; never writes." Tools: `[read,
   search]`
-- `summariser`: "Produce a one-paragraph summary of a long markdown document,
-  plus a 3-5 bullet \"what changed\" list against the previous version if one
-  exists." Tools: `[read, search]`
+- `summariser`: 'Produce a one-paragraph summary of a long markdown document,
+  plus a 3-5 bullet "what changed" list against the previous version if one
+  exists.' Tools: `[read, search]`
 
 The harness MUST ship exactly four subagents, each with a frontmatter
 `description:` and a `tools:` list, and each list MUST be read-only.
@@ -244,10 +244,10 @@ The harness MUST ship exactly four subagents, each with a frontmatter
   execution capability). None of the four names `edit`, `write`, or a shell
   tool.
 - Three of the four agent bodies restate the read-only constraint in their
-  own prose (`link-fixer`: "Read-only; never edits files"; `reviewer`:
+  own prose (`link-fixer`: "Read-only; never edits files."; `reviewer`:
   "Do not write to the file... Do not call any tool other than read and
-  search"; `summariser`: "Read-only; never writes"); `glossary-check`'s body
-  states "Read-only" under its own "Constraints" heading.
+  search."; `summariser`: "Read-only; never writes."); `glossary-check`'s
+  body states "Read-only." under its own "Constraints" heading.
 - The read-only claim in this requirement rests on the declared `tools:`
   list matching what the file's own prose says it does; nothing here
   observed a subagent running and confirms the declared list is what
@@ -314,16 +314,17 @@ harness itself building or wiring that mechanism.
 Status: CONVENTION
 Evidence: `organisationos-leadership/steward/skill-registry.md`: "OrganisationOS-native
 skills that route around `superpowers:` or other plugin skills via
-description-based routing." Its "Rules" section: "Every OrganisationOS-native
-skill whose `description:` opens with 'Use this instead of
-`<plugin>:<skill>` when...' is registered here. Domain Lead approves a
-routing declaration when the skill is created." Its "Current state" section:
+description-based routing." Its "Rules" section's first bullet: 'Every
+OrganisationOS-native skill whose `description:` opens with "Use this
+instead of `<plugin>:<skill>` when..." is registered here.' Its next bullet:
+"Domain Lead approves a routing declaration when the skill is created."
+Its "Current state" section:
 "> Replace this section with the current registry. At adoption time, this
 file holds only these instructions." `organisationos-foundation/.claude/skills/README.md`
 restates the same rule with a worked example
 (`requesting-deliverable-review`, routing around
-`superpowers:requesting-code-review`) under its own "Indicative shape
-(adopter populates)" heading. A direct listing of
+`superpowers:requesting-code-review`) under its own "Routing around
+superpowers skills" heading. A direct listing of
 `organisationos-foundation/.claude/skills/` found only `.gitkeep` and
 `README.md`; no skill subdirectory exists.
 
@@ -365,8 +366,10 @@ mentions the mount flag once, conditionally: "If you started with `claude
 --add-dir ../organisationos-foundation` (`../../` from inside a domain
 folder), `/onboard` and `/find-relevant-knowledge` appear in the command
 list." The same document's Step 5 (line 85) does instruct starting a session
-with the mount flag, but only in order to run `/onboard` once, in week one,
-not as a standing habit for every session's retrieval step Step 4 describes.
+with the mount flag, but only in order to run `/onboard` once, in week one.
+That is not the standing per-session habit `docs/loading-model.md` line 41
+describes above; `setup-person.md`'s own Step 4 is the one-time smoke test,
+not a retrieval step run every session.
 
 The harness's designated retrieval mechanism, `find-relevant-knowledge`,
 MUST be documented as the mechanism that makes reach into Foundation's
