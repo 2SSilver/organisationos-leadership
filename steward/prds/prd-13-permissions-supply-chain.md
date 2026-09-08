@@ -190,7 +190,7 @@ Alternatives rejected:
 Status: CONVENTION
 Evidence: `organisationos-foundation/docs/concepts.md`, "Two gates, not
 one" section (lines 49-53): "A human gates the publish. Every artefact
-that leaves a draft state ... passes a named human" and "A human gates
+that leaves a draft state ... passes a named human ..." and "A human gates
 high-risk tool calls. The publish gate is necessary but not sufficient: an
 agent reading external content can be steered into a destructive action
 before any publish moment." `organisationos-foundation/standards/templates/external-work-claude-md.md`
@@ -284,7 +284,7 @@ both sibling repositories' paths.
   2026-09-08. Live behaviour, whether a running session actually honours
   these entries against an attempted cross-repo write, was not probed
   here; per `docs/concepts.md`'s own account (quoted at FR-13.1), a
-  committed file encodes only "the part a committed file can do," and the
+  committed file encodes only "the part a committed file can do." and the
   rest of the tool gate is session behaviour that this PRD's evidence does
   not reach.
 
@@ -407,9 +407,9 @@ gets a restricted MCP allow-list.
 Status: SHIPPED
 Evidence: all three `.claude/settings.json` files and
 `organisationos-foundation/.mcp.json` each carry a `_notes` array. Each
-settings.json's array ends: "Remove the `_notes` field before committing
+settings.json's array ends: "Remove the \_notes field before committing
 in a real adoption — it is documentation, not config." `.mcp.json`'s array
-ends with different wording: "Remove `_notes` before committing in a real
+ends with different wording: "Remove \_notes before committing in a real
 adoption." A search of Foundation's `.github/workflows/` for any reference
 to `settings.json` or `_notes` returns no hits.
 
@@ -481,7 +481,7 @@ configuration, rather than in a separate document, and MUST instruct that
 - **Status qualifier, not closed here — A17-2.** FR-13.1's central
   tool-call-gate claim for Pattern A external-work sessions rests on
   `external-work-claude-md.md`'s overstated description of `--add-dir` as
-  "OS-level isolation, fail-closed." The file is owned by another
+  "OS-level isolation, fail-closed". The file is owned by another
   workstream and is not edited by this PRD. PRD-04's FR-04.7 records the
   same finding independently, from the confidentiality side.
 - **Open question — no mechanism verifies a pin-bump PR actually carried
