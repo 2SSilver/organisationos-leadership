@@ -320,7 +320,7 @@ section (a fenced example): `## CDR-NNN: <title>` followed by checkbox rows,
 YYYY-MM-DD` and, for a closed row, `- [x] Action in Domain 2: <description> —
 Owner: @<handle>, Deadline: YYYY-MM-DD, Closed by PR #NNN on YYYY-MM-DD`.
 "Rules" section: "Every accepted CDR gets a section here when the Admin
-co-signs it at the Forum," and "Each propagation action is a checkbox row
+co-signs it at the Forum." and "Each propagation action is a checkbox row
 with owner, deadline, and (when closed) the closing PR SHA/number."
 `organisationos-foundation/cross-domain-decisions/README.md`, "Audit trail":
 "Every PR that closes a propagation action carries `Closes CDR-XXX` in its
