@@ -25,7 +25,7 @@ can see.
 
 An organisation running several domains needs somewhere that cross-domain
 decisions get approved, propagation gets checked, and strategy gets tested
-against what domains actually report back — otherwise those three things
+against what domains actually report back. Otherwise those three things
 happen wherever it is convenient: a hallway conversation, a chat thread, an
 email chain that only some Domain Leads are on. `docs/concepts.md` gives the
 Leader's ownership of this directly: "**Leader** — owns cross-domain
@@ -92,14 +92,14 @@ Key rules:
   (`cadence/`) so reviewing one naturally surfaces the other; a reader is
   never sent to a second repository to check whether an accepted decision
   is still open.
-- Strategy revisions are dated, not overwritten — a later reader can see
+- Strategy revisions are dated, not overwritten. A later reader can see
   what the current position is and what it replaced.
 - Two distinct escalation paths reach the Forum: a disagreement between the
   Admin and the Leader, and a propagation action that has run more than 30
   days past its stated deadline.
 
 Important states: template state, where `cadence/` holds only a README and
-an empty propagation-log skeleton and `strategy/` holds only a README — the
+an empty propagation-log skeleton and `strategy/` holds only a README, the
 state this PRD's evidence was read against; the adopted state, once an
 organisation has replaced the cadence block with its own shape and begun
 filing dated minutes; and the escalated state, reached whenever a
@@ -120,7 +120,7 @@ flowchart TB
 
 Alternatives rejected:
 
-- **No standing body — CDRs approved by whichever reviewers CODEOWNERS
+- **No standing body: CDRs approved by whichever reviewers CODEOWNERS
   names on the Foundation PR.** Rejected because propagation review and
   strategy testing have no natural home on a pull request; they need a
   recurring point where the whole Domain Lead set looks at the log
@@ -178,7 +178,7 @@ meeting.
 
 Status: SHIPPED for the file that exists (the folder and the propagation
 log it holds); CONVENTION for the practice of filing minutes and treating
-the log as the Forum's own review artefact — no minutes file exists at
+the log as the Forum's own review artefact. No minutes file exists at
 template state.
 Evidence: `organisationos-leadership/cadence/` at template state holds
 exactly two files: `README.md` and `propagation-log.md` (verified by
@@ -262,8 +262,8 @@ resolution, via two distinct documented paths.
   is escalated to, distinct from the drift log's own routine drift-tracking
   entries.
 - The propagation log names the Forum as the place the Admin escalates an
-  overdue action, once `propagation-sla.yml` has surfaced it as an issue —
-  the detection and issue-opening mechanism itself is PRD-07's FR-07.4,
+  overdue action, once `propagation-sla.yml` has surfaced it as an issue.
+  The detection and issue-opening mechanism itself is PRD-07's FR-07.4,
   cross-referenced here rather than re-verified.
 - Both paths are stated as what the Admin does at the next Forum meeting;
   nothing named in either file's evidence checks that either kind of
@@ -317,7 +317,7 @@ resolution, via two distinct documented paths.
 This section assumes PRD-01's three repositories and PRD-03's role model
 already exist. It produces the state PRD-14 alone is responsible for: a
 named standing body, a minutes location, a strategy folder, and two
-documented escalation paths — with no verification wired on top of any of
+documented escalation paths, with no verification wired on top of any of
 them.
 
 1. Write `cadence/README.md`'s "Adopted cadence" block: name the Forum, its
@@ -360,26 +360,26 @@ own `main` branch.
 
 Three of the four requirements are `CONVENTION` outright; the fourth,
 FR-14.2, splits `SHIPPED` for the file that exists and `CONVENTION` for
-the practice around it — consistent with this PRD's subject: a meeting
+the practice around it, consistent with this PRD's subject: a meeting
 rhythm and two folders, neither of which has any CI or hook watching it.
 FR-14.1 and FR-14.3 rest on reading the two specified files
 directly. FR-14.2's split status rests on a directory listing of `cadence/`
 at template state (two files present, no minutes file) alongside the same
-README's documented pattern — a structural fact and a documented practice,
+README's documented pattern, a structural fact and a documented practice,
 kept distinct rather than collapsed into one status. FR-14.4 rests on one
 line each from `steward/drift-log.md` (commit `8bb2c85a`, 2026-08-26) and
 `cadence/propagation-log.md` (commit `503a9746`, 2026-08-21), cited for
-evidence though neither file is claimed in this PRD's own `specifies:` list
-— `cadence/propagation-log.md` belongs to PRD-07's, and `steward/drift-log.md`
+evidence though neither file is claimed in this PRD's own `specifies:` list:
+`cadence/propagation-log.md` belongs to PRD-07's, and `steward/drift-log.md`
 to the PRD covering harness stewardship. Its cross-reference to FR-07.5 and
 FR-07.4 points at PRD-07's own section 6, not at any revision of it.
 
 No `ENFORCED` or `GAP` status appears in section 6: nothing here is
 executable logic to run red or green, and nothing describes a mechanism the
-harness intends but has not built — the Forum and the strategy folder are
+harness intends but has not built. The Forum and the strategy folder are
 exactly as documented, at exactly the maturity the evidence shows. A
 re-verifier needs only the two specified files, the two evidence-only files
 named above, `organisationos-foundation/docs/concepts.md` line 40, and
-PRD-07's and PRD-03's own text — all resolvable from the three published
+PRD-07's and PRD-03's own text, all resolvable from the three published
 repositories alone, with no live GitHub state, no seeded input, and no
 substitution of any kind in this PRD's method.
