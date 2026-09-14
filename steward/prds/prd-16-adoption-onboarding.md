@@ -237,8 +237,8 @@ steps, Step 1 ("Create the three repos") through Step 10 ("Now set
 yourself up as a person"), confirmed directly: `grep -c '^## Step'` on the
 file returns 10. Its opening line: "This is the once-per-organisation path.
 One person — usually the person who will be Admin — does it, once." Step
-10 hands off explicitly: "Continue with [Joining an organisation that runs
-OrganisationOS](setup-person.md), which covers your role's
+10 hands off explicitly: "Continue with 'Joining an organisation that runs
+OrganisationOS' (`setup-person.md`), which covers your role's
 `settings.local.json`, your `CLAUDE.local.md`, and the smoke test that
 shows whether your session can reach Foundation — not whether its rules
 are loaded."

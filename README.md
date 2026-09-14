@@ -51,7 +51,7 @@ flowchart TB
 | --- | --- |
 | `strategy/` | Org-level strategic content: priorities, OKRs, position papers |
 | `cadence/` | Leadership Forum minutes; propagation log tracking CDR → domain implementation |
-| `steward/` | Admin's drift log, monthly DRI notes, harness improvement backlog |
+| `steward/` | Admin's drift log, monthly DRI notes, harness improvement backlog, and the as-built PRD set (`steward/prds/`) |
 
 **NOT here:** CDRs, NFRs, interfaces, standards, architectural decisions, or any cross-domain artefact. Those live in the Foundation repo. If the content affects more than one domain or needs org-wide enforcement, it goes in Foundation.
 

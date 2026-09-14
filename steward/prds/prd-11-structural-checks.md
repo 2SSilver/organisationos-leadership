@@ -459,7 +459,7 @@ links` failing, with its "Check links with lychee" step itself reaching
 failure (not skipped, not an upstream setup error): the run's own log
 reports "🚫 Errors | 3" and, under "Errors in
 standards/templates/references-template.md", three identical lines:
-"[ERROR] <error:> (at 10:31) | Cannot parse 'https://…' into a URL: invalid
+"[ERROR] <error:> (at 10:31) | Cannot parse `https://…` into a URL: invalid
 international domain name" (repeated at 11:43 and 9:19). This is the
 check's own logic genuinely rejecting real file content, not an upstream
 configuration failure: `git show 5fa85c9:standards/templates/references-template.md`
