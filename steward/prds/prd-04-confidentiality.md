@@ -11,12 +11,14 @@ specifies:
   - organisationos-foundation/.github/hooks/banned-string-pre-commit
   - organisationos-foundation/standards/templates/external-work-claude-md.md
   - organisationos-foundation/.github/workflows/banned-string-check.yml
+  - organisationos-foundation/.github/scripts/banned-scan.sh
+  - organisationos-foundation/.github/scripts/banned-scan.test.sh
   - organisationos-leadership/.github/workflows/banned-string-check.yml
   - organisationos-domain/.github/workflows/banned-string-check.yml
   - organisationos-foundation/.github/workflows/back-flow-rules.yml
   - organisationos-domain/.github/workflows/back-flow-rules.yml
-verified: 2026-09-03
-foundation-tag: v1.1.2
+verified: 2026-09-14
+foundation-tag: v1.1.3
 ---
 
 ## 1. Intent
@@ -396,96 +398,101 @@ Neither ships. No CI job in `back-flow-rules.yml` evaluates session mount
 state; the ban rests entirely on reviewer judgement during back-flow
 review, with no compensating field to judge against.
 
-### FR-04.7 — External-work sessions mount the harness read-only, restricted MCP allow-list
+### FR-04.7 — External-work sessions scope the harness mount, restricted MCP allow-list
 
-Status: SHIPPED, with a status qualifier on its central confidentiality claim
+Status: SHIPPED; nothing verifies that an external-work repo adopts it
 Evidence: `organisationos-foundation/standards/templates/external-work-claude-md.md`
-exists and documents a read-only `--add-dir` mount naming only safe
-subfolders, an MCP allow-list restricted to what a project's own `.mcp.json`
-lists, and a back-flow procedure. Nothing in the harness enforces that an
-external-work repository actually adopts this template, or that a session
-is actually launched with the documented flags rather than some broader
-mount. **Status qualifier (A17-2, security-relevant, owned by another
-session, recorded here, not fixed):** the template overstates what
-`--add-dir` does. Line 30 calls the mount "OS-level isolation, fail-closed";
-line 32 states "nothing outside this list is visible to the session"; line
-45 states unlisted content "stays hidden by default." `--add-dir` is a
-Claude Code permission-surface flag that grants a session access to a named
-directory; it is not an operating-system sandbox, and nothing in the tool
-enforces that content outside the named list is actually invisible to a
-session running under some other configuration. The template's central
-confidentiality claim for Pattern A external-work sessions rests on this
-overstated sentence.
+exists and documents an `--add-dir` allow-list naming only safe subfolders
+(`interfaces`, `standards/templates`, `syntheses`, `glossary.md`) rather
+than the harness repo root, an MCP allow-list restricted to what a
+project's own `.mcp.json` lists, and a back-flow procedure. Nothing in the
+harness enforces that an external-work repository actually adopts this
+template, or that a session is launched with the documented flags rather
+than some broader mount — hence CONVENTION for adoption.
 
-An external-work repository under Pattern A MUST document a read-only mount
-of only the safe harness subfolders and a restricted MCP allow-list, using
-a shared template rather than each engagement inventing its own.
+A17-2 closed 2026-09-14 (Foundation PR #8, v1.1.3). The template had
+described the mount as "OS-level isolation, fail-closed", said "nothing
+outside this list is visible to the session", and called unlisted content
+hidden "by default". `--add-dir` grants reach through Claude Code's own
+permission layer: it grants read and write to the directories named, and
+conceals nothing. The template now presents the allow-list as scoping
+bounded by the tool's permission gates, and points an operator who needs
+enforced confinement at an OS-level boundary — a separate user account,
+a container, or a VM — configured before the session starts.
 
-- The template exists, names specific safe subfolders (`interfaces`,
-  `standards/templates`, `syntheses`, `glossary.md`) rather than the harness
-  repo root, and states the allow-list is fail-closed by omission.
+An external-work repository under Pattern A MUST document a scoped mount of
+only the safe harness subfolders and a restricted MCP allow-list, using a
+shared template rather than each engagement inventing its own.
+
+- The template exists and names specific safe subfolders rather than the
+  harness repo root.
 - Nothing in the harness verifies, at any point, that a given external-work
   repository's own `CLAUDE.md` was actually derived from this template
   rather than something looser.
-- The template's isolation language is stronger than what the underlying
-  mechanism (`--add-dir`) actually provides; this is recorded as a status
-  qualifier rather than corrected here, since the file is owned by another
-  session.
+- The template no longer claims the mount provides isolation it does not
+  provide. What it claims for the allow-list — that it scopes default reach
+  — is what the mechanism does.
 
 ### FR-04.8 — `context-near` co-occurrence patterns
 
-Status: GAP
-Evidence: `organisationos-foundation/standards/banned-patterns.yml` line 8
-documents the directive ("`!context-near` — co-occurrence directive. Fails
-if two strings appear within a token window.") and line 22 carries one
-worked entry using it. `organisationos-foundation/.github/workflows/banned-string-check.yml`
-line 44 extracts patterns with `yq '.[] | .pattern' | grep -v '^null$'`: a
-`!context-near` entry has no `.pattern` key, so this extraction yields
-`null` for it (confirmed directly: `yq '.[] | .pattern'` against the file
-returns two literal patterns followed by a literal `null` for the
-`context-near` entry), and `grep -v '^null$'` drops it before the scan loop
-ever runs. The pre-commit hook uses the identical extraction line, so the
-gap is the same at both enforcement points. `coverage-gaps.md` names
-`context-near` twice as the defence for structural and co-occurrence
-identifiers (lines 8 and 10 of that file).
+Status: ENFORCED (CI); run `34861050432` (red) and run `34861265245`
+(green), Foundation self-CI
+Evidence: `organisationos-foundation/.github/scripts/banned-scan.sh`
+selects co-occurrence entries on the YAML tag itself
+(`select(tag == "!context-near")`) rather than on a `.pattern` key, then
+tokenises each scanned file and fails when both strings occur within
+`window` tokens. Both enforcement points call that one script:
+`banned-string-check.yml` invokes it from the Foundation checkout, and
+`banned-string-pre-commit` resolves it next to `banned-patterns.yml`.
+
+Red and green were both observed in Foundation's own CI rather than only in
+a local fixture. Run `34861050432` failed `banned-string / banned` with
+`.github/scripts/banned-scan.test.sh matches co-occurrence directive
+'retail bank' near 'Stockholm' (within 100 tokens)` — the first execution
+of this directive anywhere, catching the scan's own fixture file. Run
+`34861265245`, after that fixture file was excluded by exact path, passed
+14/14. `.github/scripts/banned-scan.test.sh` runs on every Foundation PR
+and covers both directions: co-occurrence inside the window must fail,
+beyond it must pass.
 
 Intent: two otherwise-anodyne strings that only identify someone in
 combination MUST be catchable by a declared co-occurrence rule, not left to
 human review alone.
 
-Reality: the directive is documented in `banned-patterns.yml` and named
-twice in `coverage-gaps.md` as the defence for exactly this leak shape, but
-the workflow's own extraction reads only the `.pattern` key. A
-`!context-near` entry carries no `.pattern` key by construction, so it is
-filtered out before either scan loop sees it. A documented confidentiality
-control has no implementation at all.
+Reality: as intended. `coverage-gaps.md` names `context-near` as the
+defence for structural and co-occurrence identifiers, and that defence now
+executes. Note the limit of the claim: ENFORCED describes the logic, not
+whether a merge is blocked — Foundation has no branch protection, and
+Leadership and Domain have Actions disabled until an adopter substitutes
+`<adopter-org>`, so no caller run of this directive has been observed
+outside Foundation.
 
 ### FR-04.9 — `match:` modifiers
 
-Status: GAP
-Evidence: `organisationos-foundation/standards/banned-patterns.yml` declares
-`match:` modifiers on every entry: line 16 ("word-boundary,
-case-insensitive, diacritic-insensitive") and line 19 ("regex,
-case-sensitive"). Neither `banned-string-check.yml` nor
-`banned-string-pre-commit` reads a `.match` key anywhere (`grep -n
-"\.match"` against both returns zero hits); both extract only `.pattern`
-(the same line cited for FR-04.8) and both scan with a hardcoded `rg -qi`
-regardless of what a given entry's `match:` declares. Concretely: the
-four-digit ticket-reference pattern declares `case-sensitive`, but the loop
-that scanned it in this PRD's own red/green run (verification log Check 2)
-used `rg -qi` (case-insensitive) throughout, the same as every other
-pattern.
+Status: SHIPPED — the declaration was removed rather than implemented
+Evidence: `organisationos-foundation/standards/banned-patterns.yml` no
+longer declares `match:` on any entry (`grep -c 'match:'` returns 0). Its
+header now states what the scan applies to every entry without exception:
+regex semantics, case-insensitive, at word boundaries. That matches
+`banned-scan.sh`, which scans each pattern with `rg -qi "\b${p}\b"`.
 
-Intent: an entry's declared `match:` modifiers (including
-diacritic-insensitive matching and an entry-specific case sensitivity)
-MUST govern how that entry is scanned.
+Removing the key had one non-obvious consequence, handled in the same
+change: `self-ci.yml`'s `banned-patterns-validate` job selected the
+patterns it compile-checked with `.match | test("regex")`. With no `match:`
+key remaining, that selector returns nothing and the job would have
+reported success while compile-checking zero patterns. It now compile-checks
+every pattern, which is the honest rule, since `rg` applies regex semantics
+to all of them regardless of declaration.
 
-Reality: both enforcement points hardcode one matching mode
-(word-boundary, case-insensitive) for every pattern, independent of what
-`match:` declares. Same root cause as FR-04.8: the extraction reads one
-key and silently drops every other declared modifier, so a stated
-diacritic-insensitive or case-sensitive rule does not exist in either
-scan.
+Intent: the pattern file MUST NOT declare matching behaviour that the scan
+does not apply.
+
+Reality: as intended, by narrowing the declaration rather than widening the
+implementation. Diacritic-insensitive matching and entry-specific case
+sensitivity are not available; they are no longer claimed to be. Stefan's
+ruling on 2026-09-14 took the co-occurrence directive as the control worth
+building, since `coverage-gaps.md` names it as the only defence for its
+category, and treated the modifiers as the part to drop.
 
 ## 7. Dependencies & constraints
 
@@ -523,23 +530,14 @@ scan.
   mechanism (a session-id PR-template field plus a commit-tagging hook);
   neither exists in either repository's PR template. The ban is enforced by
   reviewer judgement alone, with nothing for a reviewer to check against.
-- **GAP — `context-near` co-occurrence patterns are declared and named as
-  a defence, but never executed.** FR-04.8: the workflow's own `.pattern`-only
-  extraction silently drops any entry that uses the directive instead of a
-  literal pattern.
-- **GAP — declared `match:` modifiers are never read.** FR-04.9: both
-  enforcement points hardcode one matching mode for every entry, so a
-  declared case-sensitive or diacritic-insensitive rule does not exist in
-  either scan.
-- FR-04.6, FR-04.8, and FR-04.9 share one shape: a control the
-  documentation describes, naming a specific mechanism, and no code
-  implements. Each was verified independently against its own file and
-  line; this PRD does not generalise the shape to any control beyond these
-  three.
-- **Status qualifier, not closed here — A17-2.** FR-04.7's central
-  confidentiality claim (`--add-dir` as "OS-level isolation, fail-closed")
-  is overstated relative to what the underlying tool does. The file is
-  owned by another workstream and is not edited by this PRD.
+- **Closed 2026-09-14 — FR-04.8, FR-04.9 and A17-2.** All three were
+  instances of one shape: a control the documentation described, naming a
+  specific mechanism, that no code implemented. `!context-near` now
+  executes and is tested on every Foundation PR; the `match:` declaration
+  was removed rather than implemented; the external-work template no longer
+  claims isolation `--add-dir` does not provide. FR-04.6 is the one
+  instance of that shape still open, and this PRD does not generalise it
+  beyond the cases named here.
 - **Open question — nothing verifies a back-flow PR's own CODEOWNERS
   routing before merge.** FR-04.4's cap and cool-off run as CI checks;
   whether the correct reviewer set was actually named for a given PR's
