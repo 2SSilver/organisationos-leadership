@@ -1,10 +1,12 @@
 #!/bin/bash
-# coverage-check.sh — every harness file is claimed by exactly one PRD's
+# coverage-check.sh — every harness file is claimed by at least one PRD's
 # specifies: list, and every claimed path exists. Run from steward/prds/.
 # Exit 0 = clean; 1 = unclaimed or stale entries; 2 = sibling layout broken.
 # Exclusions: LICENSE, .gitkeep, .DS_Store, docs/assets/banner.png, steward/prds/**.
 # The check proves no file is undocumented. It does NOT prove any file is
-# documented well — that is a review concern, not a tooling one.
+# documented well — that is a review concern, not a tooling one. Nor does it
+# prove exclusive ownership: it detects only files with zero claimants, and
+# two files are legitimately claimed twice (see README.md).
 set -u
 shopt -s nullglob   # a zero-PRD directory must not leave the literal glob in $f
 BASE="$(cd "$(dirname "$0")/../../.." && pwd)"   # parent of the three clones

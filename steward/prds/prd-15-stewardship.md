@@ -385,7 +385,7 @@ touching Foundation (Admin + Leader per CODEOWNERS)."
 
 An open question this PRD records rather than resolves: `coverage-check.sh`
 (the script that confirms every harness file in the three published
-repositories is claimed by exactly one PRD's `specifies:` list) is not
+repositories is claimed by at least one PRD's `specifies:` list) is not
 itself wired into any CI workflow on any of the three repositories (a
 tracked-content search for "coverage-check" across all three returns no
 hit outside `steward/prds/` itself, where the script lives). `steward/prds/README.md`'s
