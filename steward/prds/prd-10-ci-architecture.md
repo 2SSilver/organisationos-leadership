@@ -279,10 +279,17 @@ lists 10 files (`banned-string-check.yml`, `claude-md-length.yml`,
 `monthly-dri.yml`, `pr-preview.yml`, `propagation-sla.yml`,
 `stale-path-check.yml`), each carrying exactly one `@v1` reference (`grep -rc`
 confirms). The same command against `organisationos-domain/.github/workflows/`
-lists 12 files, 11 carrying one reference each and
-`glossary-consistency.yml` carrying two (its own two-checkout shape), for
-13 references across 12 files. Total: 23 `@v1` references across the two
-repositories (10 + 13), 22 distinct files carrying at least one.
+lists 12 files, but `grep -rl '@v1'` matches comment text as readily as
+calls, and one of the 12 is not a caller: `glossary-consistency.yml`
+calls no Foundation reusable at all. Its three `uses:` lines are two
+`actions/checkout@v4` and one `actions/github-script@v7`; its two `@v1`
+hits are both comments, one of which states that the step is
+"deliberately not pinned like the reusable-workflow `@v1` refs elsewhere
+in this" repository. Counting `uses:` lines that resolve to a Foundation
+reusable — `grep -cE '^\s*uses:.*organisationos-foundation/\.github/workflows/.*@v1'`
+per file — gives 11 Domain files, one reference each. Total: 21 `@v1`
+references across the two repositories (10 + 11), one per file, 21
+distinct callers.
 `docs/setup-org.md`'s own "Pinning" bullet, in its closing "Afterwards"
 section: "Every Leadership and Domain workflow calls Foundation's reusables
 at `@v1`. When Foundation's workflows change, roll the `v1` tag forward in a
@@ -313,7 +320,7 @@ Foundation's own default branch.
 - N1 confirms a literal reading of `docs/setup-org.md` produces a freshly
   templated Foundation with zero tags at all (`gh repo create --template`
   does not copy them), and no step in the guide instructs creating one, so
-  every one of the 23 counted `@v1` references would fail to resolve on a
+  every one of the 21 counted `@v1` references would fail to resolve on a
   first run performed exactly as documented. This is recorded as a `GAP` in
   the setup path itself, distinct from the `SHIPPED` state of the tag as it
   exists today on the published repositories.
@@ -882,9 +889,14 @@ because either could otherwise be read as a stronger claim than the run
 history alone supports.
 
 FR-10.3's job-and-directory count (13 jobs; 9 called, 5 not, against a
-15-file directory) and FR-10.2's pin count (23 references across 22 files)
+15-file directory) and FR-10.2's pin count (21 references across 21 files)
 were each re-derived from the `grep`/`ls` commands quoted in section 6 rather
-than computed by hand; a re-verifier re-running those same commands against
+than computed by hand. FR-10.2's count was corrected on 2026-09-14: the
+original derivation used `grep -rl '@v1'`, which counts a file whose only
+`@v1` occurrences are comments, and reported 23 references across 22 files.
+Counting `uses:` lines that resolve to a Foundation reusable gives 21 and
+21. The looser command is the one quoted in section 6 for listing files;
+the narrower one is what the count rests on. a re-verifier re-running those same commands against
 the current state of the three repositories should expect the totals to
 match only as long as no reusable, caller, or workflow file has been added
 or removed since this PRD's `verified:` date.
