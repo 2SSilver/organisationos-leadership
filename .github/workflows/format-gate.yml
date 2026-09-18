@@ -6,3 +6,6 @@ on:
 jobs:
   call:
     uses: <adopter-org>/organisationos-foundation/.github/workflows/format-gate.yml@v1  # pin to a released tag or commit SHA; bump via a two-approver Foundation PR that also rolls the tag
+    with:
+      foundation-repo: <adopter-org>/organisationos-foundation
+      foundation-ref: main
