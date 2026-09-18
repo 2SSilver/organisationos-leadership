@@ -357,15 +357,17 @@ of the two candidate anchors, the settings file's own location or the
 session's launch directory, the `additionalDirectories` path is resolved
 against.
 
-A third, mechanical gap touches five of these ten files directly (N5,
-status owned by PRD-05's FR-05.2): `format-gate.yml`'s extension check
-(`ext="${f##*.}"`, line 66 as read on 2026-09-08) extracts
-`example-admin`, `example-domain-lead`, `example-leader`,
+A third, mechanical gap touched five of these ten files directly (N5,
+status owned by PRD-05's FR-05.2, closed 2026-09-15): `format-gate.yml`'s
+extension check (`ext="${f##*.}"`, line 66 as read on 2026-09-08)
+extracted `example-admin`, `example-domain-lead`, `example-leader`,
 `example-product-owner` and `example-team-member` respectively from the
-five `settings.local.json.example-<role>` basenames, reproduced directly
-against the live workflow text, none of which is on the extension
-whitelist. A PR touching any one of these five files fails `format-gate`
-as the check is currently written.
+five `settings.local.json.example-<role>` basenames, none of which was on
+the extension whitelist, so a PR touching any one of these five files
+failed `format-gate` as the check was then written. The scan now lives in
+`.github/scripts/format-scan.sh`, which strips the `.example[-<role>]`
+suffix before deriving the extension; a PR touching any of these five
+files no longer fails for this reason.
 
 Six sites across these same role templates carried a separate false claim
 until 2026-09-01: Foundation `CHANGELOG.md`'s entry for that date:
@@ -392,68 +394,76 @@ list on purpose.
 - The warning that a joiner should copy the role file rather than the
   generic one is stated in both `loading-model.md` and `setup-person.md`,
   in nearly identical words.
-- Three further gaps sit inside this same set of ten files without being a
-  defect in any one file's own wording: the mount-flag reachability gap
-  (N6), the `additionalDirectories` anchor ambiguity (N4), and
-  `format-gate`'s extension-parsing defect (N5). Each is cross-referenced
-  to the PRD that owns its full derivation rather than re-derived here.
+- Three further findings sit inside this same set of ten files without
+  being a defect in any one file's own wording: the mount-flag
+  reachability gap (N6), the `additionalDirectories` anchor ambiguity
+  (N4), still open, and `format-gate`'s extension-parsing defect (N5),
+  closed 2026-09-15. Each is cross-referenced to the PRD that owns its
+  full derivation rather than re-derived here.
 
 ### FR-16.4 — Placeholder substitution precedes enabling Actions; two supply-chain placeholders are not part of the sweep
 
-Status: SHIPPED for the `<adopter-org>` substitution and its ordering
-before Actions is enabled; GAP for the Foundation tag every pinned caller
-depends on (N1) and for two supply-chain placeholders the substitution
-step does not catch (N2)
+Status: CONVENTION for the Foundation tag and the two supply-chain
+placeholders, both now documented and checked (closed 2026-09-15, was
+`GAP`) (N1, N2); SHIPPED for the `<adopter-org>` substitution and its
+ordering before Actions is enabled
 Evidence: `docs/setup-org.md` Step 3 ("Substitute the placeholder")
-precedes Step 5 ("Enable Actions") in the document's own numbering, and
-Step 5 states the dependency directly: "Actions are disabled on the
-published Leadership and Domain templates precisely because Step 3 has not
-run on them. Now that it has, enable them:". Step 3 itself: "The templates
-carry the literal string `<adopter-org>` wherever they need to name your
-GitHub owner: in every workflow that calls a Foundation reusable, in
-`AGENTS.md`, and in the cross-repo links in each README. Until it is
-substituted, those workflows are invalid and those links are dead."
-PRD-10's FR-10.7 records the run-level proof that an unsubstituted caller
-fails at registration time in both Leadership and Domain, with four run
-IDs read directly; this PRD does not repeat them.
+precedes Step 5 ("Tag Foundation's reusables as `v1`, then enable
+Actions") in the document's own numbering, and Step 5 states the
+dependency directly: "Actions are disabled on the published Leadership and
+Domain templates precisely because Step 3 has not run on them. Now that it
+has, enable them:". Step 3 itself: "The templates carry the literal string
+`<adopter-org>` wherever they need to name your GitHub owner: in every
+workflow that calls a Foundation reusable, in `AGENTS.md`, and in the
+cross-repo links in each README. Until it is substituted, those workflows
+are invalid and those links are dead." PRD-10's FR-10.7 records the
+run-level proof that an unsubstituted caller fails at registration time in
+both Leadership and Domain, with four run IDs read directly; this PRD does
+not repeat them.
 
-**N1 — no step creates the Foundation tag every pinned caller resolves
-against.** Checked directly against `docs/setup-org.md`'s full text on
-2026-09-08: of its ten numbered steps, none mentions "tag" or "v1"; the
-only occurrence of "v1" in the whole document is one sentence in the
-closing "Afterwards" section, after Step 10: "Every Leadership and Domain
-workflow calls Foundation's reusables at `@v1`. When Foundation's
-workflows change, roll the `v1` tag forward in a Foundation PR (two
-approvers) — callers pick the change up on their next run." That sentence
-assumes `v1` already exists; it never instructs creating it. Step 1
-creates each repository with `gh repo create "$ORG/organisationos-$r"
---template "2SSilver/organisationos-$r" --private`. GitHub's template
-mechanism does not copy tags from the source repository. PRD-10's FR-10.2
-records this same finding in full; this PRD's own independent check
-reproduces the same zero-hit result and records what it means for the
-adoption path specifically: a stranger who executes Steps 1 through 10
-exactly as written, on a freshly templated Foundation, has every one of
-the pinned `@v1` references in Leadership and Domain fail to resolve the
-moment Actions is enabled at Step 5.
+**N1, closed 2026-09-15 — no step created the Foundation tag every pinned
+caller resolves against.** Checked directly against `docs/setup-org.md`'s
+full text on 2026-09-08, before this wave: of its then-ten numbered steps,
+none mentioned "tag" or "v1"; the only occurrence of "v1" in the whole
+document was one sentence in the closing "Afterwards" section, after the
+final step, which assumed `v1` already existed rather than instructing
+creating it. Step 1 creates each repository with `gh repo create
+"$ORG/organisationos-$r" --template "2SSilver/organisationos-$r"
+--private`. GitHub's template mechanism does not copy tags from the source
+repository. `docs/setup-org.md` now has eleven numbered steps; Step 5 is
+retitled "Tag Foundation's reusables as `v1`, then enable Actions" and
+opens with `git tag v1 && git push origin v1`, run before Actions is
+enabled later in the same step. PRD-10's FR-10.2 records this same finding
+and its closure in full; this PRD records what it means for the adoption
+path specifically: a stranger who executes the documented steps in order,
+on a freshly templated Foundation, now creates `v1` before Actions can be
+turned on, so no pinned `@v1` reference fails to resolve for this reason
+on a literal first run.
 
-**N2 — two supply-chain placeholders ship unsubstituted and the setup
-guide never names them.** Direct read of all three repositories'
-`.claude/settings.json` on 2026-09-08: each carries `"ref":
-"REPLACE-WITH-AUDITED-COMMIT-SHA"` (Foundation line 29, Domain line 19,
-Leadership line 23) and `"version": "<pinned-version-or-ref>"` (Foundation
-line 36, Domain line 26, Leadership line 30). Foundation's own file states
-the intent in its `_notes` array: "Pin to a marketplace ref (commit SHA),
-not a tag/label."; "Remove the _notes field before committing in a real
-adoption — it is documentation, not config." A search of both setup
-documents for "REPLACE-WITH", "pinned-version" and "marketplace" returns
-no hits in either file. Step 3's substitution sweep matches only the
-literal string `<adopter-org>`, a different literal from either
-placeholder, so it cannot catch them structurally, not merely by
-omission. PRD-13's FR-13.4 records this same finding from the permissions
-side in full; this PRD records what it means for the documented setup
-path: an adopter who completes `docs/setup-org.md` exactly as written
-finishes with both placeholders live, and nothing in either setup
-document, at any step, flags it.
+**N2, closed 2026-09-15 — two supply-chain placeholders shipped
+unsubstituted and the setup guide never named them.** Direct read of all
+three repositories' `.claude/settings.json` on 2026-09-08, before this
+wave: each carried `"ref": "REPLACE-WITH-AUDITED-COMMIT-SHA"` (Foundation
+line 29, Domain line 19, Leadership line 23) and `"version":
+"<pinned-version-or-ref>"` (Foundation line 36, Domain line 26, Leadership
+line 30), and a search of both setup documents for "REPLACE-WITH",
+"pinned-version" and "marketplace" returned no hits in either file.
+`docs/setup-org.md` now carries "Also in Step 3 — pin the plugin supply
+chain," naming both literals directly and instructing the adopter to set
+both and delete the `_notes` array. PRD-13's FR-13.4 records this same
+finding and its closure in full; this PRD records what it means for the
+documented setup path: an adopter who completes Step 3 as written now sets
+both placeholders as part of the same step the `<adopter-org>` sweep
+belongs to, rather than at some later, uncatalogued point.
+
+**Neither N1 nor N2 reaches `ENFORCED`.** `docs/setup-org.md` Step 10 now
+runs `.github/scripts/setup-check.sh`, which fails if either placeholder
+remains or the `v1` tag is absent — but Step 10 is a step an adopter can
+skip, and the script itself is never invoked by CI (it is deliberately not
+a CI job; the templates must keep the placeholders literal for
+`format-gate` and `setup-check-tests` to have something real to check).
+Both findings therefore move to `CONVENTION`: documented, checked on
+request, not compelled.
 
 The setup documentation MUST substitute every adopter-specific placeholder
 before any workflow depending on it is allowed to run, and MUST NOT enable
@@ -464,14 +474,14 @@ Actions before that substitution completes.
   ordering in the document's own step numbers is correct for the
   placeholder it covers.
 - Two further placeholders, a marketplace commit SHA and a plugin version
-  pin, are not part of that sweep, are not named anywhere in either setup
-  document, and ship live in all three repos as of 2026-09-08.
-- A tag every pinned caller depends on is never created by any of the ten
-  steps; the only sentence mentioning it assumes it already exists.
-- None of these three gaps is a defect in the ordering this requirement's
-  title names. The ordering that exists is correct; they are gaps in the
-  sweep's completeness: what it substitutes, it substitutes in the right
-  order; what it does not know to look for, it cannot catch.
+  pin, are now named in the same Step 3 as the `<adopter-org>` sweep, and
+  checked (not enforced) by Step 10's `setup-check.sh`.
+- A tag every pinned caller depends on is now created by Step 5, before
+  Actions is enabled later in that same step.
+- None of these three findings was a defect in the ordering this
+  requirement's title names. The ordering was, and remains, correct; N1
+  and N2 were gaps in the sweep's completeness, now closed by naming and
+  checking what previously went unmentioned and uncaught.
 
 ### FR-16.5 — Branch protection is stated as a per-repo floor and named a convention, not enforcement
 
@@ -681,15 +691,20 @@ against changes.
 
 ## 8. Known gaps & open questions
 
-- **GAP — N1.** No step in `setup-org.md` creates the Foundation tag every
-  pinned Leadership and Domain caller resolves against; a stranger
-  executing the ten steps literally has every caller fail once Actions is
-  enabled (FR-16.1, FR-16.4; full derivation at PRD-10's FR-10.2).
-- **GAP — N2.** `REPLACE-WITH-AUDITED-COMMIT-SHA` and
-  `<pinned-version-or-ref>` ship live in all three repos'
-  `.claude/settings.json`; neither setup document names either string, and
-  the one substitution sweep that exists cannot catch them (FR-16.4; full
-  derivation at PRD-13's FR-13.4).
+- **CONVENTION, closed 2026-09-15 — N1.** `setup-org.md` Step 5 now
+  creates the Foundation tag every pinned Leadership and Domain caller
+  resolves against, before Actions is enabled later in the same step; a
+  stranger executing the eleven steps in order no longer has every caller
+  fail for this reason (FR-16.1, FR-16.4; full derivation at PRD-10's
+  FR-10.2). Stops at `CONVENTION`: Step 10's `setup-check.sh` checks for
+  the tag but nothing compels running Step 10.
+- **CONVENTION, closed 2026-09-15 — N2.** `REPLACE-WITH-AUDITED-COMMIT-SHA`
+  and `<pinned-version-or-ref>` still ship live in all three repos'
+  `.claude/settings.json`, but `setup-org.md` now names both directly
+  ("Also in Step 3 — pin the plugin supply chain") and Step 10's
+  `setup-check.sh` checks for them (FR-16.4; full derivation at PRD-13's
+  FR-13.4). Stops at `CONVENTION` for the same reason as N1: Step 10 is
+  optional.
 - **GAP — N6.** None of the five role onboarding files ever names the
   mount flag that the retrieval command three of them instruct a joiner to
   run depends on (FR-16.3; full derivation at PRD-12's FR-12.6 and PRD-02's
@@ -699,10 +714,12 @@ against changes.
   and a Domain-role joiner is told to launch one level deeper than the
   settings file's own location (FR-16.3; recorded in full as a `GAP` at
   PRD-02's section 8).
-- **Open question — N5.** `format-gate.yml`'s extension parsing fails
-  every PR touching any of the five `settings.local.json.example-<role>`
-  files this PRD specifies, independent of anything this task changed
-  (FR-16.3; status owned by PRD-05's FR-05.2).
+- **Closed 2026-09-15 — N5.** `format-gate.yml`'s extension parsing used to
+  fail every PR touching any of the five `settings.local.json.example-<role>`
+  files this PRD specifies, independent of anything this task changed. The
+  parser now strips the `.example[-<role>]` suffix before deriving the
+  extension (FR-16.3; status owned by PRD-05's FR-05.2, moved to `ENFORCED
+  (CI)`).
 - **Live state, checked 2026-09-08 ~12:15 UTC.** Branch protection is
   absent (404) on all three published repositories' `main` branch; the
   per-repo floor `setup-org.md` Step 7 documents (Foundation 2 approvals,
@@ -842,3 +859,14 @@ and commit history, and the three `branches/main/protection` reads named
 above, all resolvable against the three published repositories and their
 public state without any scratch path, working-branch reference, or access
 to this project's own tasks, briefs or errata.
+
+**2026-09-18 — FR-16.4 moved from `GAP` to `CONVENTION` for N1 and N2;
+FR-16.3's N5 cross-reference updated.** `docs/setup-org.md` Step 5 now
+creates the Foundation `v1` tag and Step 3 now names both supply-chain
+placeholders (Foundation PR #11, `5aea4e5`, 2026-09-15); a new Step 10
+runs `.github/scripts/setup-check.sh`, which checks both but is not
+compelled by anything, which is why neither reaches `ENFORCED (local)`.
+FR-16.3 itself is unchanged: it covers N4 and N6, neither touched by this
+wave. N5 (owned by PRD-05's FR-05.2) closed in the same wave; FR-16.3's
+section-8 cross-reference is updated to say so without altering FR-16.3's
+own status.

@@ -17,6 +17,10 @@ specifies:
   - organisationos-foundation/.github/labels.yml
   - organisationos-leadership/.github/labels.yml
   - organisationos-domain/.github/labels.yml
+  - organisationos-foundation/.github/scripts/format-scan.sh
+  - organisationos-foundation/.github/scripts/format-scan.test.sh
+  - organisationos-foundation/.github/scripts/setup-check.sh
+  - organisationos-foundation/.github/scripts/setup-check.test.sh
 verified: 2026-09-07
 foundation-tag: v1.1.2
 ---
@@ -296,16 +300,33 @@ at `@v1`. When Foundation's workflows change, roll the `v1` tag forward in a
 Foundation PR (two approvers) — callers pick the change up on their next
 run."
 
-Errata finding N1, checked directly: `docs/setup-org.md`'s ten numbered steps
-(Step 1, "Create the three repos," through Step 10, "Now set yourself up as
-a person") contain no instruction to create a tag anywhere; a search for
-`git tag`, `tag -a`, or any tag-creation phrase across the whole file returns
-no matches. Step 1 itself creates each repository with `gh repo create
+Errata finding N1, checked directly against the pre-fix text: as of
+2026-09-08, `docs/setup-org.md`'s then-ten numbered steps (Step 1, "Create
+the three repos," through Step 10, "Now set yourself up as a person")
+contained no instruction to create a tag anywhere; a search for `git tag`,
+`tag -a`, or any tag-creation phrase across the whole file returned no
+matches. Step 1 itself creates each repository with `gh repo create
 "$ORG/organisationos-$r" --template "2SSilver/organisationos-$r" --private`,
 a mechanism that does not copy tags from the template repository. The only
-tag-related sentence in the document is the "Pinning" bullet quoted above,
-which assumes `v1` already exists and describes rolling it forward, not
-creating it.
+tag-related sentence in the document was the "Pinning" bullet quoted
+above, which assumed `v1` already existed and described rolling it
+forward, not creating it.
+
+**Closed 2026-09-15 (Foundation PR #11, `5aea4e5`).** `docs/setup-org.md`
+now has eleven numbered steps; Step 5 is retitled "Tag Foundation's
+reusables as `v1`, then enable Actions" and opens with `git tag v1 && git
+push origin v1`, run before Actions is enabled later in the same step —
+the step now instructs exactly what was previously missing. The fix's own
+blast radius spanned eight files across three repos, not six confined to
+Foundation: six in Foundation itself (`.github/workflows/format-gate.yml`,
+`.github/workflows/self-ci.yml`, and the four new
+`.github/scripts/{format-scan,setup-check}{.sh,.test.sh}` files this PRD's
+`specifies:` list is updated to claim), plus one caller-side
+`format-gate.yml` change each in Leadership and Domain (adding the
+`foundation-repo` and `foundation-ref` inputs the cross-repo checkout
+needs). N1's own fix is `docs/setup-org.md` alone; the wider eight-file
+count is the combined N1+N2+N5 fix, cited here because Foundation's own
+CHANGELOG records the three findings as one dated entry.
 
 The harness MUST resolve every Leadership and Domain caller's reusable
 reference at a tag (`@v1`), and that tag MUST move only through a
@@ -317,13 +338,16 @@ Foundation's own default branch.
   behind.
 - Every counted caller in both repositories pins the same tag name (`@v1`);
   none pins a specific commit SHA or a different tag.
-- N1 confirms a literal reading of `docs/setup-org.md` produces a freshly
-  templated Foundation with zero tags at all (`gh repo create --template`
-  does not copy them), and no step in the guide instructs creating one, so
-  every one of the 21 counted `@v1` references would fail to resolve on a
-  first run performed exactly as documented. This is recorded as a `GAP` in
-  the setup path itself, distinct from the `SHIPPED` state of the tag as it
-  exists today on the published repositories.
+- A freshly templated Foundation, the instant `gh repo create --template`
+  finishes, still has zero tags at all — GitHub's template mechanism never
+  copies them, closed finding or not. That instant of the setup path
+  remains a genuine `GAP`, distinct from the `SHIPPED` state of the tag as
+  it exists today on the published repositories.
+- N1 was that no step in the guide instructed creating one, so every one
+  of the 21 counted `@v1` references would fail to resolve on a first run
+  performed exactly as documented. Closed 2026-09-15: Step 5 now creates
+  `v1` before the same step enables Actions, so a literal, in-order
+  execution of the documented path no longer leaves any caller unresolved.
 
 ### FR-10.3 — `self-ci` calls every Foundation reusable by local path, so Foundation PRs run the same suite
 
@@ -716,12 +740,18 @@ separate document.
 
 ## 8. Known gaps & open questions
 
-- **GAP — a freshly templated Foundation has no tags, and nothing tells an
-  adopter to create one.** FR-10.2 (errata N1) records this precisely:
-  `gh repo create --template` does not copy tags, `docs/setup-org.md`'s ten
-  numbered steps never instruct creating `v1`, and every one of the 23
-  counted `@v1` references in Leadership and Domain resolves to nothing on
-  a literal, first-time execution of the documented setup path.
+- **GAP, structural — a freshly templated Foundation has no tags the
+  instant it is created.** `gh repo create --template` does not copy tags;
+  this is a permanent property of the template mechanism, not something
+  documentation closes.
+- **CONVENTION, closed 2026-09-15 — nothing told an adopter to create
+  one.** FR-10.2 (errata N1) records this precisely: `docs/setup-org.md`'s
+  then-ten numbered steps never instructed creating `v1`, so every one of
+  the 21 counted `@v1` references in Leadership and Domain resolved to
+  nothing on a literal, first-time execution of the documented setup path.
+  Step 5 (of the document's now-eleven steps) creates the tag before
+  enabling Actions in the same step. Stops at `CONVENTION` because the
+  step is one an adopter can still skip; nothing in CI compels it.
 - **GAP — most of Foundation's own enforcement surface has never executed
   in place.** `self-ci.yml` runs on Foundation's own pull requests, and
   FR-10.3's evidence shows it genuinely doing so: real red runs, real green
@@ -900,3 +930,18 @@ the narrower one is what the count rests on. a re-verifier re-running those same
 the current state of the three repositories should expect the totals to
 match only as long as no reusable, caller, or workflow file has been added
 or removed since this PRD's `verified:` date.
+
+**2026-09-18 — FR-10.2's blast-radius claim corrected; N1's closure
+recorded; status unchanged.** N1 closed 2026-09-15 (Foundation PR #11,
+`5aea4e5`): `docs/setup-org.md` Step 5 now creates the Foundation `v1`
+tag before enabling Actions. FR-10.2's compound status stays as written —
+`CONVENTION` for the roll-forward procedure, `SHIPPED` for the current tag
+state, `GAP` for the instant a freshly templated Foundation still has no
+tag, which is a structural property of `gh repo create --template`, not
+something Step 5 removes — only the prose describing N1 and the fix's own
+footprint was corrected: the combined N1+N2+N5 fix touched eight files
+across three repos (six in Foundation, one each in Leadership and
+Domain), not six files confined to Foundation, and `docs/setup-org.md` now
+runs to eleven numbered steps, not ten. Read directly against
+`organisationos-foundation` (`git show 5aea4e5 --stat`) and the two
+sibling repos' PR #8 diffs (`gh pr view 8 --json files`).

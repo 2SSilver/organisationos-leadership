@@ -36,8 +36,9 @@ change a month as the improvement channel.
 
 ## 2. Problem & evidence
 
-`organisationos-foundation/docs/setup-org.md` line 122 states the cadence
-directly: "On the 1st of every month, the Admin walks a checklist: stale
+`organisationos-foundation/docs/setup-org.md` Step 8 — The monthly
+maintenance issue — states the cadence directly: "On the 1st of every
+month, the Admin walks a checklist: stale
 `CLAUDE.md` files, stale interfaces, stalled propagations, accumulated
 drafts, the banned-pattern list, plugin pins." `organisationos-foundation/CLAUDE.md`
 line 79 ties a specific artefact's own clock to the same event: "Drafts have
@@ -189,7 +190,8 @@ carries the schedule (`cron: '0 9 1 * *'`) and passes
 `organisationos-leadership/README.md` line 60 states the unset case in the
 same sentence as the mechanism: "assigns it to the handle in the
 `ADMIN_HANDLE` repository variable"; "If the variable is unset the issue
-opens unassigned". `organisationos-foundation/docs/setup-org.md` line 125
+opens unassigned". `organisationos-foundation/docs/setup-org.md` Step 8 —
+The monthly maintenance issue
 (`gh variable set ADMIN_HANDLE --body "the-admins-github-handle" -R
 "$ORG/organisationos-leadership"`) is the adopter step that sets it.
 
@@ -449,8 +451,9 @@ report tools behind several checklist items, and MAY additionally run
 - **External constraint — no repository variable is set.** `gh api
   repos/2SSilver/organisationos-leadership/actions/variables`, same reading
   window, returns zero variables; `ADMIN_HANDLE` exists only as documented
-  adopter-time configuration (`setup-org.md` line 125), not as live state on
-  the published template repository.
+  adopter-time configuration (`setup-org.md` Step 8 — The monthly
+  maintenance issue), not as live state on the published template
+  repository.
 
 ## 8. Known gaps & open questions
 
