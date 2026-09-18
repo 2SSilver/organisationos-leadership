@@ -151,14 +151,15 @@ has to skip past organisation-wide steps that do not apply to them, and the
 person standing the organisation up follows exactly one extra guide rather
 than a second copy of the first.
 
-The primary flow runs `setup-org.md`'s ten steps in order: create the
+The primary flow runs `setup-org.md`'s eleven steps in order: create the
 three repositories from their templates, clone them as siblings, substitute
 the `<adopter-org>` placeholder, bind CODEOWNERS to real handles, enable
 Actions, sync labels, apply branch protection, enable the monthly
-maintenance issue, install the pre-commit hook, and hand off to
-`setup-person.md`. That second guide runs five steps in order: clone what
-the role needs, copy the role's two onboarding files, install the hook,
-smoke-test the session, and run `/onboard`.
+maintenance issue, install the pre-commit hook, verify the setup with
+`setup-check.sh`, and hand off to `setup-person.md`. That second guide
+runs five steps in order: clone what the role needs, copy the role's two
+onboarding files, install the hook, smoke-test the session, and run
+`/onboard`.
 
 Key rules:
 
@@ -229,15 +230,15 @@ Alternatives rejected:
 
 ## 6. Requirements
 
-### FR-16.1 — Once-per-organisation setup is a single ordered ten-step guide
+### FR-16.1 — Once-per-organisation setup is a single ordered eleven-step guide
 
 Status: SHIPPED
-Evidence: `organisationos-foundation/docs/setup-org.md` numbers exactly ten
-steps, Step 1 ("Create the three repos") through Step 10 ("Now set
+Evidence: `organisationos-foundation/docs/setup-org.md` numbers exactly
+eleven steps, Step 1 ("Create the three repos") through Step 11 ("Now set
 yourself up as a person"), confirmed directly: `grep -c '^## Step'` on the
-file returns 10. Its opening line: "This is the once-per-organisation path.
+file returns 11. Its opening line: "This is the once-per-organisation path.
 One person — usually the person who will be Admin — does it, once." Step
-10 hands off explicitly: "Continue with 'Joining an organisation that runs
+11 hands off explicitly: "Continue with 'Joining an organisation that runs
 OrganisationOS' (`setup-person.md`), which covers your role's
 `settings.local.json`, your `CLAUDE.local.md`, and the smoke test that
 shows whether your session can reach Foundation — not whether its rules
@@ -256,15 +257,15 @@ live branch-protection state).
 The setup documentation MUST present the once-per-organisation path as a
 single ordered sequence, ending in a handoff to the once-per-person path.
 
-- Ten numbered steps run start to finish without branching, each with its
-  own heading and a runnable command block.
-- Step 10 is the explicit handoff to `setup-person.md`; nothing in the
+- Eleven numbered steps run start to finish without branching, each with
+  its own heading and a runnable command block.
+- Step 11 is the explicit handoff to `setup-person.md`; nothing in the
   once-per-organisation path is left implicit.
-- What remains true and what remains a gap when the ten steps are executed
-  literally, in order, is recorded at FR-16.4 rather than here: the
-  `<adopter-org>` substitution and its ordering are `SHIPPED`; a Foundation
-  tag and two supply-chain placeholders are neither created nor caught by
-  any of the ten steps (`GAP`).
+- What remains true when the eleven steps are executed literally, in
+  order, is recorded at FR-16.4 rather than here: the `<adopter-org>`
+  substitution and its ordering are `SHIPPED`; a Foundation tag and two
+  supply-chain placeholders are now documented and checked by the steps
+  (`CONVENTION`, closed 2026-09-15).
 
 ### FR-16.2 — Once-per-person setup: clone, copy, hook, smoke-test, onboard
 
@@ -410,12 +411,13 @@ ordering before Actions is enabled
 Evidence: `docs/setup-org.md` Step 3 ("Substitute the placeholder")
 precedes Step 5 ("Tag Foundation's reusables as `v1`, then enable
 Actions") in the document's own numbering, and Step 5 states the
-dependency directly: "Actions are disabled on the published Leadership and
-Domain templates precisely because Step 3 has not run on them. Now that it
-has, enable them:". Step 3 itself: "The templates carry the literal string
-`<adopter-org>` wherever they need to name your GitHub owner: in every
-workflow that calls a Foundation reusable, in `AGENTS.md`, and in the
-cross-repo links in each README. Until it is substituted, those workflows
+dependency directly: "Now enable Actions. They are disabled on the
+published Leadership and Domain templates precisely because Step 3 has not
+run on them. Enable them:". Step 3 itself: "The templates carry the
+literal string `<adopter-org>` wherever they need to name your GitHub
+owner: in every workflow that calls a Foundation reusable, in
+`AGENTS.md`, and in the cross-repo links in each README. Until it is
+substituted, those workflows
 are invalid and those links are dead." PRD-10's FR-10.7 records the
 run-level proof that an unsubstituted caller fails at registration time in
 both Leadership and Domain, with four run IDs read directly; this PRD does

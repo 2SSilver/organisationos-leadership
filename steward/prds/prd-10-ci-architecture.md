@@ -63,7 +63,7 @@ one of them against its own pull requests.
 The obstacle is that a delivery mechanism spanning three repositories has
 three separate ways to fail silently. First, a freshly created Foundation
 carries none of the tag history a pinned caller expects: `gh repo create
---template` does not copy tags, and `docs/setup-org.md`'s own ten numbered
+--template` does not copy tags, and `docs/setup-org.md`'s then-ten numbered
 steps (from creating the three repositories, Step 1, through installing a
 pre-commit hook, Step 9, and setting up a person, Step 10) never once
 instruct creating one. The only tag-related instruction in the document
@@ -316,17 +316,11 @@ forward, not creating it.
 now has eleven numbered steps; Step 5 is retitled "Tag Foundation's
 reusables as `v1`, then enable Actions" and opens with `git tag v1 && git
 push origin v1`, run before Actions is enabled later in the same step —
-the step now instructs exactly what was previously missing. The fix's own
-blast radius spanned eight files across three repos, not six confined to
-Foundation: six in Foundation itself (`.github/workflows/format-gate.yml`,
-`.github/workflows/self-ci.yml`, and the four new
-`.github/scripts/{format-scan,setup-check}{.sh,.test.sh}` files this PRD's
-`specifies:` list is updated to claim), plus one caller-side
-`format-gate.yml` change each in Leadership and Domain (adding the
-`foundation-repo` and `foundation-ref` inputs the cross-repo checkout
-needs). N1's own fix is `docs/setup-org.md` alone; the wider eight-file
-count is the combined N1+N2+N5 fix, cited here because Foundation's own
-CHANGELOG records the three findings as one dated entry.
+the step now instructs exactly what was previously missing. The N5 defect
+this same wave closed had affected eight shipped files across the three
+repos, not six confined to Foundation: six in Foundation
+(`settings.local.json.example` and its five `-<role>` variants), plus one
+each in Leadership and Domain sharing Foundation's basename.
 
 The harness MUST resolve every Leadership and Domain caller's reusable
 reference at a tag (`@v1`), and that tag MUST move only through a
@@ -938,10 +932,8 @@ tag before enabling Actions. FR-10.2's compound status stays as written —
 `CONVENTION` for the roll-forward procedure, `SHIPPED` for the current tag
 state, `GAP` for the instant a freshly templated Foundation still has no
 tag, which is a structural property of `gh repo create --template`, not
-something Step 5 removes — only the prose describing N1 and the fix's own
-footprint was corrected: the combined N1+N2+N5 fix touched eight files
-across three repos (six in Foundation, one each in Leadership and
-Domain), not six files confined to Foundation, and `docs/setup-org.md` now
-runs to eleven numbered steps, not ten. Read directly against
-`organisationos-foundation` (`git show 5aea4e5 --stat`) and the two
-sibling repos' PR #8 diffs (`gh pr view 8 --json files`).
+something Step 5 removes — only the prose describing N1 was corrected: the
+N5 defect affected eight shipped files across three repos (six in
+Foundation, one each in Leadership and Domain), not six confined to
+Foundation, and `docs/setup-org.md` now runs to eleven numbered steps, not
+ten.
