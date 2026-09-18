@@ -290,7 +290,8 @@ both sibling repositories' paths.
 
 ### FR-13.4 — Marketplace pinned by commit SHA, `strictKnownMarketplaces`
 
-Status: SHIPPED, with a template-state honesty note
+Status: CONVENTION for substituting the marketplace pin (closed 2026-09-15,
+was `GAP`); SHIPPED for the pin mechanism's shape as it ships
 Evidence: all three `.claude/settings.json` files carry an identical
 `marketplaces` block: `{"name": "anthropic-official", "url":
 "https://github.com/anthropics/claude-code-plugins", "ref":
@@ -313,22 +314,38 @@ plugin install requires a CDR.
 - The `_notes` array states what `strictKnownMarketplaces` does and the
   CDR requirement for anything outside the marketplace mechanism, in the
   same file the mechanism lives in.
-- **Status qualifier (N2):** the `ref` field shipped in all three files is
-  the literal placeholder string `REPLACE-WITH-AUDITED-COMMIT-SHA`, not an
-  actual commit SHA (confirmed: `grep -n "REPLACE-WITH-AUDITED-COMMIT-SHA"`
+- **Closed 2026-09-15 (finding N2).** The `ref` field ships as the literal
+  placeholder string `REPLACE-WITH-AUDITED-COMMIT-SHA`, not an actual
+  commit SHA (confirmed: `grep -n "REPLACE-WITH-AUDITED-COMMIT-SHA"`
   against all three files, foundation line 29, leadership line 23, domain
   line 19). "Pinned by commit SHA" is the mechanism's shape as shipped, not
-  its state: substituting a real SHA is a step an adopter still has to
-  take, not a default the template already applies. Nothing in
-  `docs/setup-org.md`'s documented setup path names or catches this: Step
-  3's placeholder sweep matches only the literal string `<adopter-org>`,
-  Step 4's matches only `placeholder-` inside `.github/CODEOWNERS`, and a
-  search of the entire `docs/` tree for `REPLACE-WITH-AUDITED-COMMIT-SHA`
-  returns no hits outside the three settings files themselves. An adopter
-  who completes `docs/setup-org.md` exactly as written finishes setup with
-  an unsubstituted supply-chain pin, and nothing in that documented path
-  (no step, no check, no CI job) flags it. This is recorded as a `GAP` in
-  section 8.
+  its state: substituting a real SHA is still a step an adopter has to
+  take. Before this wave, nothing in `docs/setup-org.md`'s documented setup
+  path named or caught this: Step 3's placeholder sweep matched only the
+  literal string `<adopter-org>`, Step 4's matched only `placeholder-`
+  inside `.github/CODEOWNERS`, and a search of the entire `docs/` tree for
+  `REPLACE-WITH-AUDITED-COMMIT-SHA` returned no hits outside the three
+  settings files themselves. `docs/setup-org.md` now carries "Also in Step
+  3 — pin the plugin supply chain," which names both
+  `REPLACE-WITH-AUDITED-COMMIT-SHA` and `<pinned-version-or-ref>` directly
+  and instructs setting both before deleting the `_notes` array, and
+  `.github/scripts/setup-check.sh`'s check 2 fails with "file(s) still
+  carry an unsubstituted supply-chain pin" if either literal remains in
+  any of the three `.claude/settings.json` files.
+  **This stops at `CONVENTION`, not `ENFORCED (local)`.** `setup-check.sh`
+  is adopter-run: nothing compels running it, and it executes on a
+  workstation before any CI exists to gate against. Claiming a local locus
+  here would borrow the credibility of this PRD set's 17 existing
+  local-locus claims, each of which sits behind a check something actually
+  invokes. The script's own correctness is a separate, and separately
+  enforced, claim: its fixture suite (`setup-check.test.sh`) runs in
+  Foundation's own CI and passed at run `35324985628` — that run verifies
+  the checker works, not that any adopter has run it. An adopter who
+  completes `docs/setup-org.md` Step 3 but skips the optional Step 10
+  verification still finishes setup with an unsubstituted supply-chain
+  pin and no CI job to flag it — documentation and a script now exist,
+  but nothing compels either being used. This moves the finding from
+  `GAP` to `CONVENTION` in section 8, not to `ENFORCED (local)`.
 
 ### FR-13.5 — Plugin version pinned; pin bumps are two-approver PRs
 
@@ -470,14 +487,18 @@ configuration, rather than in a separate document, and MUST instruct that
 
 ## 8. Known gaps & open questions
 
-- **GAP (N2) — unsubstituted supply-chain placeholders ship in all three
-  settings files, and nothing in the documented setup path catches them.**
-  `REPLACE-WITH-AUDITED-COMMIT-SHA` and `<pinned-version-or-ref>` both ship
-  in every `.claude/settings.json`; `docs/setup-org.md`'s Step 3 sweep
-  matches only `<adopter-org>` and Step 4's matches only `placeholder-`
-  inside CODEOWNERS. An adopter who runs the documented setup exactly as
-  written finishes with both supply-chain pins unsubstituted and no
-  failing check to tell them so.
+- **CONVENTION, closed 2026-09-15 (N2) — unsubstituted supply-chain
+  placeholders ship in all three settings files; nothing compels catching
+  them.** `REPLACE-WITH-AUDITED-COMMIT-SHA` and `<pinned-version-or-ref>`
+  both ship in every `.claude/settings.json`. Before this wave,
+  `docs/setup-org.md`'s Step 3 sweep matched only `<adopter-org>` and Step
+  4's matched only `placeholder-` inside CODEOWNERS, and no check named
+  either literal. `docs/setup-org.md` now names both directly ("Also in
+  Step 3 — pin the plugin supply chain") and `.github/scripts/
+  setup-check.sh` fails if either remains — but `setup-check.sh` is run at
+  an adopter's discretion, not compelled by anything, so an adopter who
+  completes Step 3 but skips verification can still finish with both pins
+  unsubstituted. See FR-13.4.
 - **Status qualifier, not closed here — A17-2.** FR-13.1's central
   tool-call-gate claim for Pattern A external-work sessions rests on
   `external-work-claude-md.md`'s overstated description of `--add-dir` as
@@ -578,3 +599,13 @@ file type was run against it. A17-2 (FR-13.1) is recorded as a status
 qualifier, not corrected, since the source file is owned by another
 workstream; PRD-04's FR-04.7 is the independent verification of the same
 finding from the confidentiality side, cited here rather than duplicated.
+
+**2026-09-18 — FR-13.4 moved from `GAP` to `CONVENTION`.** N2 closed:
+`docs/setup-org.md`'s "Also in Step 3 — pin the plugin supply chain" now
+names both supply-chain literals, and `.github/scripts/setup-check.sh`
+checks 2 fails if either remains unsubstituted, verified by reading both
+files directly. The status stops at `CONVENTION` rather than `ENFORCED
+(local)` because nothing compels an adopter to run `setup-check.sh` —
+it is a discretionary local script, not a check something invokes.
+`setup-check.test.sh`'s own passing run (`35324985628`) verifies the
+checker's logic, a separate claim from whether any adopter runs it.

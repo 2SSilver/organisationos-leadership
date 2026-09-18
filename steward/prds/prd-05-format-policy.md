@@ -190,15 +190,41 @@ MUST state them as the basis the whitelist and caps below apply.
 
 ### FR-05.2 — Extension whitelist
 
-Status: ENFORCED (local) — with a reproducible defect in the extraction
-logic, described below
+Status: ENFORCED (CI) — the finding N5 defect below is fixed and
+reverified; locus `format-gate`, both halves observed directly in
+Foundation's own CI
 Evidence: `organisationos-foundation/.github/workflows/format-gate.yml`,
-step "Verify changed files against FORMATS.md whitelist": line 66,
-`ext="${f##*.}"`, then `if ! echo "$allowed_extensions" | grep -wq "$ext"`.
-Verified 2026-09-03: a
-scratch git repo branch adding `report.xlsx` failed with `::error
-file=report.xlsx::extension '.xlsx' is not on FORMATS.md's whitelist.`; the
-same repo with only a `.md` file added passed cleanly.
+step "Verify changed files against FORMATS.md whitelist", now delegates
+the scan to `.github/scripts/format-scan.sh` rather than inlining the
+extraction logic (extracted closing N5, Foundation PR #11, `5aea4e5`,
+2026-09-15). `format-scan.sh` strips a `.example` or `.example-<role>`
+suffix before deriving the extension (`if [[ "$base" =~
+^(.+)\.example(-[A-Za-z0-9-]+)?$ ]]; then stem="${BASH_REMATCH[1]}"`), so
+`settings.local.json.example-admin` is scanned as the `.json` it is.
+Verified 2026-09-03, pre-fix: a scratch git repo branch adding
+`report.xlsx` failed with `::error file=report.xlsx::extension '.xlsx' is
+not on FORMATS.md's whitelist.`; the same repo with only a `.md` file
+added passed cleanly — the gate's core reject/pass logic, unaffected by
+the fix.
+
+**Locus, stated precisely.** Red and green were both observed running
+inside Foundation's own repository, on Foundation's own pull requests: red
+at run `33508553151` (`format-gate/format` failing on the N5 defect,
+2026-09-01), green at run `35324985628` (`format-gate/format` passing,
+2026-09-15 — the same run where `format-scan-tests` and
+`setup-check-tests` executed live for the first time, both green).
+Neither run exercised the cross-repo path: `format-gate.yml` also carries
+a step, gated `if: !endsWith(github.repository,
+'organisationos-foundation')`, that checks out Foundation into
+`_foundation/` so a Leadership or Domain caller can resolve
+`format-scan.sh` from a repository that does not carry its own copy. That
+step is shipped and reads correctly, but has never run for real: Actions
+are disabled on both published Leadership and Domain templates by design
+(`docs/setup-org.md` Step 5), so no Leadership or Domain pull request has
+ever reached it. `ENFORCED (CI)` covers exactly what was observed — the
+scan's own logic, exercised in Foundation — and does not extend to the
+cross-repo checkout a Leadership or Domain adopter's gate depends on,
+which remains shipped but unexercised.
 
 The gate MUST reject a pull request that adds or modifies a file whose
 extension is not on `FORMATS.md`'s published whitelist, and MUST name the
@@ -210,30 +236,37 @@ offending file and its extension in the failure.
 - Given a changed file with a whitelisted extension
   When the gate runs
   Then it passes
-- **Defect, reproduced (finding N5):** the extension is derived by taking
-  everything after a filename's last dot (`ext="${f##*.}"`), so a filename
-  with more than one dot yields whatever follows the final one as its
-  "extension," regardless of the file's real type. Six files in Foundation
-  are shaped this way: `.claude/settings.local.json.example` and the five
+- **Defect, closed 2026-09-15 (finding N5):** the extension was derived by
+  taking everything after a filename's last dot (`ext="${f##*.}"`), so a
+  filename with more than one dot yielded whatever followed the final one
+  as its "extension," regardless of the file's real type. Eight files
+  across the three repos were shaped this way — six in Foundation
+  (`.claude/settings.local.json.example` and the five
   `standards/templates/onboarding/settings.local.json.example-<role>`
-  files (`-admin`, `-domain-lead`, `-leader`, `-product-owner`,
-  `-team-member`), yielding "extensions" `example` and
-  `example-<role>`, none of which are on the whitelist. `git log --oneline`
-  against each of the six shows exactly two commits per file: the initial
-  commit and `7ce3b32` ("Fix additionalDirectories nesting in shipped
-  settings examples", 2026-09-01), the first change to any of their
-  content since the repository's initial commit. That live pull request's
-  own CI run (`gh api .../commits/7ce3b32.../check-runs`) shows
+  files: `-admin`, `-domain-lead`, `-leader`, `-product-owner`,
+  `-team-member`), plus one each in Leadership and Domain (each repo's own
+  `.claude/settings.local.json.example`) — not six confined to Foundation,
+  as this PRD's own prior evidence recorded. `git log --oneline` against
+  the six Foundation files showed exactly two commits per file: the
+  initial commit and `7ce3b32` ("Fix additionalDirectories nesting in
+  shipped settings examples", 2026-09-01), the first change to any of
+  their content since the repository's initial commit. That live pull
+  request's own CI run (`gh api .../commits/7ce3b32.../check-runs`) showed
   `format-gate / format` as the one `failure` among thirteen checks, with
-  file-level annotations naming exactly these six files and extensions;
-  confirmed against GitHub, not only reproduced locally. The commit landed
-  on `main` regardless, since Foundation's `main` carries no branch
-  protection (`gh api .../branches/main/protection` → 404, confirmed
-  2026-09-03). The gate's logic is otherwise sound and was verified
-  producing the correct verdict on both a violating and a clean input; this
-  is a defect in what counts as an "extension" for these six specific
-  filenames, not a failure of the check to run. Left unfixed here per
-  instruction: the source is read-only for this PRD.
+  file-level annotations naming exactly the six Foundation files and
+  extensions; confirmed against GitHub, not only reproduced locally. The
+  commit landed on `main` regardless, since Foundation's `main` carries no
+  branch protection (`gh api .../branches/main/protection` → 404, confirmed
+  2026-09-03). The gate's logic was otherwise sound and verified producing
+  the correct verdict on both a violating and a clean input; the defect
+  was in what counted as an "extension" for these filenames, not a
+  failure of the check to run. Fixed by moving the scan into
+  `.github/scripts/format-scan.sh` with the `.example[-<role>]` suffix
+  strip above (Foundation PR #11, `5aea4e5`, 2026-09-15): a fixture suite
+  (`format-scan.test.sh`) covers the six distinct basenames the eight real
+  files reduce to — Leadership's and Domain's
+  `.claude/settings.local.json.example` share Foundation's basename, and
+  the scan keys on basename — and ran green at `35324985628`.
 
 ### FR-05.3 — Size caps: per-file by format, aggregate per PR
 
@@ -391,13 +424,17 @@ Leader.
 
 ## 8. Known gaps & open questions
 
-- **Defect, not closed here — N5.** `ext="${f##*.}"` takes everything
-  after a filename's last dot; six shipped Foundation files with a second
-  dot in their name (`settings.local.json.example` and its five
-  `-<role>` variants) fail the whitelist check on any pull request that
-  modifies them, independent of their actual content. Reproduced locally
-  and confirmed against the live CI run that hit it (commit `7ce3b32`).
-  Not fixed here: the source files are read-only for this PRD.
+- **Defect, closed 2026-09-15 — N5.** `ext="${f##*.}"` took everything
+  after a filename's last dot; eight shipped files across the three repos
+  with a second dot in their name (six in Foundation —
+  `settings.local.json.example` and its five `-<role>` variants — plus one
+  each in Leadership and Domain) failed the whitelist check on any pull
+  request that modified them, independent of their actual content.
+  Reproduced locally and confirmed against the live CI run that hit it
+  (commit `7ce3b32`, run `33508553151`). Fixed by moving the scan into
+  `.github/scripts/format-scan.sh` with an `.example[-<role>]` suffix
+  strip (Foundation PR #11, `5aea4e5`); reverified green at run
+  `35324985628`. See FR-05.2's updated `ENFORCED (CI)` status above.
 - **Open question — no inventory of which past PRs merged with
   `format-gate` red.** Commit `7ce3b32` is confirmed; whether other merges
   share this history is not checked here.
@@ -486,3 +523,16 @@ evidence for N5 is a live run that occurred for unrelated reasons, read
 after the fact, not one this verification triggered); a re-verifier
 reproducing the `ENFORCED` claims would need only the scratch git repo
 steps, not GitHub access.
+
+**2026-09-18 — FR-05.2 moved from `ENFORCED (local)` to `ENFORCED (CI)`.**
+N5 closed: Foundation PR #11 (`5aea4e5`, 2026-09-15) moved the extraction
+logic into `.github/scripts/format-scan.sh` with the `.example[-<role>]`
+suffix strip, and its fixture suite (`format-scan.test.sh`) ran green for
+the first time at CI run `35324985628`, alongside the pre-existing red at
+`33508553151`. Both read directly via `gh api
+repos/2SSilver/organisationos-foundation/actions/runs/<id>` and
+`.../jobs`, not reproduced locally, which is what moves the locus from
+`(local)` to `(CI)`. The move is scoped to Foundation's own CI only; the
+cross-repo `format-scan.sh` resolution step that a Leadership or Domain
+caller depends on remains unexercised, since Actions stay disabled on
+both published templates.
