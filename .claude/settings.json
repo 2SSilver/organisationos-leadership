@@ -31,6 +31,7 @@
     }
   },
   "_notes": [
+    "Both placeholders below are substituted during adoption — docs/setup-org.md Step 3 in Foundation. setup-check.sh verifies it.",
     "Pin to a marketplace ref (commit SHA), not a tag/label.",
     "strictKnownMarketplaces blocks any marketplace not explicitly listed.",
     "Pin bumps are two-approver PRs (Admin + Leader) per .github/CODEOWNERS.",
