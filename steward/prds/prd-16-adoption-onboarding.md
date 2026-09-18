@@ -180,7 +180,7 @@ Key rules:
   fail on purpose when the install is wrong.
 
 Important states: an unconfigured organisation (no repos created yet); an
-organisation configured but no person set up (Step 10 of `setup-org.md`
+organisation configured but no person set up (Step 11 of `setup-org.md`
 pending); a person configured but not yet smoke-tested; and a person
 smoke-tested and onboarded, with a dated 30-day plan on file.
 
